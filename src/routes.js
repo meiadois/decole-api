@@ -6,11 +6,7 @@ var path = require("path");
 const InstagramController = require('./controllers/InstagramController');
 
 const routes = express.Router();
-routes.get("/", function (req, res) {
-    res.json({
-        "Mensagem": "Seja bem vindo a API da equipe MeiaDois!"
-    })
-})
+
 /*
 routes.get('/products', ProductsController.index);
 routes.post('/products', ProductsController.store);
