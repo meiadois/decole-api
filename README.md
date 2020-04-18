@@ -5,9 +5,21 @@ This repository holds our App.
 
 ## Installation
 
-Follow these two simple steps:
+Follow these three simple steps:
 
-1) Install the dependencies:
+1) Create a file called .env at "path/to/this/project/"containing the following information (You will need a MySql database)
+    ```bash
+    ML_CLIENT_ID=5569930784321344
+    ML_CLIENT_SECRET=CLAeyqRWGsU0apha4XAXFSFugod6uOeH
+    DB_SEQUELIZE_DIALECT=mysql
+    DB_SEQUELIZE_HOST=$HOST
+    DB_SEQUELIZE_USERNAME=$USER
+    DB_SEQUELIZE_PASSWORD=$USERPASSWORD
+    DB_SEQUELIZE_DATABASE=$DBNAME
+    DB_SEQUELIZE_PORT=$PORT
+    ```
+
+2) Install the dependencies:
     ```bash
     yarn
     ```
@@ -15,7 +27,7 @@ Follow these two simple steps:
     ```bash
     npm i
     ```
-2) Run the project:
+3) Run the project:
     ```bash
     yarn start
     ```
