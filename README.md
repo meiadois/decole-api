@@ -24,7 +24,7 @@ Follow these two simple steps:
     npm start
     ```
 ## Routes
-To see where and how to make requests, import our [workspace](https://support.insomnia.rest/article/50-workspaces) contained [here](https://github.com/meiadois/DecoleAPI/tree/master/docs) for your [INSOMNIA](https://insomnia.rest/).
+To see where and how to make requests, import our [workspace](https://support.insomnia.rest/article/50-workspaces) contained [here](https://github.com/meiadois/DecoleAPI/blob/master/docs/Workspace.json) for your [INSOMNIA](https://insomnia.rest/).
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
