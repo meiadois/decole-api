@@ -2,10 +2,13 @@ const express = require('express');
 var path = require("path");
 //const authServer = require('./services/auth-service');
 
-//const ProductsController = require('./controllers/ProductsController');
 const InstagramController = require('./controllers/InstagramController');
 const MercadoLivreController = require('./controllers/MercadoLivreController');
-
+const StepsController = require('./controllers/StepsController');
+const ModulesController = require('./controllers/ModulesController');
+const UsersController = require('./controllers/UsersController');
+const ProgressController = require('./controllers/ProgressController');
+const SocialNetworkController = require('./controllers/SocialNetworkController');
 const routes = express.Router();
 
 /*
@@ -21,5 +24,27 @@ routes.get('/insta/user-profile', InstagramController.getUserProfileByNickname);
 
 routes.get('/mercado-livre/user', MercadoLivreController.getUserByNickname);
 routes.get('/mercado-livre/user/reputation', MercadoLivreController.getUserReputationByNickname);
+
+
+routes.get('/steps', StepsController.index);
+routes.post('/steps', StepsController.store);
+
+routes.get('/modules/:id', ModulesController.index);
+routes.get('/modules', ModulesController.list);
+routes.post('/modules', ModulesController.store);
+
+routes.post('/users', UsersController.store);
+routes.get('/login', UsersController.login);
+
+routes.get('/progress/:id', ProgressController.index);
+routes.get('/progress', ProgressController.list);
+routes.get('/progress/user/:user_id', ProgressController.getByUser);
+routes.get('/progress/user/:user_id/module/:module_id', ProgressController.getByUserAndModule);
+routes.post('/progress', ProgressController.store);
+
+routes.get('/social-networks/:id', SocialNetworkController.index);
+routes.get('/social-networks', SocialNetworkController.list);
+routes.post('/social-networks', SocialNetworkController.store);
+
 
 module.exports = routes;
