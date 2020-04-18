@@ -1,8 +1,8 @@
+require('dotenv/config');
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const dbConfig = require('../config/database');
-
 const db = {};
 const sequelize = new Sequelize(dbConfig);
 
@@ -16,6 +16,7 @@ fs
     });
 
 Object.keys(db).forEach((modelName) => {
+    console.log(`Reconhecendo ${modelName}`)
     if (db[modelName].associate) {
         db[modelName].associate(db);
     }

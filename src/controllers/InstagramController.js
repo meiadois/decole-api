@@ -1,4 +1,3 @@
-const ProductsRepository = require('../repositories/ProductsRepository');
 const I = require('../Lib/InstaLib');
 const InstaLib = new I();
 module.exports = {
@@ -63,14 +62,6 @@ module.exports = {
                 "location": node.location,
             });
         })
-        /*
-        item_to_be_copied.attributes.forEach((attribute, index) => {
-                    sell_infos.attributes.push({
-                        "id": attribute.id,
-                        "value_name": attribute.value_name
-                    });
-                })
-        */
         return res.json(user_processed);
     },
 };
