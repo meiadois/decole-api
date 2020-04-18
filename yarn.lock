@@ -341,6 +341,13 @@ media-typer@0.3.0:
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
 
+melif@^1.0.4:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/melif/-/melif-1.0.6.tgz#5e651395de264a5491dc7548b363167a403123d0"
+  integrity sha512-z3lpS2elO5ZPMmuwNKime6kSyaK/9KgtmactJ+1ne1jf76KBaAV1dYJ7kcfHKPteMnWrdhmLNJ89JCmbuDSszw==
+  dependencies:
+    axios "^0.19.2"
+
 merge-descriptors@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"

@@ -4,6 +4,7 @@ var path = require("path");
 
 //const ProductsController = require('./controllers/ProductsController');
 const InstagramController = require('./controllers/InstagramController');
+const MercadoLivreController = require('./controllers/MercadoLivreController');
 
 const routes = express.Router();
 
@@ -17,5 +18,8 @@ routes.options('/products', ProductsController.options);
 */
 routes.get('/insta/user', InstagramController.getUserByNickname);
 routes.get('/insta/user-profile', InstagramController.getUserProfileByNickname);
+
+routes.get('/mercado-livre/user', MercadoLivreController.getUserByNickname);
+routes.get('/mercado-livre/user/reputation', MercadoLivreController.getUserReputationByNickname);
 
 module.exports = routes;
