@@ -16,7 +16,6 @@ fs
     });
 
 Object.keys(db).forEach((modelName) => {
-    console.log(`Reconhecendo ${modelName}`)
     if (db[modelName].associate) {
         db[modelName].associate(db);
     }
