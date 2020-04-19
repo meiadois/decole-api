@@ -36,6 +36,7 @@ Follow these three simple steps:
     npm start
     ```
 ## Routes
+Our Endpoint: https://decoleapi.herokuapp.com/
 To see where and how to make requests, import our [workspace](https://support.insomnia.rest/article/50-workspaces) contained [here](https://github.com/meiadois/DecoleAPI/blob/master/docs/Workspace.json) for your [INSOMNIA](https://insomnia.rest/).
 
 ## Contributing
