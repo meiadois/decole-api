@@ -11,7 +11,7 @@
     "express": "^4.17.1",
     "melif": "^1.0.4",
     "mysql2": "^2.1.0",
-    "sequelize": "^5.21.6"
+    "sequelize": "^5.21.7"
   },
   "scripts": {
     "start": "node src/server.js",
