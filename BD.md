@@ -3,7 +3,7 @@
 
 - Rede Social 
 	- Nome
-	
+
 	npx sequelize-cli model:generate --name SocialNetwork --attributes name:string
 
 - Plataforma de Venda
@@ -44,22 +44,39 @@
 	- Likes
 	- CNPJ (Opcional)
 
+	npx sequelize-cli model:generate --name Company --attributes name:string,cep:string,cnpj:string
+
 - Serviço
 	- Nome
+
+	npx sequelize-cli model:generate --name Service --attributes name:string
 	
 - Produto
 	- Nome
 
+	npx sequelize-cli model:generate --name Product --attributes name:string
+
 - Segmento (Opções de Naiara)
 	- Nome
+
+	npx sequelize-cli model:generate --name Segment --attributes name:string
 
 - Like
 	- Usuario de origem
 	- Usuario de destino
 	- Situacao : [Não respondida, Aceita, Negada]
 
+	npx sequelize-cli model:generate --name Segment --attributes sender_id:string,recipient_id:string,status:string
+
 - Sequencia de Percursos
 	- Percursos
+
+	npx sequelize-cli model:generate --name RouteSequence
+
+- Plano
+	- Descrição
+	- Preço
+	- Nivel de acesso
 
 - Usuario
 	- Usuario
@@ -72,20 +89,23 @@
 	- Percurso em andamento
 	- Percursos concluidos
 
+	npx sequelize-cli model:generate --name User username:string,email:string,password:string
+
 ## Relações
+- 1 x 1
+	- Usuario x Empresa
+
 - 1 x n
 	- Licao x Etapa
-
-	- Usuario x Empresa
-	- Usuario x Licoes (Licoes concluidas)
-	- Usuario x Percursos (Percursos concluidos)
+	- Plano x Usuario
+	- Usuario x Licoes Concluidas
+	- Usuario x Percursos Concluidos
 
 - n x n
-	- Percurso x Licao
-	- Licao x Plataforma de Venda
-	- Licao x Rede Social
-
-	- Empresa x Like
-	- Empresa x Segmento
-	- Empresa x Produto
-	- Empresa x Serviço
+	- Percurso x Licao (route_lessons)
+	- Licao x Plataforma de Venda (marketplace_lessons)
+	- Licao x Rede Social (social_network_lessons)
+	- Empresa x Like (company_likes)
+	- Empresa x Segmento (company_segments)
+	- Empresa x Produto (company_products)
+	- Empresa x Serviço (company_services)
