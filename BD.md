@@ -1,13 +1,20 @@
 ## Educação
 
-- Rede Social
+
+- Rede Social 
 	- Nome
+	
+	npx sequelize-cli model:generate --name SocialNetwork --attributes name:string
 
 - Plataforma de Venda
 	- Nome
 
+	npx sequelize-cli model:generate --name Marketplace --attributes name:string
+	
 - Etapa
 	- Mensagem
+
+	npx sequelize-cli model:generate --name Step --attributes message:string
 
 - Licao
 	- Titulo
@@ -16,8 +23,13 @@
 	- Redes Sociais
 	- Plataformas de Vendas
 
+	npx sequelize-cli model:generate --name Lesson --attributes title:string,description:string
+
 - Percurso
+	- Descricão
 	- Licoes
+
+	npx sequelize-cli model:generate --name Route --attributes description:string
 
 
 
