@@ -1,6 +1,6 @@
 const express = require('express');
 const routes = require('./routes');
-//require('./models');
+require('./models');
 const app = express();
 app.use(express.json());
 app.use('/v1', routes);

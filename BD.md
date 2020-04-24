@@ -66,7 +66,7 @@
 	- Usuario de destino
 	- Situacao : [Não respondida, Aceita, Negada]
 
-	npx sequelize-cli model:generate --name Segment --attributes sender_id:string,recipient_id:string,status:string
+	npx sequelize-cli model:generate --name Like --attributes sender_id:string,recipient_id:string,status:string
 
 - Sequencia de Percursos
 	- Percursos
@@ -77,6 +77,8 @@
 	- Descrição
 	- Preço
 	- Nivel de acesso
+
+	npx sequelize-cli model:generate --name Plan --attributes description:string,price:double,status:string
 
 - Usuario
 	- Usuario
@@ -109,3 +111,8 @@
 	- Empresa x Segmento (company_segments)
 	- Empresa x Produto (company_products)
 	- Empresa x Serviço (company_services)
+	- Usuario x Percurso (user_routes)
+
+
+
+sequelize-cli db:migrate

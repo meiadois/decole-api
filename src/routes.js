@@ -4,11 +4,9 @@ var path = require("path");
 
 const InstagramController = require('./controllers/InstagramController');
 const MercadoLivreController = require('./controllers/MercadoLivreController');
+
 const StepsController = require('./controllers/StepsController');
-const ModulesController = require('./controllers/ModulesController');
-const UsersController = require('./controllers/UsersController');
-const ProgressController = require('./controllers/ProgressController');
-const SocialNetworkController = require('./controllers/SocialNetworkController');
+const MarketplacesController = require('./controllers/MarketplacesController');
 const routes = express.Router();
 
 /*
@@ -25,39 +23,14 @@ routes.get('/insta/user-profile', InstagramController.getUserProfileByNickname);
 routes.get('/mercado-livre/user', MercadoLivreController.getUserByNickname);
 routes.get('/mercado-livre/user/reputation', MercadoLivreController.getUserReputationByNickname);
 
+routes.route('/steps/:id', StepsController.index);
 routes.route('/steps')
-    .get(StepsController.index)
+    .get(StepsController.list)
     .post(StepsController.store)
-/*
-routes.get('/steps', StepsController.index);
-routes.post('/steps', StepsController.store);*/
 
-
-
-routes.route('/modules')
-    .get(ModulesController.list)
-    .post(ModulesController.store);
-routes.get('/modules/:id', ModulesController.index);
-/*
-routes.get('/modules', ModulesController.list);
-routes.post('/modules', ModulesController.store);*/
-
-routes.post('/users', UsersController.store);
-routes.get('/login', UsersController.login);
-
-
-/*
-routes.post('/progress', ProgressController.store);
-routes.get('/progress', ProgressController.list);*/
-routes.route('/progress')
-    .get(ProgressController.list)
-    .post(ProgressController.store);
-routes.get('/progress/:id', ProgressController.index);
-routes.get('/progress/user/:user_id', ProgressController.getByUser);
-routes.get('/progress/user/:user_id/module/:module_id', ProgressController.getByUserAndModule);
-
-routes.get('/social-networks/:id', SocialNetworkController.index);
-routes.get('/social-networks', SocialNetworkController.list);
-routes.post('/social-networks', SocialNetworkController.store);
+routes.route('/marketplaces/:id', MarketplacesController.index);
+routes.route('/marketplaces')
+    .get(MarketplacesController.list)
+    .post(MarketplacesController.store)
 
 module.exports = routes;
