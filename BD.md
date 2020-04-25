@@ -1,6 +1,6 @@
 ## Educação
 
-- Canal
+- Canal :heavy_check_mark:
   - Nome
   - Categoria
   
