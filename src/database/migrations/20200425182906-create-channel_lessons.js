@@ -1,12 +1,19 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('requirements', {
+    return queryInterface.createTable('channel_lessons', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      channel_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'channels', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       lesson_id: {
         type: Sequelize.INTEGER,
@@ -26,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('requirements');
+    return queryInterface.dropTable('channel_lessons');
   }
 };

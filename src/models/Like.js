@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Like.associate = function(models) {
     // associations can be defined here
+    this.belongsToMany(models.Company, { foreignKey: 'like_id', through: 'company_likes', as: 'companies' });
+
   };
   return Like;
 };

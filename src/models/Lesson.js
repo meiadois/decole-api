@@ -6,6 +6,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Lesson.associate = function(models) {
     // associations can be defined here
+    this.belongsToMany(models.Route, { foreignKey: 'lesson_id', through: 'route_lessons', as: 'routes' });
+    this.belongsToMany(models.Channel, { foreignKey: 'lesson_id', through: 'channel_lessons', as: 'channels' });
+    this.hasMany(models.Step, { foreignKey: 'lesson_id', as: 'steps' });
+    this.hasMany(models.Requirement, { foreignKey: 'lesson_id', as: 'requirements' });
+
   };
   return Lesson;
 };

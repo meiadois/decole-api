@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   User.associate = function(models) {
     // associations can be defined here
+    this.belongsToMany(models.Route, { foreignKey: 'user_id', through: 'user_routes', as: 'routes' });
+    this.hasOne(models.Company, {as: 'company'});
   };
   return User;
 };

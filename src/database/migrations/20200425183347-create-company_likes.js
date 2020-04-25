@@ -1,17 +1,24 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('requirements', {
+    return queryInterface.createTable('company_likes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      lesson_id: {
+      company_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'lessons', key: 'id' },
+        references: { model: 'companies', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      like_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'likes', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -26,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('requirements');
+    return queryInterface.dropTable('company_likes');
   }
 };

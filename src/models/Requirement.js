@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Requirement.associate = function(models) {
     // associations can be defined here
+    this.belongsTo(models.Lesson, { foreignKey: 'lesson_id', as: 'lesson' });
   };
   return Requirement;
 };

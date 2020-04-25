@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Step.associate = function(models) {
     // associations can be defined here
+    this.belongsTo(models.Lesson, { foreignKey: 'lesson_id', as: 'lesson' });
   };
   return Step;
 };

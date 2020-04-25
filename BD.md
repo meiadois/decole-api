@@ -1,16 +1,11 @@
 ## Educação
 
+- Canal
+  - Nome
+  - Categoria
+  
+  npx sequelize-cli model:generate --name Channel --attributes name:string,category:string
 
-- Rede Social :heavy_check_mark:
-	- Nome
-
-	npx sequelize-cli model:generate --name SocialNetwork --attributes name:string
-
-- Plataforma de Venda :heavy_check_mark:
-	- Nome
-
-	npx sequelize-cli model:generate --name Marketplace --attributes name:string
-	
 - Etapa :heavy_check_mark:
 	- Mensagem
 	- Ordem
@@ -27,8 +22,7 @@
 	- Titulo
 	- Descrição
 	- Etapas
-	- Redes Sociais (SocialNetworks)
-	- Plataformas de Vendas (Marketplace)
+	- Canais (Channels)
 	- Requisitos (Requirements)
 
 	npx sequelize-cli model:generate --name Lesson --attributes title:string,description:string
@@ -55,19 +49,9 @@
 
 	npx sequelize-cli model:generate --name Company --attributes name:string,cep:string,thumbnail:string,cnpj:string
 
-- Serviço :heavy_check_mark:
-	- Nome
-
-	npx sequelize-cli model:generate --name Service --attributes name:string
-	
-- Produto :heavy_check_mark:
-	- Nome
-
-	npx sequelize-cli model:generate --name Product --attributes name:string
-
 - Segmento :heavy_check_mark:
 	- Nome
-
+	
 	npx sequelize-cli model:generate --name Segment --attributes name:string
 
 - Like :heavy_check_mark:
@@ -102,30 +86,29 @@
 
 	npx sequelize-cli model:generate --name User --attributes username:string,email:string,password:string
 
+
 ## Relações
 - 1 x 1
-	- Usuario x Empresa
-
+	- Usuario x Empresa :heavy_check_mark:
+	- Empresa x Segmento :heavy_check_mark:
 - 1 x n
-	- Licao x Etapa
-    - Licao x Pŕe Requisitos
+	- Licao x Etapa :heavy_check_mark:
+    - Licao x Pŕe Requisitos :heavy_check_mark:
 	- Plano x Usuario
 	- Usuario x Licoes Concluidas
 	- Usuario x Percursos Concluidos
 
 - n x n
-	- Percurso x Licao (route_lessons)
-	- Licao x Plataforma de Venda (marketplace_lessons)
-	- Licao x Rede Social (social_network_lessons)
-	- Empresa x Like (company_likes)
-	- Empresa x Segmento (company_segments)
-	- Empresa x Produto (company_products)
-	- Empresa x Serviço (company_services)
-	- Usuario x Percurso (user_routes)
+	- Percurso x Licao (route_lessons) :heavy_check_mark:
+	- Canal x Licao (channel_lessons) :heavy_check_mark:
+	- Empresa x Like (company_likes) :heavy_check_mark:
+	- Usuario x Percurso (user_routes) :heavy_check_mark:
 
 
 ## Comandos
 
+### Criar migration
+`sequelize migration:create --name=create-users`
 ### Subir migrations
 `sequelize-cli db:migrate`
 
