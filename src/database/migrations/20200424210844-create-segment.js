@@ -22,6 +22,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Segments');
+    return queryInterface.dropTable('segments');
   }
 };

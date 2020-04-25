@@ -11,6 +11,9 @@ module.exports = {
       message: {
         type: Sequelize.STRING
       },
+      order: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -22,6 +25,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Steps');
+    return queryInterface.dropTable('steps');
   }
 };

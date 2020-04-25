@@ -1,31 +1,39 @@
 ## Educação
 
 
-- Rede Social 
+- Rede Social :heavy_check_mark:
 	- Nome
 
 	npx sequelize-cli model:generate --name SocialNetwork --attributes name:string
 
-- Plataforma de Venda
+- Plataforma de Venda :heavy_check_mark:
 	- Nome
 
 	npx sequelize-cli model:generate --name Marketplace --attributes name:string
 	
-- Etapa
+- Etapa :heavy_check_mark:
 	- Mensagem
+	- Ordem
+  
+	npx sequelize-cli model:generate --name Step --attributes message:string, order:integer
 
-	npx sequelize-cli model:generate --name Step --attributes message:string
-
-- Licao
+- Pré Requisito :heavy_check_mark:
+	- Licao
+  	- Etapa
+  
+	npx sequelize-cli model:generate --name Requirement --attributes lixo:string,
+  
+- Licao :heavy_check_mark:
 	- Titulo
 	- Descrição
 	- Etapas
-	- Redes Sociais
-	- Plataformas de Vendas
+	- Redes Sociais (SocialNetworks)
+	- Plataformas de Vendas (Marketplace)
+	- Requisitos (Requirements)
 
 	npx sequelize-cli model:generate --name Lesson --attributes title:string,description:string
 
-- Percurso
+- Percurso :heavy_check_mark:
 	- Descricão
 	- Licoes
 
@@ -35,52 +43,53 @@
 
 ## Parceiros
 
-- Empresa
+- Empresa :heavy_check_mark:
 	- Nome
 	- CEP
 	- Segmento	
 	- Serviços
 	- Produtos
 	- Likes
+	- Thumbnail
 	- CNPJ (Opcional)
 
-	npx sequelize-cli model:generate --name Company --attributes name:string,cep:string,cnpj:string
+	npx sequelize-cli model:generate --name Company --attributes name:string,cep:string,thumbnail:string,cnpj:string
 
-- Serviço
+- Serviço :heavy_check_mark:
 	- Nome
 
 	npx sequelize-cli model:generate --name Service --attributes name:string
 	
-- Produto
+- Produto :heavy_check_mark:
 	- Nome
 
 	npx sequelize-cli model:generate --name Product --attributes name:string
 
-- Segmento (Opções de Naiara)
+- Segmento :heavy_check_mark:
 	- Nome
 
 	npx sequelize-cli model:generate --name Segment --attributes name:string
 
-- Like
+- Like :heavy_check_mark:
 	- Usuario de origem
 	- Usuario de destino
-	- Situacao : [Não respondida, Aceita, Negada]
+	- Situacao : [Não respondida, Aceita, Negada, Removida]
 
 	npx sequelize-cli model:generate --name Like --attributes sender_id:string,recipient_id:string,status:string
 
-- Sequencia de Percursos
+- Sequencia de Percursos :interrobang:
 	- Percursos
 
 	npx sequelize-cli model:generate --name RouteSequence
 
-- Plano
+- Plano :interrobang:
 	- Descrição
 	- Preço
 	- Nivel de acesso
 
 	npx sequelize-cli model:generate --name Plan --attributes description:string,price:double,status:string
 
-- Usuario
+- Usuario :heavy_check_mark:
 	- Usuario
 	- Email
 	- Senha
@@ -91,7 +100,7 @@
 	- Percurso em andamento
 	- Percursos concluidos
 
-	npx sequelize-cli model:generate --name User username:string,email:string,password:string
+	npx sequelize-cli model:generate --name User --attributes username:string,email:string,password:string
 
 ## Relações
 - 1 x 1
@@ -99,6 +108,7 @@
 
 - 1 x n
 	- Licao x Etapa
+    - Licao x Pŕe Requisitos
 	- Plano x Usuario
 	- Usuario x Licoes Concluidas
 	- Usuario x Percursos Concluidos
@@ -114,5 +124,10 @@
 	- Usuario x Percurso (user_routes)
 
 
+## Comandos
 
-sequelize-cli db:migrate
+### Subir migrations
+`sequelize-cli db:migrate`
+
+### Remover todas as migrations do banco
+`sequelize-cli db:migrate:undo:all`
