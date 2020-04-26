@@ -8,6 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      required_step_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'steps', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      required_lesson_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'lessons', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
       lesson_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
