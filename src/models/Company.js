@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   Company.associate = function(models) {
     // associations can be defined here
     this.belongsToMany(models.Like, { foreignKey: 'company_id', through: 'company_likes', as: 'likes' });
-    this.hasOne(models.Segment, {as: 'segment'});
+    this.belongsTo(models.Segment, {as: 'segment'});
   };
   return Company;
 };

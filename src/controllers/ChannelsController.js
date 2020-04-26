@@ -1,12 +1,12 @@
 const database = require('../models')
-const Step = database.Step
-const {  ErrorHandler } = require('../helpers/error');
+const Channel = database.Channel
+const { ErrorHandler } = require('../helpers/error');
 
 module.exports = {
     async list(req, res, next) {
         try{
-            const _steps = await Step.findAll();
-            res.json(_steps);
+            const _channels = await Channel.findAll();
+            res.json(_channels);
         }catch(err){
             next(err);
         }
@@ -18,17 +18,17 @@ module.exports = {
             if(!id){
                 throw new ErrorHandler(404, null);
             }
-            var _step = null;
+            var _channel = null;
             try {
-                _step = await Step.findByPk(id);
+                _channel = await Channel.findByPk(id);
             } catch (err) {
                 console.log(err)
             }
     
-            if(_step === null){
+            if(_channel === null){
                 throw new ErrorHandler(404, null);
             }
-            return res.status(200).json(_step);
+            return res.status(200).json(_channel);
         }catch(err){
             next(err);
         }
@@ -36,21 +36,21 @@ module.exports = {
     },
     async store(req, res, next) {
         try{
-            var { message, order, lesson_id } = req.body;
-            if(!message || !order || !lesson_id){
+            var { name, category } = req.body;
+            if(!name || !category){
                 throw new ErrorHandler(400, null);
             }
     
-            const [_step] = await Step.findOrCreate({
-                where: { message, order, lesson_id }
+            const [_channel] = await Channel.findOrCreate({
+                where: { name, category }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
-            if(!_step){
+            if(!_channel){
                 throw new ErrorHandler(500, null);
             }
-            return res.status(201).json(_step);
+            return res.status(201).json(_channel);
         }catch(err){
             next(err);
         }
@@ -58,23 +58,22 @@ module.exports = {
     async update (req, res, next) {
         try{
             var { id } = req.params;
-            var { message, order } = req.body;
-            
-            if(!id || !message || !order){
+            var { name, category } = req.body;
+            if(!name || !category){
                 throw new ErrorHandler(400, null);
             }
     
-            const _step = await Step.findByPk(id);
+            const _channel = await Channel.findByPk(id);
     
-            if(!_step){
+            if(!_channel){
                 throw new ErrorHandler(404, null);
             }
     
-            _step.message = message;
-            _step.order = order;
+            _channel.name = name;
+            _channel.category = category;
     
     
-            var _success = await _step.save().then(() => {
+            var _success = await _channel.save().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -84,7 +83,7 @@ module.exports = {
             if(!_success){
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(_step);    
+            return res.status(200).json(_channel);    
         }catch(err){
             next(err);
         }
@@ -93,18 +92,17 @@ module.exports = {
     async delete (req, res, next) {
         try{
             var { id } = req.params;
-
             if(!id){
                 throw new ErrorHandler(400, null);
             }
     
-            const _step = await Step.findByPk(id);
+            const _channel = await Channel.findByPk(id);
     
-            if(!_step){
+            if(!_channel){
                 throw new ErrorHandler(404, null);
             }
     
-            var _success = await _step.destroy().then(() => {
+            var _success = await _channel.destroy().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);

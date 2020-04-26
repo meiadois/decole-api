@@ -1,12 +1,12 @@
 const database = require('../models')
-const Step = database.Step
+const Segment = database.Segment
 const {  ErrorHandler } = require('../helpers/error');
 
 module.exports = {
     async list(req, res, next) {
         try{
-            const _steps = await Step.findAll();
-            res.json(_steps);
+            const _segments = await Segment.findAll();
+            res.json(_segments);
         }catch(err){
             next(err);
         }
@@ -18,17 +18,17 @@ module.exports = {
             if(!id){
                 throw new ErrorHandler(404, null);
             }
-            var _step = null;
+            var _segment = null;
             try {
-                _step = await Step.findByPk(id);
+                _segment = await Segment.findByPk(id);
             } catch (err) {
                 console.log(err)
             }
     
-            if(_step === null){
+            if(_segment === null){
                 throw new ErrorHandler(404, null);
             }
-            return res.status(200).json(_step);
+            return res.status(200).json(_segment);
         }catch(err){
             next(err);
         }
@@ -36,21 +36,21 @@ module.exports = {
     },
     async store(req, res, next) {
         try{
-            var { message, order, lesson_id } = req.body;
-            if(!message || !order || !lesson_id){
+            var { name } = req.body;
+            if(!name){
                 throw new ErrorHandler(400, null);
             }
     
-            const [_step] = await Step.findOrCreate({
-                where: { message, order, lesson_id }
+            const [_segment] = await Segment.findOrCreate({
+                where: { name }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
-            if(!_step){
+            if(!_segment){
                 throw new ErrorHandler(500, null);
             }
-            return res.status(201).json(_step);
+            return res.status(201).json(_segment);
         }catch(err){
             next(err);
         }
@@ -58,23 +58,22 @@ module.exports = {
     async update (req, res, next) {
         try{
             var { id } = req.params;
-            var { message, order } = req.body;
+            var { name } = req.body;
             
-            if(!id || !message || !order){
+            if(!id || !name){
                 throw new ErrorHandler(400, null);
             }
     
-            const _step = await Step.findByPk(id);
+            const _segment = await Segment.findByPk(id);
     
-            if(!_step){
+            if(!_segment){
                 throw new ErrorHandler(404, null);
             }
     
-            _step.message = message;
-            _step.order = order;
+            _segment.name = name;
     
     
-            var _success = await _step.save().then(() => {
+            var _success = await _segment.save().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -84,7 +83,7 @@ module.exports = {
             if(!_success){
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(_step);    
+            return res.status(200).json(_segment);    
         }catch(err){
             next(err);
         }
@@ -98,13 +97,13 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
     
-            const _step = await Step.findByPk(id);
+            const _segment = await Segment.findByPk(id);
     
-            if(!_step){
+            if(!_segment){
                 throw new ErrorHandler(404, null);
             }
     
-            var _success = await _step.destroy().then(() => {
+            var _success = await _segment.destroy().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);

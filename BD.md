@@ -91,6 +91,8 @@
 - 1 x 1
 	- Usuario x Empresa :heavy_check_mark:
 	- Empresa x Segmento :heavy_check_mark:
+	- Pré requisito x Etapa
+	- Pré requisito x Lição
 - 1 x n
 	- Licao x Etapa :heavy_check_mark:
     - Licao x Pŕe Requisitos :heavy_check_mark:
