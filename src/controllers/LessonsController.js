@@ -1,12 +1,24 @@
-const database = require('../models')
-const Step = database.Step
-const {  ErrorHandler } = require('../helpers/error');
+const database = require('../models');
+const Lesson = database.Lesson;
+const Route = database.Route;
+const Step = database.Step;
+
+const { ErrorHandler } = require('../helpers/error');
 
 module.exports = {
     async list(req, res, next) {
         try{
-            const _steps = await Step.findAll();
-            res.json(_steps);
+            const _lessons = await Lesson.findAll({
+                include: [
+                    { 
+                        association: 'steps'
+                    },
+                    { 
+                        association: 'requirements'
+                    },
+                ]
+            });
+            res.json(_lessons);
         }catch(err){
             next(err);
         }
@@ -18,17 +30,26 @@ module.exports = {
             if(!id){
                 throw new ErrorHandler(404, null);
             }
-            var _step = null;
+            var _lesson = null;
             try {
-                _step = await Step.findByPk(id);
+                _lesson = await Lesson.findByPk(id, {
+                    include: [
+                        { 
+                            association: 'steps'
+                        },
+                        { 
+                            association: 'requirements'
+                        },
+                    ]
+                });
             } catch (err) {
                 console.log(err)
             }
-    
-            if(_step === null){
+            
+            if(_lesson === null){
                 throw new ErrorHandler(404, null);
             }
-            return res.status(200).json(_step);
+            return res.status(200).json(_lesson);
         }catch(err){
             next(err);
         }
@@ -36,21 +57,22 @@ module.exports = {
     },
     async store(req, res, next) {
         try{
-            var { message, order, lesson_id } = req.body;
-            if(!message || !order || !lesson_id){
+            var { title, description } = req.body;
+            if(!title || !description){
                 throw new ErrorHandler(400, null);
             }
     
-            const [_step] = await Step.findOrCreate({
-                where: { message, order, lesson_id }
+            const [_lesson] = await Lesson.findOrCreate({
+                where: { title, description }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
-            if(!_step){
+            if(!_lesson){
                 throw new ErrorHandler(500, null);
             }
-            return res.status(201).json(_step);
+
+            return res.status(201).json(_lesson);
         }catch(err){
             next(err);
         }
@@ -58,23 +80,22 @@ module.exports = {
     async update (req, res, next) {
         try{
             var { id } = req.params;
-            var { message, order } = req.body;
-            
-            if(!id || !message || !order){
+            var { title, description} = req.body;
+            if(!title || !description){
                 throw new ErrorHandler(400, null);
             }
     
-            const _step = await Step.findByPk(id);
+            const _lesson = await Lesson.findByPk(id);
     
-            if(!_step){
+            if(!_lesson){
                 throw new ErrorHandler(404, null);
             }
     
-            _step.message = message;
-            _step.order = order;
+            _lesson.title = title;
+            _lesson.description = description;
     
     
-            var _success = await _step.save().then(() => {
+            var _success = await _lesson.save().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -84,7 +105,7 @@ module.exports = {
             if(!_success){
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(_step);    
+            return res.status(200).json(_lesson);    
         }catch(err){
             next(err);
         }
@@ -93,18 +114,17 @@ module.exports = {
     async delete (req, res, next) {
         try{
             var { id } = req.params;
-
             if(!id){
                 throw new ErrorHandler(400, null);
             }
     
-            const _step = await Step.findByPk(id);
+            const _lesson = await Lesson.findByPk(id);
     
-            if(!_step){
+            if(!_lesson){
                 throw new ErrorHandler(404, null);
             }
     
-            var _success = await _step.destroy().then(() => {
+            var _success = await _lesson.destroy().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);

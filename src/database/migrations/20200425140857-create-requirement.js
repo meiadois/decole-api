@@ -1,32 +1,31 @@
 'use strict';
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
-    return queryInterface.createTable('SocialNetworkModules', {
+    return queryInterface.createTable('requirements', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      module_id: {
+      required_step_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'Modules', key: 'id' },
+        references: { model: 'steps', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      social_network_id: {
+      required_lesson_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'SocialNetworks', key: 'id' },
+        references: { model: 'lessons', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      lesson_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'lessons', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -40,14 +39,7 @@ module.exports = {
       }
     });
   },
-
   down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
+    return queryInterface.dropTable('requirements');
   }
 };

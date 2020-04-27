@@ -1,34 +1,26 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Steps', {
+    return queryInterface.createTable('route_lessons', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      module_id: {
+      route_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'Modules', key: 'id' },
+        references: { model: 'routes', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      text: {
-        type: Sequelize.STRING
-      },
-      distanceX: {
-        type: Sequelize.STRING
-      },
-      distanceY: {
-        type: Sequelize.STRING
-      },
-      isRelativeMaxX: {
-        type: Sequelize.BOOLEAN
-      },
-      isRelativeMaxY: {
-        type: Sequelize.BOOLEAN
+      lesson_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'lessons', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Steps');
+    return queryInterface.dropTable('route_lessons');
   }
 };

@@ -1,23 +1,24 @@
 const database = require('../models');
+const Lesson = database.Lesson;
 const Company = database.Company;
-const User = database.User;
+const Step = database.Step;
 
 const { ErrorHandler } = require('../helpers/error');
 
 module.exports = {
     async list(req, res, next) {
         try {
-            const _users = await User.findAll({
+            const _company = await Company.findAll({
                 include: [
                     {
-                        association: 'routes'
+                        association: 'likes'
                     },
                     {
-                        association: 'companies'
+                        association: 'users'
                     },
                 ]
             });
-            res.json(_users);
+            res.json(_company);
         } catch (err) {
             next(err);
         }
@@ -31,20 +32,14 @@ module.exports = {
             }
             var _user = null;
             try {
-                _user = await User.findByPk(id, {
+                _user = await Company.findByPk(id, {
                     include: [
                         {
-                            association: 'routes'
+                            association: 'likes'
                         },
                         {
-                            association: 'companies'
-                        },
-                        {
-                            association: 'done_lessons'
-                        },
-                        {
-                            association: 'done_routes'
-                        },
+                            association: 'users'
+                        }
                     ]
                 });
             } catch (err) {
@@ -62,13 +57,13 @@ module.exports = {
     },
     async store(req, res, next) {
         try {
-            var { username, email, password } = req.body;
-            if (!username || !email || !password) {
+            var { name, cep, thumbnail, cnpj, segment_id } = req.body;
+            if (!name || !cep || !thumbnail || !cnpj || !segment_id) {
                 throw new ErrorHandler(400, null);
             }
 
-            const [_user] = await User.findOrCreate({
-                where: { username, email, password }
+            const [_user] = await Company.findOrCreate({
+                where: { name, cep, thumbnail, cnpj, segment_id }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -85,20 +80,23 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { username, email, password } = req.body;
-            if (!username || !email || !password) {
+            var { name, cep, thumbnail, cnpj, segment_id } = req.body;
+            if (!name || !cep || !thumbnail || !cnpj || !segment_id) {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await User.findByPk(id);
+            const _user = await Company.findByPk(id);
 
             if (!_user) {
                 throw new ErrorHandler(404, null);
             }
 
-            _user.username = username;
-            _user.email = email;
-            _user.password = password;
+            _user.name = name;
+            _user.cep = cep;
+            _user.thumbnail = thumbnail;
+            _user.cnpj = cnpj;
+            _user.segment_id = segment_id;
+
 
             var _success = await _user.save().then(() => {
                 return true;
@@ -123,7 +121,7 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await User.findByPk(id);
+            const _user = await Company.findByPk(id);
 
             if (!_user) {
                 throw new ErrorHandler(404, null);
@@ -145,41 +143,39 @@ module.exports = {
             next(err);
         }
     },
-    async storeCompany(req, res, next) {
+    /*
+    async storeLesson(req, res, next) {
         try {
             var { id } = req.params;
-            var { company_ids } = req.body;
-            if (!id || !company_ids) {
+            var { lesson_ids } = req.body;
+            if (!id || !lesson_ids) {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await User.findByPk(id, {
+            const _user = await Company.findByPk(id, {
                 include: [
                     {
-                        association: 'routes'
-                    },
-                    {
-                        association: 'companies'
+                        association: 'lessons'
                     },
                 ]
             });
-
+            console.log("ROUTE: " + _user);
             if (!_user) {
-                throw new ErrorHandler(404, "Usuário não encontrada");
+                throw new ErrorHandler(404, "Rota não encontrada");
             }
-            var _companies = [];
+            var _lessons = [];
 
-            for (var i in company_ids) {
-                var _company = await Company.findByPk(company_ids[i]);
-                if (!_company) {
-                    throw new ErrorHandler(404, `Empresa ${company_ids[i]} não encontrada.`);
+            for (var i in lesson_ids) {
+                var _lesson = await Lesson.findByPk(lesson_ids[i]);
+                if (!_lesson) {
+                    throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
                 }
 
-                _companies.push(_company);
+                _lessons.push(_lesson);
             }
 
 
-            var _success = await _user.addCompanies(_companies).then(() => {
+            var _success = await _user.addLessons(_lessons).then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -194,41 +190,39 @@ module.exports = {
             next(err);
         }
     },
-    async updateCompany(req, res, next) {
+    async updateLesson(req, res, next) {
         try {
             var { id } = req.params;
-            var { company_ids } = req.body;
-            if (!id || !company_ids) {
+            var { lesson_ids } = req.body;
+            if (!id || !lesson_ids) {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await User.findByPk(id, {
+            const _user = await Company.findByPk(id, {
                 include: [
                     {
-                        association: 'routes'
-                    },
-                    {
-                        association: 'companies'
+                        association: 'lessons'
                     },
                 ]
             });
-
+            console.log("ROUTE: " + _user);
             if (!_user) {
-                throw new ErrorHandler(404, "Usuário não encontrada");
+                throw new ErrorHandler(404, "Rota não encontrada");
             }
-            var _companies = [];
+            var _lessons = [];
 
-            for (var i in company_ids) {
-                var _company = await Company.findByPk(company_ids[i]);
-                if (!_company) {
-                    throw new ErrorHandler(404, `Empresa ${company_ids[i]} não encontrada.`);
+            for (var i in lesson_ids) {
+                var _lesson = await Lesson.findByPk(lesson_ids[i]);
+                if (!_lesson) {
+                    throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
                 }
 
-                _companies.push(_company);
+                _lessons.push(_lesson);
             }
 
 
-            var _success = await _user.setCompanies(_companies).then(() => {
+            var _success = await _user.setLessons(_lessons).then((l) => {
+                console.log(l)
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -243,41 +237,38 @@ module.exports = {
             next(err);
         }
     },
-    async deleteCompany(req, res, next) {
+    async deleteLesson(req, res, next) {
         try {
             var { id } = req.params;
-            var { company_ids } = req.body;
-            if (!id || !company_ids) {
+            var { lesson_ids } = req.body;
+            if (!id || !lesson_ids) {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await User.findByPk(id, {
+            const _user = await Company.findByPk(id, {
                 include: [
                     {
-                        association: 'routes'
-                    },
-                    {
-                        association: 'companies'
+                        association: 'lessons'
                     },
                 ]
             });
-
+            console.log("ROUTE: " + _user);
             if (!_user) {
-                throw new ErrorHandler(404, "Usuário não encontrada");
+                throw new ErrorHandler(404, "Rota não encontrada");
             }
-            var _companies = [];
+            var _lessons = [];
 
-            for (var i in company_ids) {
-                var _company = await Company.findByPk(company_ids[i]);
-                if (!_company) {
-                    throw new ErrorHandler(404, `Empresa ${company_ids[i]} não encontrada.`);
+            for (var i in lesson_ids) {
+                var _lesson = await Lesson.findByPk(lesson_ids[i]);
+                if (!_lesson) {
+                    throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
                 }
 
-                _companies.push(_company);
+                _lessons.push(_lesson);
             }
 
 
-            var _success = await _user.removeCompanies(_companies).then(() => {
+            var _success = await _user.removeLessons(_lessons).then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -291,5 +282,7 @@ module.exports = {
         } catch (err) {
             next(err);
         }
-    }
+    },*/
+
+
 };

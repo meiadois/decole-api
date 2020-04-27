@@ -1,55 +1,90 @@
 ## Educação
 
-- Rede Social
-	- Nome
+- Canal :heavy_check_mark:
+  - Nome
+  - Categoria
+  
+  npx sequelize-cli model:generate --name Channel --attributes name:string,category:string
 
-- Plataforma de Venda
-	- Nome
-
-- Etapa
+- Etapa :heavy_check_mark:
 	- Mensagem
+	- Ordem
+  
+	npx sequelize-cli model:generate --name Step --attributes message:string, order:integer
 
-- Licao
+- Pré Requisito :heavy_check_mark:
+	- Licao
+  	- Etapa
+  
+	npx sequelize-cli model:generate --name Requirement --attributes lixo:string,
+  
+- Licao :heavy_check_mark:
 	- Titulo
 	- Descrição
 	- Etapas
-	- Redes Sociais
-	- Plataformas de Vendas
+	- Canais (Channels)
+	- Requisitos (Requirements)
 
-- Percurso
+	npx sequelize-cli model:generate --name Lesson --attributes title:string,description:string
+
+- Licoes Concluidas :heavy_check_mark:
+	- Licao
+	- Usuario
+
+	npx sequelize-cli model:generate --name DoneLesson --attributes user_id:string
+
+- Percurso :heavy_check_mark:
+	- Descricão
 	- Licoes
 
+	npx sequelize-cli model:generate --name Route --attributes description:string
+
+- Percursos Concluidos :heavy_check_mark:
+	- Percurso
+	- Usuario
+
+	npx sequelize-cli model:generate --name DoneRoute --attributes user_id:string
 
 
 ## Parceiros
 
-- Empresa
+- Empresa :heavy_check_mark:
 	- Nome
 	- CEP
 	- Segmento	
 	- Serviços
 	- Produtos
 	- Likes
+	- Thumbnail
 	- CNPJ (Opcional)
 
-- Serviço
+	npx sequelize-cli model:generate --name Company --attributes name:string,cep:string,thumbnail:string,cnpj:string
+
+- Segmento :heavy_check_mark:
 	- Nome
 	
-- Produto
-	- Nome
+	npx sequelize-cli model:generate --name Segment --attributes name:string
 
-- Segmento (Opções de Naiara)
-	- Nome
-
-- Like
+- Like :heavy_check_mark:
 	- Usuario de origem
 	- Usuario de destino
-	- Situacao : [Não respondida, Aceita, Negada]
+	- Situacao : [Não respondida, Aceita, Negada, Removida]
 
-- Sequencia de Percursos
+	npx sequelize-cli model:generate --name Like --attributes sender_id:string,recipient_id:string,status:string
+
+- Sequencia de Percursos :interrobang:
 	- Percursos
 
-- Usuario
+	npx sequelize-cli model:generate --name RouteSequence
+
+- Plano :interrobang:
+	- Descrição
+	- Preço
+	- Nivel de acesso
+
+	npx sequelize-cli model:generate --name Plan --attributes description:string,price:double,status:string
+
+- Usuario :heavy_check_mark:
 	- Usuario
 	- Email
 	- Senha
@@ -60,20 +95,36 @@
 	- Percurso em andamento
 	- Percursos concluidos
 
-## Relações
-- 1 x n
-	- Licao x Etapa
+	npx sequelize-cli model:generate --name User --attributes username:string,email:string,password:string
 
-	- Usuario x Empresa
-	- Usuario x Licoes (Licoes concluidas)
-	- Usuario x Percursos (Percursos concluidos)
+
+## Relações
+- 1 x 1
+	- Usuario x Empresa :heavy_check_mark:
+	- Empresa x Segmento :heavy_check_mark:
+	- Pré requisito x Etapa :heavy_check_mark:
+	- Pré requisito x Lição :heavy_check_mark:
+- 1 x n
+	- Licao x Etapa :heavy_check_mark:
+    - Licao x Pŕe Requisitos :heavy_check_mark:
+	- Plano x Usuario
+	- Usuario x Licoes Concluidas :heavy_check_mark:
+	- Usuario x Percursos Concluidos :heavy_check_mark:
 
 - n x n
-	- Percurso x Licao
-	- Licao x Plataforma de Venda
-	- Licao x Rede Social
+	- Percurso x Licao (route_lessons) :heavy_check_mark:
+	- Canal x Licao (channel_lessons) :heavy_check_mark:
+	- Empresa x Like (company_likes) :heavy_check_mark:
+	- Usuario x Percurso (user_routes) :heavy_check_mark:
+	- Usuario x Empresa (user_companies) :heavy_check_mark:
 
-	- Empresa x Like
-	- Empresa x Segmento
-	- Empresa x Produto
-	- Empresa x Serviço
+
+## Comandos
+
+### Criar migration
+`sequelize migration:create --name=create-users`
+### Subir migrations
+`sequelize-cli db:migrate`
+
+### Remover todas as migrations do banco
+`sequelize-cli db:migrate:undo:all`
