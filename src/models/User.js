@@ -5,10 +5,12 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING
   }, {});
-  User.associate = function(models) {
+  User.associate = function (models) {
     // associations can be defined here
     this.belongsToMany(models.Route, { foreignKey: 'user_id', through: 'user_routes', as: 'routes' });
-    this.hasOne(models.Company, {foreignKey: 'user_id', as: 'company'});
+    this.belongsToMany(models.Company, { foreignKey: 'user_id', through: 'user_companies', as: 'companies' });
+    this.hasMany(models.DoneLesson, { foreignKey: 'user_id', as: 'done_lessons' });
+    this.hasMany(models.DoneRoute, { foreignKey: 'user_id', as: 'done_routes' });
   };
   return User;
 };

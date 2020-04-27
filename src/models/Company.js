@@ -6,11 +6,12 @@ module.exports = (sequelize, DataTypes) => {
     thumbnail: DataTypes.STRING,
     cnpj: DataTypes.STRING
   }, {});
-  Company.associate = function(models) {
+  Company.associate = function (models) {
     // associations can be defined here
     this.belongsToMany(models.Like, { foreignKey: 'company_id', through: 'company_likes', as: 'likes' });
-    this.belongsTo(models.Segment, {as: 'segment'});
-    this.belongsTo(models.User, {foreignKey: 'user_id', as: 'user'});
+    // TODO Ajustar relação 1 x N 
+    this.belongsTo(models.Segment, { foreignKey: 'segment_id', as: 'segment' });
+    this.belongsToMany(models.User, { foreignKey: 'company_id', through: 'user_companies', as: 'users' });
   };
   return Company;
 };

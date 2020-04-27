@@ -27,12 +27,23 @@
 
 	npx sequelize-cli model:generate --name Lesson --attributes title:string,description:string
 
+- Licoes Concluidas :heavy_check_mark:
+	- Licao
+	- Usuario
+
+	npx sequelize-cli model:generate --name DoneLesson --attributes user_id:string
+
 - Percurso :heavy_check_mark:
 	- Descricão
 	- Licoes
 
 	npx sequelize-cli model:generate --name Route --attributes description:string
 
+- Percursos Concluidos :heavy_check_mark:
+	- Percurso
+	- Usuario
+
+	npx sequelize-cli model:generate --name DoneRoute --attributes user_id:string
 
 
 ## Parceiros
@@ -91,20 +102,21 @@
 - 1 x 1
 	- Usuario x Empresa :heavy_check_mark:
 	- Empresa x Segmento :heavy_check_mark:
-	- Pré requisito x Etapa
-	- Pré requisito x Lição
+	- Pré requisito x Etapa :heavy_check_mark:
+	- Pré requisito x Lição :heavy_check_mark:
 - 1 x n
 	- Licao x Etapa :heavy_check_mark:
     - Licao x Pŕe Requisitos :heavy_check_mark:
 	- Plano x Usuario
-	- Usuario x Licoes Concluidas
-	- Usuario x Percursos Concluidos
+	- Usuario x Licoes Concluidas :heavy_check_mark:
+	- Usuario x Percursos Concluidos :heavy_check_mark:
 
 - n x n
 	- Percurso x Licao (route_lessons) :heavy_check_mark:
 	- Canal x Licao (channel_lessons) :heavy_check_mark:
 	- Empresa x Like (company_likes) :heavy_check_mark:
 	- Usuario x Percurso (user_routes) :heavy_check_mark:
+	- Usuario x Empresa (user_companies) :heavy_check_mark:
 
 
 ## Comandos

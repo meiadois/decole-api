@@ -1,31 +1,26 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('companies', {
+    return queryInterface.createTable('done_lessons', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      segment_id: {
+      user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'segments', key: 'id' },
+        references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      cep: {
-        type: Sequelize.STRING
-      },
-      thumbnail: {
-        type: Sequelize.STRING
-      },
-      cnpj: {
-        type: Sequelize.STRING
+      lesson_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'lessons', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,
@@ -38,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('companies');
+    return queryInterface.dropTable('done_lessons');
   }
 };

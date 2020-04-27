@@ -11,6 +11,10 @@ const SegmentsController = require('./controllers/SegmentsController');
 const LessonsController = require('./controllers/LessonsController');
 const RequirementsController = require('./controllers/RequirementsController');
 const RoutesController = require('./controllers/RoutesController');
+const UsersController = require('./controllers/UsersController');
+const CompaniesController = require('./controllers/CompaniesController');
+const DoneLessonsController = require('./controllers/DoneLessonsController');
+const DoneRoutesController = require('./controllers/DoneRoutesController');
 
 
 const routes = express.Router();
@@ -70,7 +74,7 @@ routes.route('/requirements/:id')
 routes.route('/requirements')
     .get(RequirementsController.list)
     .post(RequirementsController.store);
-    
+
 // Routes
 routes.route('/routes/:id')
     .get(RoutesController.index)
@@ -81,10 +85,57 @@ routes.route('/routes')
     .get(RoutesController.list)
     .post(RoutesController.store);
 
-// Routes
 routes.route('/routes/:id/lessons')
     .post(RoutesController.storeLesson)
     .put(RoutesController.updateLesson)
-    .delete(RoutesController.deleteLesson)
-    
+    .delete(RoutesController.deleteLesson);
+
+
+
+// Users
+routes.route('/users/:id')
+    .get(UsersController.index)
+    .put(UsersController.update)
+    .delete(UsersController.delete);
+
+routes.route('/users')
+    .get(UsersController.list)
+    .post(UsersController.store);
+
+routes.route('/users/:id/companies')
+    .post(UsersController.storeCompany)
+    .put(UsersController.updateCompany)
+    .delete(UsersController.deleteCompany);
+
+
+// Companies
+routes.route('/companies/:id')
+    .get(CompaniesController.index)
+    .put(CompaniesController.update)
+    .delete(CompaniesController.delete);
+
+routes.route('/companies')
+    .get(CompaniesController.list)
+    .post(CompaniesController.store);
+
+// Done Lessons
+routes.route('/done_lessons/:id')
+    .get(DoneLessonsController.index)
+    .put(DoneLessonsController.update)
+    .delete(DoneLessonsController.delete);
+
+routes.route('/done_lessons')
+    .get(DoneLessonsController.list)
+    .post(DoneLessonsController.store);
+
+// Done Routes
+routes.route('/done_routes/:id')
+    .get(DoneRoutesController.index)
+    .put(DoneRoutesController.update)
+    .delete(DoneRoutesController.delete);
+
+routes.route('/done_routes')
+    .get(DoneRoutesController.list)
+    .post(DoneRoutesController.store);
+
 module.exports = routes;
