@@ -30,24 +30,19 @@ module.exports = {
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
-            var _done_lesson = null;
-            try {
-                _done_lesson = await DoneLesson.findByPk(id, {
-                    include: [
-                        {
-                            association: 'user'
-                        },
-                        {
-                            association: 'lesson'
-                        },
-                    ]
-                });
-            } catch (err) {
-                console.log(err)
-            }
+            var _done_lesson = await DoneLesson.findByPk(id, {
+                include: [
+                    {
+                        association: 'user'
+                    },
+                    {
+                        association: 'lesson'
+                    },
+                ]
+            });
 
             if (_done_lesson === null) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`);
             }
             return res.status(200).json(_done_lesson);
         } catch (err) {
@@ -100,7 +95,7 @@ module.exports = {
             const _done_lesson = await DoneLesson.findByPk(id);
 
             if (!_done_lesson) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`);
             }
 
             const _lesson = await Lesson.findByPk(lesson_id);
@@ -144,7 +139,7 @@ module.exports = {
             const _done_lesson = await DoneLesson.findByPk(id);
 
             if (!_done_lesson) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`);
             }
 
             var _success = await _done_lesson.destroy().then(() => {

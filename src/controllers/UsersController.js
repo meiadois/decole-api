@@ -29,30 +29,25 @@ module.exports = {
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
-            var _user = null;
-            try {
-                _user = await User.findByPk(id, {
-                    include: [
-                        {
-                            association: 'routes'
-                        },
-                        {
-                            association: 'companies'
-                        },
-                        {
-                            association: 'done_lessons'
-                        },
-                        {
-                            association: 'done_routes'
-                        },
-                    ]
-                });
-            } catch (err) {
-                console.log(err)
-            }
+            var _user = await User.findByPk(id, {
+                include: [
+                    {
+                        association: 'routes'
+                    },
+                    {
+                        association: 'companies'
+                    },
+                    {
+                        association: 'done_lessons'
+                    },
+                    {
+                        association: 'done_routes'
+                    },
+                ]
+            });
 
             if (_user === null) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
             }
             return res.status(200).json(_user);
         } catch (err) {
@@ -93,7 +88,7 @@ module.exports = {
             const _user = await User.findByPk(id);
 
             if (!_user) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
             }
 
             _user.username = username;
@@ -126,7 +121,7 @@ module.exports = {
             const _user = await User.findByPk(id);
 
             if (!_user) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
             }
 
             var _success = await _user.destroy().then(() => {

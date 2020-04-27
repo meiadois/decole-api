@@ -30,24 +30,19 @@ module.exports = {
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
-            var _done_route = null;
-            try {
-                _done_route = await DoneRoute.findByPk(id, {
-                    include: [
-                        {
-                            association: 'user'
-                        },
-                        {
-                            association: 'route'
-                        },
-                    ]
-                });
-            } catch (err) {
-                console.log(err)
-            }
+            var _done_route = await DoneRoute.findByPk(id, {
+                include: [
+                    {
+                        association: 'user'
+                    },
+                    {
+                        association: 'route'
+                    },
+                ]
+            });
 
             if (_done_route === null) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Rota Concluida ${id} não encontrada.`);
             }
             return res.status(200).json(_done_route);
         } catch (err) {
@@ -100,7 +95,7 @@ module.exports = {
             const _done_route = await DoneRoute.findByPk(id);
 
             if (!_done_route) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Rota Concluida ${id} não encontrada.`);
             }
 
             const _route = await Route.findByPk(route_id);
@@ -144,7 +139,7 @@ module.exports = {
             const _done_route = await DoneRoute.findByPk(id);
 
             if (!_done_route) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Rota Concluida ${id} não encontrada.`);
             }
 
             var _success = await _done_route.destroy().then(() => {

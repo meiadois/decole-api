@@ -47,7 +47,7 @@ module.exports = {
             }
 
             if (_route === null) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
             }
             return res.status(200).json(_route);
         } catch (err) {
@@ -88,7 +88,7 @@ module.exports = {
             const _route = await Route.findByPk(id);
 
             if (!_route) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
             }
 
             _route.description = description;
@@ -120,7 +120,7 @@ module.exports = {
             const _route = await Route.findByPk(id);
 
             if (!_route) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
             }
 
             var _success = await _route.destroy().then(() => {
@@ -155,7 +155,7 @@ module.exports = {
                 ]
             });
             if (!_route) {
-                throw new ErrorHandler(404, "Rota não encontrada");
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
             }
             var _lessons = [];
 
@@ -200,7 +200,7 @@ module.exports = {
                 ]
             });
             if (!_route) {
-                throw new ErrorHandler(404, "Rota não encontrada");
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
             }
             var _lessons = [];
 
@@ -244,9 +244,9 @@ module.exports = {
                     },
                 ]
             });
-            console.log("ROUTE: " + _route);
+
             if (!_route) {
-                throw new ErrorHandler(404, "Rota não encontrada");
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
             }
             var _lessons = [];
 

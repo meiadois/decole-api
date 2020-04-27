@@ -30,24 +30,19 @@ module.exports = {
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
-            var _requirement = null;
-            try {
-                _requirement = await Requirement.findByPk(id, {
-                    include: [
-                        {
-                            association: 'required_lesson'
-                        },
-                        {
-                            association: 'required_step'
-                        },
-                    ]
-                });
-            } catch (err) {
-                console.log(err)
-            }
+            var _requirement = await Requirement.findByPk(id, {
+                include: [
+                    {
+                        association: 'required_lesson'
+                    },
+                    {
+                        association: 'required_step'
+                    },
+                ]
+            });
 
             if (_requirement === null) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Requisito ${id} não encontrado.`);
             }
             return res.status(200).json(_requirement);
         } catch (err) {
@@ -65,19 +60,19 @@ module.exports = {
             const lesson = await Lesson.findByPk(lesson_id);
 
             if (!lesson) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
             }
 
             const required_lesson = await Lesson.findByPk(required_lesson_id);
 
             if (!required_lesson) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Lição Requerida ${id} não encontrado.`);
             }
 
             const step = await Step.findOne({ where: { 'lesson_id': required_lesson_id, 'order': step_order } });
 
             if (!step) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Etapa ${id} não encontrada.`);
             }
 
             const _requirement = await Requirement.create({
@@ -106,15 +101,6 @@ module.exports = {
                 throw new ErrorHandler(500, null);
             }
 
-            /*
-            _requirement.setStep(step).catch((err) => {
-                console.log(err);
-            });
-
-            _requirement.setLesson(lesson).catch((err) => {
-                console.log(err);
-            });*/
-
             return res.status(201).json(_requirement);
         } catch (err) {
             next(err);
@@ -131,13 +117,13 @@ module.exports = {
             const _requirement = await Requirement.findByPk(id);
 
             if (!_requirement) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Requisito ${id} não encontrado.`);
             }
 
             const step = await Step.findOne({ where: { 'lesson_id': required_lesson_id, 'order': step_order } });
 
             if (!step) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Etapa ${id} não encontrada.`);
             }
 
             _requirement.lesson_id = lesson_id;
@@ -170,7 +156,7 @@ module.exports = {
             const _requirement = await Requirement.findByPk(id);
 
             if (!_requirement) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Requisito ${id} não encontrado.`);
             }
 
             var _success = await _requirement.destroy().then(() => {

@@ -30,9 +30,9 @@ module.exports = {
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
-            var _user = null;
+            var _company = null;
             try {
-                _user = await Company.findByPk(id, {
+                _company = await Company.findByPk(id, {
                     include: [
                         {
                             association: 'likes'
@@ -46,10 +46,10 @@ module.exports = {
                 console.log(err)
             }
 
-            if (_user === null) {
-                throw new ErrorHandler(404, null);
+            if (_company === null) {
+                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
             }
-            return res.status(200).json(_user);
+            return res.status(200).json(_company);
         } catch (err) {
             next(err);
         }
@@ -62,17 +62,17 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const [_user] = await Company.findOrCreate({
+            const [_company] = await Company.findOrCreate({
                 where: { name, cep, thumbnail, cnpj, segment_id }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
-            if (!_user) {
+            if (!_company) {
                 throw new ErrorHandler(500, null);
             }
 
-            return res.status(201).json(_user);
+            return res.status(201).json(_company);
         } catch (err) {
             next(err);
         }
@@ -85,20 +85,20 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await Company.findByPk(id);
+            const _company = await Company.findByPk(id);
 
-            if (!_user) {
-                throw new ErrorHandler(404, null);
+            if (!_company) {
+                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
             }
 
-            _user.name = name;
-            _user.cep = cep;
-            _user.thumbnail = thumbnail;
-            _user.cnpj = cnpj;
-            _user.segment_id = segment_id;
+            _company.name = name;
+            _company.cep = cep;
+            _company.thumbnail = thumbnail;
+            _company.cnpj = cnpj;
+            _company.segment_id = segment_id;
 
 
-            var _success = await _user.save().then(() => {
+            var _success = await _company.save().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -108,7 +108,7 @@ module.exports = {
             if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(_user);
+            return res.status(200).json(_company);
         } catch (err) {
             next(err);
         }
@@ -121,13 +121,13 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await Company.findByPk(id);
+            const _company = await Company.findByPk(id);
 
-            if (!_user) {
-                throw new ErrorHandler(404, null);
+            if (!_company) {
+                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
             }
 
-            var _success = await _user.destroy().then(() => {
+            var _success = await _company.destroy().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -152,15 +152,15 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await Company.findByPk(id, {
+            const _company = await Company.findByPk(id, {
                 include: [
                     {
                         association: 'lessons'
                     },
                 ]
             });
-            console.log("ROUTE: " + _user);
-            if (!_user) {
+            console.log("ROUTE: " + _company);
+            if (!_company) {
                 throw new ErrorHandler(404, "Rota não encontrada");
             }
             var _lessons = [];
@@ -175,7 +175,7 @@ module.exports = {
             }
 
 
-            var _success = await _user.addLessons(_lessons).then(() => {
+            var _success = await _company.addLessons(_lessons).then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -185,7 +185,7 @@ module.exports = {
             if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-            return res.status(201).json(await _user.reload());
+            return res.status(201).json(await _company.reload());
         } catch (err) {
             next(err);
         }
@@ -198,15 +198,15 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await Company.findByPk(id, {
+            const _company = await Company.findByPk(id, {
                 include: [
                     {
                         association: 'lessons'
                     },
                 ]
             });
-            console.log("ROUTE: " + _user);
-            if (!_user) {
+            console.log("ROUTE: " + _company);
+            if (!_company) {
                 throw new ErrorHandler(404, "Rota não encontrada");
             }
             var _lessons = [];
@@ -221,7 +221,7 @@ module.exports = {
             }
 
 
-            var _success = await _user.setLessons(_lessons).then((l) => {
+            var _success = await _company.setLessons(_lessons).then((l) => {
                 console.log(l)
                 return true;
             }).catch((err) => {
@@ -232,7 +232,7 @@ module.exports = {
             if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-            return res.status(201).json(await _user.reload());
+            return res.status(201).json(await _company.reload());
         } catch (err) {
             next(err);
         }
@@ -245,15 +245,15 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const _user = await Company.findByPk(id, {
+            const _company = await Company.findByPk(id, {
                 include: [
                     {
                         association: 'lessons'
                     },
                 ]
             });
-            console.log("ROUTE: " + _user);
-            if (!_user) {
+            console.log("ROUTE: " + _company);
+            if (!_company) {
                 throw new ErrorHandler(404, "Rota não encontrada");
             }
             var _lessons = [];
@@ -268,7 +268,7 @@ module.exports = {
             }
 
 
-            var _success = await _user.removeLessons(_lessons).then(() => {
+            var _success = await _company.removeLessons(_lessons).then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
