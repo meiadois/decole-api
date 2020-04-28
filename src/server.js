@@ -1,10 +1,12 @@
+var path = require('path');
 const express = require('express');
 const routes = require('./routes');
 const { handleError, ErrorHandler } = require('./helpers/error');
 require('./models');
 const app = express();
 app.use(express.json());
-
+var public_dir = path.join(__dirname, 'public');
+app.use(express.static(public_dir));
 
 
 app.use('/v1', routes);

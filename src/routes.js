@@ -1,5 +1,10 @@
 const express = require('express');
 var path = require("path");
+const multer = require('./services/multer');
+const file_helper = require('./services/sharp');
+const fs = require('fs');
+const stream = require('stream');
+const resolve = require('path').resolve;
 //const authServer = require('./services/auth-service');
 
 const InstagramController = require('./controllers/InstagramController');
@@ -138,4 +143,66 @@ routes.route('/done_routes')
     .get(DoneRoutesController.list)
     .post(DoneRoutesController.store);
 
+routes.get('/nova-imagem', (req, res, next) => {
+    res.send(`
+            <html>
+                <head> 
+                    <title> Nova imagem </title>
+                </head>
+                </body>
+                    <!-- O enctype é de extrema importância! Não funciona sem! -->
+                    <form action="/nova-imagem"  method="POST" enctype="multipart/form-data">
+                        <!-- O NAME do input deve ser exatamente igual ao especificado na rota -->
+                        <input type="file" name="image">
+                        <button type="submit"> Enviar </button>
+                    </form>
+                </body>
+            </html>
+        `);
+});
+// ROTA PARA POST, TRATAR O FORMULÁRIO
+// APLICAMOS O NOSSO MIDDLEWARE IMPORTADO PASSANDO O NAME DO INPUT A SER TRATADO
+routes.post('/nova-imagem', multer.single('image'), (req, res, next) => {
+
+    // Se houve sucesso no armazenamento
+    // Se houve sucesso no armazenamento
+    if (req.file) {
+
+        // Vamos mandar essa imagem para compressão antes de prosseguir
+        // Ela vai retornar o a promise com o novo caminho como resultado, então continuamos com o then.
+        file_helper.compressImage(req.file, 100)
+            .then(newPath => {
+                // Vamos continuar normalmente, exibindo o novo caminho
+                return res.send("Upload e compressão realizados com sucesso! O novo caminho é:" + newPath);
+            })
+            .catch(err => {
+                console.log(err)
+                return res.send('Houve erro no upload!');
+            });
+    } else {
+        return res.send('Não há arquivo!');
+    }
+
+
+
+});
+
+// TODO Seguir implementando
+routes.get("/pegar-imagem", (req, res, nex) => {
+    const full_path = resolve('.\public\images\1588102139001-anormal_no_covid3.webp');
+    console.log(full_path)
+    //return res.sendFile('./public/images/1588102139001-anormal_no_covid3.webp');
+    const r = fs.createReadStream(full_path) // or any other way to get a readable stream
+    const ps = new stream.PassThrough() // <---- this makes a trick with stream error handling
+    stream.pipeline(
+        r,
+        ps, // <---- this makes a trick with stream error handling
+        (err) => {
+            if (err) {
+                console.log(err) // No such file or any other kind of error
+                return res.sendStatus(400);
+            }
+        })
+    ps.pipe(res) // <---- this makes a trick with stream error handling
+})
 module.exports = routes;
