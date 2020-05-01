@@ -1,11 +1,10 @@
 const express = require('express');
 var path = require("path");
-const multer = require('./services/multer');
-const file_helper = require('./services/sharp');
+const SaveImage = require('./services/SaveImage');
+const ProcessImage = require('./services/ProcessImage');
 const fs = require('fs');
 const stream = require('stream');
 const resolve = require('path').resolve;
-//const authServer = require('./services/auth-service');
 
 const InstagramController = require('./controllers/InstagramController');
 const MercadoLivreController = require('./controllers/MercadoLivreController');
@@ -20,6 +19,7 @@ const UsersController = require('./controllers/UsersController');
 const CompaniesController = require('./controllers/CompaniesController');
 const DoneLessonsController = require('./controllers/DoneLessonsController');
 const DoneRoutesController = require('./controllers/DoneRoutesController');
+const AuthenticationsController = require('./controllers/AuthenticationsController');
 
 
 const routes = express.Router();
@@ -98,10 +98,11 @@ routes.route('/routes/:id/lessons')
 
 
 // Users
-routes.route('/users/:id')
+routes.route('/admin/users/:id')
     .get(UsersController.index)
     .put(UsersController.update)
     .delete(UsersController.delete);
+
 
 routes.route('/users')
     .get(UsersController.list)
@@ -111,7 +112,6 @@ routes.route('/users/:id/companies')
     .post(UsersController.storeCompany)
     .put(UsersController.updateCompany)
     .delete(UsersController.deleteCompany);
-
 
 // Companies
 routes.route('/companies/:id')
@@ -143,6 +143,11 @@ routes.route('/done_routes')
     .get(DoneRoutesController.list)
     .post(DoneRoutesController.store);
 
+routes.post('/login', AuthenticationsController.login);
+
+
+// Me Routes
+
 routes.get('/nova-imagem', (req, res, next) => {
     res.send(`
             <html>
@@ -162,29 +167,47 @@ routes.get('/nova-imagem', (req, res, next) => {
 });
 // ROTA PARA POST, TRATAR O FORMULÁRIO
 // APLICAMOS O NOSSO MIDDLEWARE IMPORTADO PASSANDO O NAME DO INPUT A SER TRATADO
-routes.post('/nova-imagem', multer.single('image'), (req, res, next) => {
-
+routes.post('/nova-imagem', SaveImage.any(), async (req, res, next) => {
     // Se houve sucesso no armazenamento
     // Se houve sucesso no armazenamento
-    if (req.file) {
+    var thumbnail_path = null;
+    var banner_path = null;
 
-        // Vamos mandar essa imagem para compressão antes de prosseguir
-        // Ela vai retornar o a promise com o novo caminho como resultado, então continuamos com o then.
-        file_helper.compressImage(req.file, 100)
-            .then(newPath => {
-                // Vamos continuar normalmente, exibindo o novo caminho
-                return res.send("Upload e compressão realizados com sucesso! O novo caminho é:" + newPath);
-            })
-            .catch(err => {
-                console.log(err)
-                return res.send('Houve erro no upload!');
+    if (req.files) {
+        for (var i in req.files) {
+            var file = req.files[i];
+            var file_path = await ProcessImage.processCompanyThumbnail(file.path)
+                .then((file_path) => {
+                    return file_path;
+                }).catch((err) => {
+                    console.log(err)
+                    throw err;
+                });
+            if (file.fieldname == 'thumbnail') {
+                thumbnail_path = file_path
+            } else {
+                if (file.fieldname == 'banner') {
+                    banner_path = file_path
+                }
+            }
+        }
+        var message = [];
+        if (thumbnail_path) {
+            message.push({
+                'message': "Thumbnail adicionada com sucesso!",
+                'path': thumbnail_path
             });
+        }
+        if (banner_path) {
+            message.push({
+                'message': "Banner adicionado com sucesso!",
+                'path': banner_path
+            });
+        }
+        return res.json(message);
     } else {
-        return res.send('Não há arquivo!');
+        return res.send('Não há imagens!');
     }
-
-
-
 });
 
 // TODO Seguir implementando

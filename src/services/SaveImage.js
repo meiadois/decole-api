@@ -1,19 +1,21 @@
 const multer = require('multer');
-
+const { uuid } = require('uuidv4');
+var path = require('path');
+const public_folder = path.join(__dirname, '..', '..', 'public')
+const uploads_folder = path.join(public_folder, 'uploads')
 // Os objetos e suas funções são automaticamentes executadas pela biblioteca, no momento do Upload.
 // Nessas funções, teremos acesso a requisição, a alguns dados do arquivo, e um callback que vamos
 
 // Vamos expotar nosso módulo multer, que vamos executar passando as nossas configurações
-module.exports = (multer({
+const SaveImage = multer({
 
     // Como deve ser feito o armazenamento dos arquivos?
     storage: multer.diskStorage({
 
         // Qual deve ser o destino deles?
         destination: (req, file, cb) => {
-
             // Setamos o destino como segundo paramêtro do callback
-            cb(null, './public/images');
+            cb(null, uploads_folder);
         },
 
         // E como devem se chamar?
@@ -21,14 +23,13 @@ module.exports = (multer({
 
             // Setamos o nome do arquivo que vai ser salvado no segundo paramêtro
             // Apenas concatenei a data atual com o nome original do arquivo, que a biblioteca nos disponibiliza.
-            cb(null, Date.now().toString() + '-' + file.originalname);
+            cb(null, uuid() + path.extname(file.originalname));
 
         }
     }),
 
     // Como esses arquivos serão filtrados, quais formatos são aceitos/esperados?
     fileFilter: (req, file, cb) => {
-
         // Procurando o formato do arquivo em um array com formatos aceitos
         // A função vai testar se algum dos formatos aceitos do ARRAY é igual ao formato do arquivo.
         const isAccepted = ['image/png', 'image/jpg', 'image/jpeg'].find(formatoAceito => formatoAceito == file.mimetype);
@@ -42,4 +43,5 @@ module.exports = (multer({
         // Se o arquivo não bateu com nenhum aceito, executamos o callback com o segundo valor false (validação falhouo)
         return cb(null, false);
     }
-}));
+});
+module.exports = SaveImage;

@@ -7,7 +7,11 @@
 <!-- O enctype é de extrema importância! Não funciona sem! -->
 <form action="http://localhost:3000/v1/nova-imagem" method="POST" enctype="multipart/form-data">
     <!-- O NAME do input deve ser exatamente igual ao especificado na rota -->
-    <input type="file" name="image">
+    <input type="file" name="thumbnail" />
+    <br>
+    <input type="file" name="banner" />
+    <br>
+    <input type="text" name="nome" id="nome" />
     <button type="submit"> Enviar </button>
 </form>
 </b
