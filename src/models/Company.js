@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsToMany(models.User, { foreignKey: 'company_id', through: 'user_companies', as: 'users' });
   };
 
-  Company.beforeCreate(company => company.id = uuid());
+  Company.beforeCreate(m => m.id = uuid());
+
   return Company;
 };

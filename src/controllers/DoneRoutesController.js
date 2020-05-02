@@ -158,4 +158,24 @@ module.exports = {
             next(err);
         }
     },
+    async meList(req, res, next) {
+        try {
+            var { id } = res.locals.user;
+            const _done_route = await DoneRoute.findAll({
+                where: {
+                    'user_id': id,
+                },
+                include: [
+                    {
+                        association: 'route'
+                    },
+                ]
+            });
+
+            //_done_route.user.password = null;
+            res.json(_done_route);
+        } catch (err) {
+            next(err);
+        }
+    },
 };

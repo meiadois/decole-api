@@ -15,17 +15,25 @@ const AuthenticationsController = require('./controllers/AuthenticationsControll
 
 const authorized_routes = express.Router();
 
-authorized_routes.use(AuthService.authorize);
-
-authorized_routes.route('/me/companies')
-    .get(UsersController.listMeCompany)
-    .post(UsersController.storeMeCompany)
-    .put(UsersController.updateMeCompany)
-    .delete(UsersController.deleteMeCompany);
-
+// Users
 authorized_routes.route('/me')
-    .get(UsersController.meIndex)
-    .put(UsersController.meUpdate)
-    .delete(UsersController.meDelete);
+    .get(AuthService.authorize, UsersController.meIndex)
+    .put(AuthService.authorize, UsersController.meUpdate)
+    .delete(AuthService.authorize, UsersController.meDelete);
+
+// Companies
+authorized_routes.route('/me/companies')
+    .get(AuthService.authorize, UsersController.listMeCompany)
+    .post(AuthService.authorize, UsersController.storeMeCompany)
+    .put(AuthService.authorize, UsersController.updateMeCompany)
+    .delete(AuthService.authorize, UsersController.deleteMeCompany);
+
+// Done Routes    
+authorized_routes.route('/me/done_routes')
+    .get(AuthService.authorize, DoneRoutesController.meList)
+
+// Done Lessons  
+authorized_routes.route('/me/done_lessons')
+    .get(AuthService.authorize, DoneLessonsController.meList)
 
 module.exports = authorized_routes;

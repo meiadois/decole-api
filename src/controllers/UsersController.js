@@ -46,7 +46,7 @@ module.exports = {
                     },
                 ]
             });
-
+            _user.password = null;
             if (_user === null) {
                 throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
             }
@@ -73,7 +73,7 @@ module.exports = {
             if (!_user) {
                 throw new ErrorHandler(500, null);
             }
-
+            _user.password = null;
             return res.status(201).json(_user);
         } catch (err) {
             next(err);
@@ -237,7 +237,6 @@ module.exports = {
         }
     },
     async listMeCompany(req, res, next) {
-        console.log("a")
         try {
             var { id } = res.locals.user;
             if (!id) {

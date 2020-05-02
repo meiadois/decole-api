@@ -16,7 +16,7 @@ app.use("static/companies/banners", express.static(path.join(companies_folder, '
 app.use("static/companies/thumbnails", express.static(path.join(companies_folder, 'thumbnails')));
 
 app.use('/v1', routes);
-app.use('/v2', authorized_routes);
+app.use('/v1', authorized_routes);
 
 
 app.get('/', async function (req, res) {

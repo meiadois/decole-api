@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
     this.belongsTo(models.Lesson, { foreignKey: 'lesson_id', as: 'lesson' });
   };
-  DoneLesson.beforeCreate(doneLesson => doneLesson.id = uuid());
-
+  DoneLesson.beforeCreate(m => m.id = uuid());
   return DoneLesson;
 };

@@ -158,4 +158,22 @@ module.exports = {
             next(err);
         }
     },
+    async meList(req, res, next) {
+        try {
+            var { id } = res.locals.user;
+            const _done_lesson = await DoneLesson.findAll({
+                where: {
+                    'user_id': id,
+                },
+                include: [
+                    {
+                        association: 'lesson'
+                    },
+                ]
+            });
+            res.json(_done_lesson);
+        } catch (err) {
+            next(err);
+        }
+    },
 };
