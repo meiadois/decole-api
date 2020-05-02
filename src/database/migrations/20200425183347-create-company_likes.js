@@ -4,19 +4,18 @@ module.exports = {
     return queryInterface.createTable('company_likes', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       company_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: { model: 'companies', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       like_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: { model: 'likes', key: 'id' },
         onUpdate: 'CASCADE',

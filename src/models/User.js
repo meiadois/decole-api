@@ -1,4 +1,6 @@
 'use strict';
+const uuid = require('uuid/v4');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: DataTypes.STRING,
@@ -12,5 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     this.hasMany(models.DoneLesson, { foreignKey: 'user_id', as: 'done_lessons' });
     this.hasMany(models.DoneRoute, { foreignKey: 'user_id', as: 'done_routes' });
   };
+  User.beforeCreate(m => m.id = uuid());
+
   return User;
 };

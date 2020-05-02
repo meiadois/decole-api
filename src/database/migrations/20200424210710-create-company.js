@@ -4,12 +4,11 @@ module.exports = {
     return queryInterface.createTable('companies', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       segment_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: { model: 'segments', key: 'id' },
         onUpdate: 'CASCADE',

@@ -4,19 +4,18 @@ module.exports = {
     return queryInterface.createTable('route_lessons', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       route_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: { model: 'routes', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       lesson_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: { model: 'lessons', key: 'id' },
         onUpdate: 'CASCADE',
