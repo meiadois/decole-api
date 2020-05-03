@@ -31,9 +31,13 @@ authorized_routes.route('/me/companies')
 // Done Routes    
 authorized_routes.route('/me/done_routes')
     .get(AuthService.authorize, DoneRoutesController.meList)
+    .post(AuthService.authorize, DoneRoutesController.meStore)
+
 
 // Done Lessons  
 authorized_routes.route('/me/done_lessons')
     .get(AuthService.authorize, DoneLessonsController.meList)
+    .post(AuthService.authorize, DoneLessonsController.meStore)
+
 
 module.exports = authorized_routes;

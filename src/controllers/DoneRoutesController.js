@@ -123,7 +123,7 @@ module.exports = {
             if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(_done_route);
+            return res.status(200).json(await _done_route.reload());
         } catch (err) {
             next(err);
         }
@@ -174,6 +174,41 @@ module.exports = {
 
             //_done_route.user.password = null;
             res.json(_done_route);
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meStore(req, res, next) {
+        try {
+            var { route_id } = req.body;
+            var { id } = res.locals.user;
+            if (!id || !route_id) {
+                throw new ErrorHandler(400, null);
+            }
+
+            const _route = await Route.findByPk(route_id);
+
+            if (!_route) {
+                throw new ErrorHandler(404, `Rota ${route_id} não encontrada.`);
+            }
+
+            const _user = await User.findByPk(id);
+
+            if (!_user) {
+                throw new ErrorHandler(404, `Usuário ${id} não encontrado.`);
+            }
+
+            const [_done_route] = await DoneRoute.findOrCreate({
+                where: { 'user_id':id, route_id }
+            }).catch((err) => {
+                console.log(err);
+                return null;
+            });
+            if (!_done_route) {
+                throw new ErrorHandler(500, null);
+            }
+
+            return res.status(201).json(_done_route);
         } catch (err) {
             next(err);
         }

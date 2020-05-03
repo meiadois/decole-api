@@ -1,5 +1,11 @@
 ## Educação
 
+- Accounts :heavy_check_mark:
+  - Usuário
+  - Canal
+  
+  npx sequelize-cli model:generate --name Account --attributes username:string
+
 - Canal :heavy_check_mark:
   - Nome
   - Categoria

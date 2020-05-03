@@ -20,6 +20,8 @@ const CompaniesController = require('./controllers/CompaniesController');
 const DoneLessonsController = require('./controllers/DoneLessonsController');
 const DoneRoutesController = require('./controllers/DoneRoutesController');
 const AuthenticationsController = require('./controllers/AuthenticationsController');
+const AccountsController = require('./controllers/AccountsController');
+
 
 
 const routes = express.Router();
@@ -144,6 +146,16 @@ routes.route('/done_routes')
     .post(DoneRoutesController.store);
 
 routes.post('/login', AuthenticationsController.login);
+
+// Accounts
+routes.route('/accounts/:id')
+    .get(AccountsController.index)
+    .put(AccountsController.update)
+    .delete(AccountsController.delete);
+
+routes.route('/accounts')
+    .get(AccountsController.list)
+    .post(AccountsController.store);
 
 
 // Me Routes
