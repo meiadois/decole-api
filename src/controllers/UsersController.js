@@ -1,7 +1,6 @@
 const database = require('../models');
 const Company = database.Company;
 const User = database.User;
-const LoginService = require('../services/login-service');
 
 const { ErrorHandler } = require('../helpers/error');
 
@@ -56,6 +55,7 @@ module.exports = {
         }
 
     },
+    /*
     async store(req, res, next) {
         try {
             var { username, email, password } = req.body;
@@ -78,7 +78,7 @@ module.exports = {
         } catch (err) {
             next(err);
         }
-    },
+    },*/
     async update(req, res, next) {
         try {
             var { id } = req.params;
