@@ -4,18 +4,18 @@ const { ErrorHandler } = require('../helpers/error');
 
 module.exports = {
     async list(req, res, next) {
-        try{
+        try {
             const _channels = await Channel.findAll();
             res.json(_channels);
-        }catch(err){
+        } catch (err) {
             next(err);
         }
     },
     async index(req, res, next) {
-        try{
+        try {
             var { id } = req.params;
 
-            if(!id){
+            if (!id) {
                 throw new ErrorHandler(404, null);
             }
             var _channel = null;
@@ -24,99 +24,99 @@ module.exports = {
             } catch (err) {
                 console.log(err)
             }
-    
-            if(_channel === null){
-                throw new ErrorHandler(404, null);
+
+            if (_channel === null) {
+                throw new ErrorHandler(404, `Canal ${id} não encontrado.`);
             }
             return res.status(200).json(_channel);
-        }catch(err){
+        } catch (err) {
             next(err);
         }
-        
+
     },
     async store(req, res, next) {
-        try{
+        try {
             var { name, category } = req.body;
-            if(!name || !category){
+            if (!name || !category) {
                 throw new ErrorHandler(400, null);
             }
-    
+
             const [_channel] = await Channel.findOrCreate({
                 where: { name, category }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
-            if(!_channel){
+            if (!_channel) {
                 throw new ErrorHandler(500, null);
             }
             return res.status(201).json(_channel);
-        }catch(err){
+        } catch (err) {
             next(err);
         }
     },
-    async update (req, res, next) {
-        try{
+    async update(req, res, next) {
+        try {
             var { id } = req.params;
             var { name, category } = req.body;
-            if(!name || !category){
+            if (!name || !category) {
                 throw new ErrorHandler(400, null);
             }
-    
+
             const _channel = await Channel.findByPk(id);
-    
-            if(!_channel){
-                throw new ErrorHandler(404, null);
+
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${id} não encontrado.`);
             }
-    
+
             _channel.name = name;
             _channel.category = category;
-    
-    
+
+
             var _success = await _channel.save().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
                 return false;
             });
-    
-            if(!_success){
+
+            if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(_channel);    
-        }catch(err){
+            return res.status(200).json(_channel);
+        } catch (err) {
             next(err);
         }
-        
+
     },
-    async delete (req, res, next) {
-        try{
+    async delete(req, res, next) {
+        try {
             var { id } = req.params;
-            if(!id){
+            if (!id) {
                 throw new ErrorHandler(400, null);
             }
-    
+
             const _channel = await Channel.findByPk(id);
-    
-            if(!_channel){
-                throw new ErrorHandler(404, null);
+
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${id} não encontrado.`);
             }
-    
+
             var _success = await _channel.destroy().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
                 return false;
             });
-    
-            if(!_success){
+
+            if (!_success) {
                 throw new ErrorHandler(500, null);
             }
             return res.status(204).json({});
-            
-        }catch(err){
+
+        } catch (err) {
             next(err);
         }
     },
-    
+
 };

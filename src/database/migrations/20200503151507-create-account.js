@@ -1,25 +1,28 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('route_lessons', {
+    return queryInterface.createTable('accounts', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      route_id: {
+      user_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'routes', key: 'id' },
+        references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      lesson_id: {
+      channel_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'lessons', key: 'id' },
+        references: { model: 'channels', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
+      },
+      username: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +35,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('route_lessons');
+    return queryInterface.dropTable('accounts');
   }
 };

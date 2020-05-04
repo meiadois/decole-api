@@ -1,6 +1,6 @@
 const database = require('../models');
-const Lesson = database.Lesson;
-const DoneLesson = database.DoneLesson;
+const Channel = database.Channel;
+const Account = database.Account;
 const User = database.User;
 
 const { ErrorHandler } = require('../helpers/error');
@@ -8,17 +8,17 @@ const { ErrorHandler } = require('../helpers/error');
 module.exports = {
     async list(req, res, next) {
         try {
-            const _done_lesson = await DoneLesson.findAll({
+            const _account = await Account.findAll({
                 include: [
                     {
                         association: 'user'
                     },
                     {
-                        association: 'lesson'
+                        association: 'channel'
                     },
                 ]
             });
-            res.json(_done_lesson);
+            res.json(_account);
         } catch (err) {
             next(err);
         }
@@ -30,21 +30,21 @@ module.exports = {
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
-            var _done_lesson = await DoneLesson.findByPk(id, {
+            var _account = await Account.findByPk(id, {
                 include: [
                     {
                         association: 'user'
                     },
                     {
-                        association: 'lesson'
+                        association: 'channel'
                     },
                 ]
             });
 
-            if (_done_lesson === null) {
-                throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`);
+            if (_account === null) {
+                throw new ErrorHandler(404, `Conta ${id} não encontrada.`);
             }
-            return res.status(200).json(_done_lesson);
+            return res.status(200).json(_account);
         } catch (err) {
             next(err);
         }
@@ -52,15 +52,16 @@ module.exports = {
     },
     async store(req, res, next) {
         try {
-            var { user_id, lesson_id } = req.body;
-            if (!user_id || !lesson_id) {
+            var { user_id, username, channel_name } = req.body;
+            if (!user_id || !username || !channel_name) {
                 throw new ErrorHandler(400, null);
             }
+            const _channel = await Channel.findOne({where: {
+                'name': channel_name
+            }});
 
-            const _lesson = await Lesson.findByPk(lesson_id);
-
-            if (!_lesson) {
-                throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
             }
 
             const _user = await User.findByPk(user_id);
@@ -69,17 +70,17 @@ module.exports = {
                 throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`);
             }
 
-            const [_done_lesson] = await DoneLesson.findOrCreate({
-                where: { user_id, lesson_id }
+            const [_account] = await Account.findOrCreate({
+                where: { user_id, username, 'channel_id':_channel.id }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
-            if (!_done_lesson) {
+            if (!_account) {
                 throw new ErrorHandler(500, null);
             }
 
-            return res.status(201).json(_done_lesson);
+            return res.status(201).json(_account);
         } catch (err) {
             next(err);
         }
@@ -87,21 +88,32 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { user_id, lesson_id } = req.body;
-            if (!user_id || !lesson_id) {
+            var { user_id, username, channel_name } = req.body;
+            if (!id || !user_id || !username || !channel_name) {
                 throw new ErrorHandler(400, null);
             }
 
-            const _done_lesson = await DoneLesson.findByPk(id);
+            var _account = await Account.findByPk(id, {
+                include: [
+                    {
+                        association: 'user'
+                    },
+                    {
+                        association: 'channel'
+                    },
+                ]
+            });
 
-            if (!_done_lesson) {
-                throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`);
+            if (_account === null) {
+                throw new ErrorHandler(404, `Conta ${id} não encontrada.`);
             }
 
-            const _lesson = await Lesson.findByPk(lesson_id);
+            const _channel = await Channel.findOne({where: {
+                'name': channel_name
+            }});
 
-            if (!_lesson) {
-                throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
             }
 
             const _user = await User.findByPk(user_id);
@@ -110,10 +122,11 @@ module.exports = {
                 throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`);
             }
 
-            _done_lesson.user_id = user_id;
-            _done_lesson.lesson_id = lesson_id;
+            _account.user_id = user_id;
+            _account.channel_id = _channel.id;
+            _account.username = username;
 
-            var _success = await _done_lesson.save().then(() => {
+            var _success = await _account.save().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -123,7 +136,7 @@ module.exports = {
             if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(await _done_lesson.reload());
+            return res.status(200).json(await _account.reload());
         } catch (err) {
             next(err);
         }
@@ -136,13 +149,13 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            const _done_lesson = await DoneLesson.findByPk(id);
+            const _account = await Account.findByPk(id);
 
-            if (!_done_lesson) {
-                throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`);
+            if (!_account) {
+                throw new ErrorHandler(404, `Conta ${id} não encontrada.`);
             }
 
-            var _success = await _done_lesson.destroy().then(() => {
+            var _success = await _account.destroy().then(() => {
                 return true;
             }).catch((err) => {
                 console.log(err);
@@ -161,33 +174,35 @@ module.exports = {
     async meList(req, res, next) {
         try {
             var { id } = res.locals.user;
-            const _done_lesson = await DoneLesson.findAll({
+            const _account = await Account.findAll({
                 where: {
                     'user_id': id,
                 },
                 include: [
                     {
-                        association: 'lesson'
+                        association: 'route'
                     },
                 ]
             });
-            res.json(_done_lesson);
+
+            //_account.user.password = null;
+            res.json(_account);
         } catch (err) {
             next(err);
         }
     },
     async meStore(req, res, next) {
         try {
-            var { lesson_id } = req.body;
+            var { route_id } = req.body;
             var { id } = res.locals.user;
-            if (!id || !lesson_id) {
+            if (!id || !route_id) {
                 throw new ErrorHandler(400, null);
             }
 
-            const _lesson = await Lesson.findByPk(lesson_id);
+            const _route = await Route.findByPk(route_id);
 
-            if (!_lesson) {
-                throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
+            if (!_route) {
+                throw new ErrorHandler(404, `Rota ${route_id} não encontrada.`);
             }
 
             const _user = await User.findByPk(id);
@@ -196,17 +211,17 @@ module.exports = {
                 throw new ErrorHandler(404, `Usuário ${id} não encontrado.`);
             }
 
-            const [_done_lesson] = await DoneLesson.findOrCreate({
-                where: { 'user_id':id, lesson_id }
+            const [_account] = await Account.findOrCreate({
+                where: { 'user_id':id, route_id }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
-            if (!_done_lesson) {
+            if (!_account) {
                 throw new ErrorHandler(500, null);
             }
 
-            return res.status(201).json(_done_lesson);
+            return res.status(201).json(_account);
         } catch (err) {
             next(err);
         }

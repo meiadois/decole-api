@@ -24,21 +24,16 @@ module.exports = {
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
-            var _segment = null;
-            try {
-                _segment = await Segment.findByPk(id, {
-                    include: [
-                        {
-                            association: 'companies'
-                        }
-                    ]
-                });
-            } catch (err) {
-                console.log(err)
-            }
+            var _segment = await Segment.findByPk(id, {
+                include: [
+                    {
+                        association: 'companies'
+                    }
+                ]
+            });
 
             if (_segment === null) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Segmento ${id} não encontrada.`);
             }
             return res.status(200).json(_segment);
         } catch (err) {
@@ -79,7 +74,7 @@ module.exports = {
             const _segment = await Segment.findByPk(id);
 
             if (!_segment) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Segmento ${id} não encontrada.`);
             }
 
             _segment.name = name;
@@ -112,7 +107,7 @@ module.exports = {
             const _segment = await Segment.findByPk(id);
 
             if (!_segment) {
-                throw new ErrorHandler(404, null);
+                throw new ErrorHandler(404, `Segmento ${id} não encontrada.`);
             }
 
             var _success = await _segment.destroy().then(() => {
