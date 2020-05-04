@@ -58,14 +58,14 @@ module.exports = {
     /*
     async store(req, res, next) {
         try {
-            var { username, email, password } = req.body;
-            if (!username || !email || !password) {
+            var { name, email, password } = req.body;
+            if (!name || !email || !password) {
                 throw new ErrorHandler(400, null);
             }
             password = await LoginService.createHashedPassword(password);
 
             const [_user] = await User.findOrCreate({
-                where: { username, email, password }
+                where: { name, email, password }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -82,8 +82,8 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { username, email } = req.body;
-            if (!username || !email) {
+            var { name, email } = req.body;
+            if (!name || !email) {
                 throw new ErrorHandler(400, null);
             }
             const _user = await User.findByPk(id);
@@ -92,7 +92,7 @@ module.exports = {
                 throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
             }
 
-            _user.username = username;
+            _user.name = name;
             _user.email = email;
 
             var _success = await _user.save().then(() => {
@@ -177,8 +177,8 @@ module.exports = {
     async meUpdate(req, res, next) {
         try {
             var { id } = res.locals.user;
-            var { username, email } = req.body;
-            if (!username || !email) {
+            var { name, email } = req.body;
+            if (!name || !email) {
                 throw new ErrorHandler(400, null);
             }
             const _user = await User.findByPk(id);
@@ -187,7 +187,7 @@ module.exports = {
                 throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
             }
 
-            _user.username = username;
+            _user.name = name;
             _user.email = email;
 
             var _success = await _user.save().then(() => {
