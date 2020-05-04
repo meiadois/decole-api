@@ -82,7 +82,7 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { name, email } = req.body;
+            var { name, email, introduced } = req.body;
             if (!name || !email) {
                 throw new ErrorHandler(400, null);
             }
@@ -94,6 +94,7 @@ module.exports = {
 
             _user.name = name;
             _user.email = email;
+            if(introduced) _user.introduced = introduced
 
             var _success = await _user.save().then(() => {
                 return true;
