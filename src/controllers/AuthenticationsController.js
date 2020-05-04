@@ -5,20 +5,29 @@ const AuthService = require('../services/auth-service');
 
 const { ErrorHandler } = require('../helpers/error');
 
+function isEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
 module.exports = {
     async login(req, res, next) {
         try {
             var { email, password } = req.body;
 
+            if (!isEmail(email)) {
+                throw new ErrorHandler(400, `[${email}] não é um email válido.`);
+            }
+
             const _user = await User.findOne({ where: { email } });
 
             if (_user === null) {
-                throw new ErrorHandler(401, `Não há usuários com o email ${email}.`);
+                throw new ErrorHandler(404, `Não há usuários com o email ${email}.`);
             }
 
             var success = await LoginService.login(_user.password, password);
             if (!success) {
-                throw new ErrorHandler(401, `Email ou Senha incorretos.`);
+                throw new ErrorHandler(404, `Email ou Senha incorretos.`);
             }
             var token = await AuthService.generateToken({
                 'user': {
@@ -41,6 +50,10 @@ module.exports = {
             if (!username || !email || !password) {
                 throw new ErrorHandler(400, null);
             }
+            if (!isEmail(email)) {
+                throw new ErrorHandler(400, `[${email}] não é um email válido.`);
+            }
+
             password = await LoginService.createHashedPassword(password);
 
             const [_user] = await User.findOrCreate({
