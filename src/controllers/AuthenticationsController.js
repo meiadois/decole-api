@@ -41,6 +41,7 @@ module.exports = {
                 'user': {
                     'email': _user.email,
                     'name': _user.name,
+                    'introduced': _user.introduced,
                     token
                 }
 
@@ -89,6 +90,7 @@ module.exports = {
                 'user': {
                     'email': _user.email,
                     'name': _user.name,
+                    'introduced': _user.introduced,
                     token
                 }
 
