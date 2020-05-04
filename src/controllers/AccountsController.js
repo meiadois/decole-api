@@ -180,12 +180,38 @@ module.exports = {
                 },
                 include: [
                     {
-                        association: 'route'
+                        association: 'channel'
                     },
                 ]
             });
+            res.json(_account);
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meIndex(req, res, next) {
+        try {
+            var user_id = res.locals.user.id;
+            var { channel_name } = req.params;
+            const _channel = await Channel.findOne({where: {
+                'name': channel_name
+            }});
 
-            //_account.user.password = null;
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
+            }
+            
+            const _account = await Account.findOne({
+                where: {
+                    user_id,
+                    'channel_id':_channel.id
+                },
+                include: [
+                    {
+                        association: 'channel'
+                    },
+                ]
+            });
             res.json(_account);
         } catch (err) {
             next(err);
@@ -193,26 +219,27 @@ module.exports = {
     },
     async meStore(req, res, next) {
         try {
-            var { route_id } = req.body;
-            var { id } = res.locals.user;
-            if (!id || !route_id) {
+            var user_id = res.locals.user.id;
+            var { username, channel_name } = req.body;
+            if (!user_id || !username || !channel_name) {
                 throw new ErrorHandler(400, null);
             }
+            const _channel = await Channel.findOne({where: {
+                'name': channel_name
+            }});
 
-            const _route = await Route.findByPk(route_id);
-
-            if (!_route) {
-                throw new ErrorHandler(404, `Rota ${route_id} não encontrada.`);
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
             }
 
-            const _user = await User.findByPk(id);
+            const _user = await User.findByPk(user_id);
 
             if (!_user) {
-                throw new ErrorHandler(404, `Usuário ${id} não encontrado.`);
+                throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`);
             }
 
             const [_account] = await Account.findOrCreate({
-                where: { 'user_id':id, route_id }
+                where: { user_id, username, 'channel_id':_channel.id }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -222,6 +249,107 @@ module.exports = {
             }
 
             return res.status(201).json(_account);
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meUpdate(req, res, next) {
+        try {
+            var user_id = res.locals.user.id;
+            var { channel_name } = req.params;
+            var { username } = req.body;
+            if ( !user_id || !username || !channel_name) {
+                throw new ErrorHandler(400, null);
+            }
+            
+            
+
+            if (_account === null) {
+                throw new ErrorHandler(404, `Conta ${id} não encontrada.`);
+            }
+
+            const _channel = await Channel.findOne({where: {
+                'name': channel_name
+            }});
+
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
+            }
+            var _account = await Account.findOne({
+                where:{
+                    user_id,
+                    'channel_id':_channel.id
+                },
+                include: [
+                    {
+                        association: 'user'
+                    },
+                    {
+                        association: 'channel'
+                    },
+                ]
+            });
+
+            const _user = await User.findByPk(user_id);
+
+            if (!_user) {
+                throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`);
+            }
+
+            _account.user_id = user_id;
+            _account.channel_id = _channel.id;
+            _account.username = username;
+
+            var _success = await _account.save().then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(200).json(await _account.reload());
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meDelete(req, res, next) {
+        try {
+            var user_id = res.locals.user.id;
+            var { channel_name } = req.params;
+
+            const _channel = await Channel.findOne({where: {
+                'name': channel_name
+            }});
+
+            if (!_channel) {
+                throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
+            }
+            
+            const _account = await Account.findOne({
+                where: {
+                    user_id,
+                    'channel_id':_channel.id
+                },
+                include: [
+                    {
+                        association: 'channel'
+                    },
+                ]
+            });
+            var _success = await _account.destroy().then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(204).json({});
         } catch (err) {
             next(err);
         }

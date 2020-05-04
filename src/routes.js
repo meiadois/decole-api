@@ -107,8 +107,8 @@ routes.route('/admin/users/:id')
 
 
 routes.route('/users')
-    .get(UsersController.list)
-    .post(UsersController.store);
+    .get(UsersController.list);
+
 
 routes.route('/users/:id/companies')
     .post(UsersController.storeCompany)
@@ -146,7 +146,7 @@ routes.route('/done_routes')
     .post(DoneRoutesController.store);
 
 routes.post('/login', AuthenticationsController.login);
-
+routes.post('/register', AuthenticationsController.register);
 // Accounts
 routes.route('/accounts/:id')
     .get(AccountsController.index)

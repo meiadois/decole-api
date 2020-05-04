@@ -12,6 +12,8 @@ const CompaniesController = require('./controllers/CompaniesController');
 const DoneLessonsController = require('./controllers/DoneLessonsController');
 const DoneRoutesController = require('./controllers/DoneRoutesController');
 const AuthenticationsController = require('./controllers/AuthenticationsController');
+const AccountsController = require('./controllers/AccountsController');
+
 
 const authorized_routes = express.Router();
 
@@ -39,5 +41,14 @@ authorized_routes.route('/me/done_lessons')
     .get(AuthService.authorize, DoneLessonsController.meList)
     .post(AuthService.authorize, DoneLessonsController.meStore)
 
+// Accounts
+authorized_routes.route('/me/accounts/:channel_name')
+    .get(AuthService.authorize, AccountsController.meIndex)
+    .put(AuthService.authorize, AccountsController.meUpdate)
+    .delete(AuthService.authorize, AccountsController.meDelete)
 
+
+authorized_routes.route('/me/accounts')
+    .get(AuthService.authorize, AccountsController.meList)
+    .post(AuthService.authorize, AccountsController.meStore);
 module.exports = authorized_routes;
