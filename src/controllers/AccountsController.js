@@ -56,9 +56,18 @@ module.exports = {
             if (!user_id || !username || !channel_name) {
                 throw new ErrorHandler(400, null);
             }
-            const _channel = await Channel.findOne({where: {
-                'name': channel_name
-            }});
+
+            const _channel = await Channel.findOne({
+                where: {
+                    'name': channel_name
+                }
+            });
+
+            const nResults = await Account.count({ where: { user_id, 'channel_id': _channel.id } });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe uma conta do usuário [${user_id}] no canal ${channel_name}.`);
+            }
 
             if (!_channel) {
                 throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
@@ -71,7 +80,7 @@ module.exports = {
             }
 
             const [_account] = await Account.findOrCreate({
-                where: { user_id, username, 'channel_id':_channel.id }
+                where: { user_id, username, 'channel_id': _channel.id }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -108,9 +117,11 @@ module.exports = {
                 throw new ErrorHandler(404, `Conta ${id} não encontrada.`);
             }
 
-            const _channel = await Channel.findOne({where: {
-                'name': channel_name
-            }});
+            const _channel = await Channel.findOne({
+                where: {
+                    'name': channel_name
+                }
+            });
 
             if (!_channel) {
                 throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
@@ -193,18 +204,20 @@ module.exports = {
         try {
             var user_id = res.locals.user.id;
             var { channel_name } = req.params;
-            const _channel = await Channel.findOne({where: {
-                'name': channel_name
-            }});
+            const _channel = await Channel.findOne({
+                where: {
+                    'name': channel_name
+                }
+            });
 
             if (!_channel) {
                 throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
             }
-            
+
             const _account = await Account.findOne({
                 where: {
                     user_id,
-                    'channel_id':_channel.id
+                    'channel_id': _channel.id
                 },
                 include: [
                     {
@@ -224,9 +237,17 @@ module.exports = {
             if (!user_id || !username || !channel_name) {
                 throw new ErrorHandler(400, null);
             }
-            const _channel = await Channel.findOne({where: {
-                'name': channel_name
-            }});
+            const _channel = await Channel.findOne({
+                where: {
+                    'name': channel_name
+                }
+            });
+
+            const nResults = await Account.count({ where: { user_id, 'channel_id': _channel.id } });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe uma conta do usuário [${user_id}] no canal ${channel_name}.`);
+            }
 
             if (!_channel) {
                 throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
@@ -239,7 +260,7 @@ module.exports = {
             }
 
             const [_account] = await Account.findOrCreate({
-                where: { user_id, username, 'channel_id':_channel.id }
+                where: { user_id, username, 'channel_id': _channel.id }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -258,27 +279,29 @@ module.exports = {
             var user_id = res.locals.user.id;
             var { channel_name } = req.params;
             var { username } = req.body;
-            if ( !user_id || !username || !channel_name) {
+            if (!user_id || !username || !channel_name) {
                 throw new ErrorHandler(400, null);
             }
-            
-            
+
+
 
             if (_account === null) {
                 throw new ErrorHandler(404, `Conta ${id} não encontrada.`);
             }
 
-            const _channel = await Channel.findOne({where: {
-                'name': channel_name
-            }});
+            const _channel = await Channel.findOne({
+                where: {
+                    'name': channel_name
+                }
+            });
 
             if (!_channel) {
                 throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
             }
             var _account = await Account.findOne({
-                where:{
+                where: {
                     user_id,
-                    'channel_id':_channel.id
+                    'channel_id': _channel.id
                 },
                 include: [
                     {
@@ -320,18 +343,20 @@ module.exports = {
             var user_id = res.locals.user.id;
             var { channel_name } = req.params;
 
-            const _channel = await Channel.findOne({where: {
-                'name': channel_name
-            }});
+            const _channel = await Channel.findOne({
+                where: {
+                    'name': channel_name
+                }
+            });
 
             if (!_channel) {
                 throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`);
             }
-            
+
             const _account = await Account.findOne({
                 where: {
                     user_id,
-                    'channel_id':_channel.id
+                    'channel_id': _channel.id
                 },
                 include: [
                     {

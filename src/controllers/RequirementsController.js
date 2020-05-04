@@ -57,6 +57,7 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
+
             const lesson = await Lesson.findByPk(lesson_id);
 
             if (!lesson) {
@@ -75,6 +76,13 @@ module.exports = {
                 throw new ErrorHandler(404, `Etapa ${id} não encontrada.`);
             }
 
+            const nResults = await Lesson.count({
+                where: { lesson_id, required_lesson_id, 'required_step_id': step.id }
+            });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `A etapa [${step.id}] da lição [${required_lesson_id}] já é requisito para a lição [${lesson_id}].`);
+            }
             const _requirement = await Requirement.create({
                 lesson_id,
                 required_lesson_id,

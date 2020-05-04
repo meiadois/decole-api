@@ -184,6 +184,12 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
+            const nResults = await Lesson.count({ where: { 'user_id': id, lesson_id } });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${id}].`);
+            }
+
             const _lesson = await Lesson.findByPk(lesson_id);
 
             if (!_lesson) {
@@ -197,7 +203,7 @@ module.exports = {
             }
 
             const [_done_lesson] = await DoneLesson.findOrCreate({
-                where: { 'user_id':id, lesson_id }
+                where: { 'user_id': id, lesson_id }
             }).catch((err) => {
                 console.log(err);
                 return null;

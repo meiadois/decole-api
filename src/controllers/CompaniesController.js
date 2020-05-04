@@ -61,6 +61,11 @@ module.exports = {
             if (!name || !cep || !thumbnail || !cnpj || !segment_id) {
                 throw new ErrorHandler(400, null);
             }
+            const nResults = await Company.count({ where: { cnpj } });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`);
+            }
 
             const [_company] = await Company.findOrCreate({
                 where: { name, cep, thumbnail, cnpj, segment_id }

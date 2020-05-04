@@ -61,7 +61,13 @@ module.exports = {
             if (!description) {
                 throw new ErrorHandler(400, null);
             }
+            const nResults = await Route.count({
+                where: { description }
+            });
 
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe uma rota com a descrição [${description}].`);
+            }
             const [_route] = await Route.findOrCreate({
                 where: { description }
             }).catch((err) => {

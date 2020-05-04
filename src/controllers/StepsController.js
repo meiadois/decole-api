@@ -35,7 +35,13 @@ module.exports = {
             if (!message || !order || !lesson_id) {
                 throw new ErrorHandler(400, null);
             }
+            const nResults = await Step.count({
+                where: { message, lesson_id }
+            });
 
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe uma etapa com a mensagem [${message}] na lição [${lesson_id}].`);
+            }
             const [_step] = await Step.findOrCreate({
                 where: { message, order, lesson_id }
             }).catch((err) => {
