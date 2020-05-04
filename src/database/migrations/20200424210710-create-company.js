@@ -15,6 +15,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       cep: {
