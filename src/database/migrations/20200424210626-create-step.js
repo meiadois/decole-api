@@ -15,9 +15,11 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       message: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       order: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {

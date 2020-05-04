@@ -8,12 +8,15 @@ module.exports = {
         type: Sequelize.UUID
       },
       sender_id: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       recipient_id: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       status: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {

@@ -8,6 +8,7 @@ module.exports = {
         type: Sequelize.UUID
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {

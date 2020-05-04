@@ -7,13 +7,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-      username: {
+      name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       email: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       password: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {
