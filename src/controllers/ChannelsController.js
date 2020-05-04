@@ -41,6 +41,12 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
+            const nResults = await Channel.count({ where: { name } });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe um canal chamado [${name}].`);
+            }
+
             const [_channel] = await Channel.findOrCreate({
                 where: { name, category }
             }).catch((err) => {

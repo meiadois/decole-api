@@ -47,7 +47,13 @@ module.exports = {
             if (!name) {
                 throw new ErrorHandler(400, null);
             }
+            const nResults = await Segment.count({
+                where: { name }
+            });
 
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe um segmento com o nome [${name}].`);
+            }
             const [_segment] = await Segment.findOrCreate({
                 where: { name }
             }).catch((err) => {

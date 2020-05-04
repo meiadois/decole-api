@@ -185,6 +185,11 @@ module.exports = {
             if (!id || !route_id) {
                 throw new ErrorHandler(400, null);
             }
+            const nResults = await Route.count({ where: { 'user_id': id, route_id } });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `A rota [${route_id}] já foi concluida pelo usuário [${id}].`);
+            }
 
             const _route = await Route.findByPk(route_id);
 
@@ -199,7 +204,7 @@ module.exports = {
             }
 
             const [_done_route] = await DoneRoute.findOrCreate({
-                where: { 'user_id':id, route_id }
+                where: { 'user_id': id, route_id }
             }).catch((err) => {
                 console.log(err);
                 return null;

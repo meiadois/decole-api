@@ -56,7 +56,11 @@ module.exports = {
             if (!title || !description) {
                 throw new ErrorHandler(400, null);
             }
+            const nResults = await Lesson.count({ where: { title, description } });
 
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Já existe uma lição com o título [${title}].`);
+            }
             const [_lesson] = await Lesson.findOrCreate({
                 where: { title, description }
             }).catch((err) => {

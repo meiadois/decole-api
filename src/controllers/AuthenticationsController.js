@@ -58,6 +58,11 @@ module.exports = {
             if (!isEmail(email)) {
                 throw new ErrorHandler(400, `[${email}] não é um email válido.`);
             }
+            const nResults = await User.count({ where: { email } });
+
+            if (nResults != 0) {
+                throw new ErrorHandler(400, `Email [${email}] já está sendo utilizado.`);
+            }
 
             password = await LoginService.createHashedPassword(password);
 
