@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     cep: DataTypes.STRING,
     thumbnail: DataTypes.STRING,
     cnpj: DataTypes.STRING
-  }, {});
+  }, {
+    tableName: 'companies'
+  });
   Company.associate = function (models) {
     // associations can be defined here
     this.belongsToMany(models.Like, { foreignKey: 'company_id', through: 'company_likes', as: 'likes' });
