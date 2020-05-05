@@ -76,6 +76,7 @@ module.exports = {
             if (!_user) {
                 throw new ErrorHandler(500, null);
             }
+            await _user.reload()
             _user.password = null;
 
             var token = await AuthService.generateToken({
