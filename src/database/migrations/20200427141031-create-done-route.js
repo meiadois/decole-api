@@ -1,11 +1,12 @@
 'use strict';
+const uuid = require('uuid/v4');
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('done_routes', {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       user_id: {
         type: Sequelize.UUID,

@@ -1,4 +1,5 @@
 'use strict';
+const uuidv4 = require('uuid/v4');
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('route_lessons', {

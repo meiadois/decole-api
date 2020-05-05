@@ -8,7 +8,7 @@ const { ErrorHandler } = require('../helpers/error');
 module.exports = {
     async list(req, res, next) {
         try {
-            const _done_lesson = await DoneLesson.findAll({
+            const _done_lessons = await DoneLesson.findAll({
                 include: [
                     {
                         association: 'user'
@@ -18,7 +18,7 @@ module.exports = {
                     },
                 ]
             });
-            res.json(_done_lesson);
+            res.json(_done_lessons);
         } catch (err) {
             next(err);
         }

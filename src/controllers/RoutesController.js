@@ -2,6 +2,7 @@ const database = require('../models');
 const Lesson = database.Lesson;
 const Route = database.Route;
 const Step = database.Step;
+const DoneLesson = database.DoneLesson;
 
 const { ErrorHandler } = require('../helpers/error');
 
@@ -18,6 +19,7 @@ module.exports = {
                     },
                 ]
             });
+
             res.json(_routes);
         } catch (err) {
             next(err);
@@ -144,6 +146,30 @@ module.exports = {
         } catch (err) {
             next(err);
         }
+    },
+    async meListWithProgress(req, res, next) {
+        try {
+            var { user_id } = res.locals.user.id;
+
+            var _routes = await Route.findAll({
+                include: [
+                    {
+                        association: 'lessons'
+                    },
+                ]
+            });
+            var _lesson_ids = null
+            for (var i in _routes.lessons) {
+                _lesson_ids.push(_routes.lessons[i].id)
+            }
+            return res.status(200).json({
+                'routes': _routes,
+                'ids': _lesson_ids,
+            });
+        } catch (err) {
+            next(err);
+        }
+
     },
     async storeLesson(req, res, next) {
         try {
