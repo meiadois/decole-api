@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
   const Lesson = sequelize.define('Lesson', {
     title: DataTypes.STRING,
     description: DataTypes.STRING
-  }, {});
+  }, {
+    tableName: 'lessons'
+  });
   Lesson.associate = function (models) {
     // associations can be defined here
     this.belongsToMany(models.Route, { foreignKey: 'lesson_id', through: 'route_lessons', as: 'routes' });

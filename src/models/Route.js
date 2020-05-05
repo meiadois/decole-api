@@ -4,7 +4,9 @@ const uuid = require('uuid/v4');
 module.exports = (sequelize, DataTypes) => {
   const Route = sequelize.define('Route', {
     description: DataTypes.STRING
-  }, {});
+  }, {
+    tableName: 'routes'
+  });
   Route.associate = function (models) {
     // associations can be defined here
     this.belongsToMany(models.Lesson, { foreignKey: 'route_id', through: 'route_lessons', as: 'lessons' });

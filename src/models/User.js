@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     introduced: DataTypes.BOOLEAN
-  }, {});
+  }, {
+    tableName: 'users'
+  });
   User.associate = function (models) {
     // associations can be defined here
     this.belongsToMany(models.Route, { foreignKey: 'user_id', through: 'user_routes', as: 'routes' });
