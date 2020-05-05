@@ -94,7 +94,13 @@ module.exports = {
 
             _user.name = name;
             _user.email = email;
-            if(introduced) _user.introduced = introduced
+            if (introduced != undefined) {
+                if (typeof introduced === "boolean") {
+                    _user.introduced = introduced;
+                } else {
+                    throw new ErrorHandler(404, `'introduced' deve ser booleano.`);
+                }
+            }
 
             var _success = await _user.save().then(() => {
                 return true;
@@ -178,7 +184,7 @@ module.exports = {
     async meUpdate(req, res, next) {
         try {
             var { id } = res.locals.user;
-            var { name, email } = req.body;
+            var { name, email, introduced } = req.body;
             if (!name || !email) {
                 throw new ErrorHandler(400, null);
             }
@@ -190,6 +196,13 @@ module.exports = {
 
             _user.name = name;
             _user.email = email;
+            if (introduced != undefined) {
+                if (typeof introduced === "boolean") {
+                    _user.introduced = introduced;
+                } else {
+                    throw new ErrorHandler(404, `'introduced' deve ser booleano.`);
+                }
+            }
 
             var _success = await _user.save().then(() => {
                 return true;

@@ -100,7 +100,7 @@ routes.route('/routes/:id/lessons')
 
 
 // Users
-routes.route('/admin/users/:id')
+routes.route('/users/:id')
     .get(UsersController.index)
     .put(UsersController.update)
     .delete(UsersController.delete);
@@ -108,6 +108,7 @@ routes.route('/admin/users/:id')
 
 routes.route('/users')
     .get(UsersController.list);
+
 
 
 routes.route('/users/:id/companies')
