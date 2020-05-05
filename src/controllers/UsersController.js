@@ -208,6 +208,37 @@ module.exports = {
         }
 
     },
+    async meIntroduce(req, res, next) {
+        try {
+            var { id } = res.locals.user;
+            if (!id) {
+                throw new ErrorHandler(400, null);
+            }
+            const _user = await User.findByPk(id);
+
+            if (!_user) {
+                throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
+            }
+
+            _user.introduced = true;
+
+            var _success = await _user.save().then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            _user.password = null;
+            return res.status(200).json(_user);
+        } catch (err) {
+            next(err);
+        }
+
+    },
     async meDelete(req, res, next) {
         try {
             var { id } = res.locals.user;

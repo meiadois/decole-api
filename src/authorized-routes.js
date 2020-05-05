@@ -22,7 +22,8 @@ authorized_routes.route('/me')
     .get(AuthService.authorize, UsersController.meIndex)
     .put(AuthService.authorize, UsersController.meUpdate)
     .delete(AuthService.authorize, UsersController.meDelete);
-
+authorized_routes.route('/me/introduce')
+    .post(AuthService.authorize, UsersController.meIntroduce);
 // Companies
 authorized_routes.route('/me/companies')
     .get(AuthService.authorize, UsersController.listMeCompany)
