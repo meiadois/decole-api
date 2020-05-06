@@ -4,25 +4,26 @@ module.exports = {
     return queryInterface.createTable('requirements', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
       required_step_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'steps', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       required_lesson_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'lessons', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       lesson_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'lessons', key: 'id' },
         onUpdate: 'CASCADE',

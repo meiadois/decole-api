@@ -4,11 +4,12 @@ module.exports = {
     return queryInterface.createTable('steps', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
       lesson_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'lessons', key: 'id' },
         onUpdate: 'CASCADE',

@@ -52,4 +52,8 @@ authorized_routes.route('/me/accounts/:channel_name')
 authorized_routes.route('/me/accounts')
     .get(AuthService.authorize, AccountsController.meList)
     .post(AuthService.authorize, AccountsController.meStore);
+
+authorized_routes.route('/me/routes')
+    .get(AuthService.authorize, RoutesController.meListWithProgress);
+
 module.exports = authorized_routes;

@@ -1,6 +1,4 @@
 'use strict';
-const uuid = require('uuid/v4');
-
 module.exports = (sequelize, DataTypes) => {
   const Company = sequelize.define('Company', {
     name: DataTypes.STRING,
@@ -17,8 +15,5 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsTo(models.Segment, { foreignKey: 'segment_id', as: 'segment' });
     this.belongsToMany(models.User, { foreignKey: 'company_id', through: 'user_companies', as: 'users' });
   };
-
-  Company.beforeCreate(m => m.id = uuid());
-
   return Company;
 };

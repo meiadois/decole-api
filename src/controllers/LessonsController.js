@@ -52,17 +52,18 @@ module.exports = {
     },
     async store(req, res, next) {
         try {
-            var { title, description } = req.body;
-            if (!title || !description) {
+            var { title } = req.body;
+
+            if (!title) {
                 throw new ErrorHandler(400, null);
             }
-            const nResults = await Lesson.count({ where: { title, description } });
+            const nResults = await Lesson.count({ where: { title } });
 
             if (nResults != 0) {
                 throw new ErrorHandler(400, `Já existe uma lição com o título [${title}].`);
             }
             const [_lesson] = await Lesson.findOrCreate({
-                where: { title, description }
+                where: { title }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -79,8 +80,8 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { title, description } = req.body;
-            if (!title || !description) {
+            var { description } = req.body;
+            if (!description) {
                 throw new ErrorHandler(400, null);
             }
 
@@ -90,7 +91,6 @@ module.exports = {
                 throw new ErrorHandler(404, `Lição ${id} não encontrada.`);
             }
 
-            _lesson.title = title;
             _lesson.description = description;
 
 

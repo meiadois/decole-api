@@ -1,6 +1,8 @@
 const database = require('../models');
 const Route = database.Route;
 const DoneRoute = database.DoneRoute;
+const DoneLesson = database.DoneLesson;
+
 const User = database.User;
 
 const { ErrorHandler } = require('../helpers/error');
@@ -181,36 +183,54 @@ module.exports = {
     async meStore(req, res, next) {
         try {
             var { route_id } = req.body;
-            var { id } = res.locals.user;
-            if (!id || !route_id) {
+            var user_id = res.locals.user.id;
+            if (!user_id || !route_id) {
                 throw new ErrorHandler(400, null);
             }
-            const nResults = await Route.count({ where: { 'user_id': id, route_id } });
+            const nResults = await DoneRoute.count({ where: { user_id, route_id } });
 
             if (nResults != 0) {
-                throw new ErrorHandler(400, `A rota [${route_id}] já foi concluida pelo usuário [${id}].`);
+                throw new ErrorHandler(400, `A rota [${route_id}] já foi concluida pelo usuário [${user_id}].`);
             }
 
-            const _route = await Route.findByPk(route_id);
+            const _route = await Route.findByPk(route_id, {
+                include: [
+                    {
+                        association: 'lessons'
+                    },
+                ]
+            });
 
             if (!_route) {
                 throw new ErrorHandler(404, `Rota ${route_id} não encontrada.`);
             }
 
-            const _user = await User.findByPk(id);
+
+            const _user = await User.findByPk(user_id);
 
             if (!_user) {
-                throw new ErrorHandler(404, `Usuário ${id} não encontrado.`);
+                throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`);
             }
 
+
+
             const [_done_route] = await DoneRoute.findOrCreate({
-                where: { 'user_id': id, route_id }
+                where: { user_id, route_id }
             }).catch((err) => {
                 console.log(err);
                 return null;
             });
             if (!_done_route) {
                 throw new ErrorHandler(500, null);
+            }
+
+            for (var i in _route.lessons) {
+                const [_done_lesson] = await DoneLesson.findOrCreate({
+                    where: { user_id, 'lesson_id': _route.lessons[i].id }
+                }).catch((err) => {
+                    console.log(err);
+                    return null;
+                });
             }
 
             return res.status(201).json(_done_route);

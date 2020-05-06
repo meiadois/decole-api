@@ -4,18 +4,19 @@ module.exports = {
     return queryInterface.createTable('channel_lessons', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
       channel_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'channels', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       lesson_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'lessons', key: 'id' },
         onUpdate: 'CASCADE',
