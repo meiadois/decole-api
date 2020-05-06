@@ -149,22 +149,87 @@ module.exports = {
     },
     async meListWithProgress(req, res, next) {
         try {
-            var { user_id } = res.locals.user.id;
+            var user_id = res.locals.user.id;
 
             var _routes = await Route.findAll({
                 include: [
                     {
-                        association: 'lessons'
+                        association: 'lessons',
+                        through: { attributes: [] }
                     },
-                ]
+                ],
             });
-            var _lesson_ids = null
-            for (var i in _routes.lessons) {
-                _lesson_ids.push(_routes.lessons[i].id)
+            var infos = []
+            for (let y = 0; y < _routes.length; y++) {
+                let lessons = _routes[y].lessons
+                let n_done_lessons = 0
+
+                for (let i = 0; i < lessons.length; i++) {
+                    let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
+                    lessons[i].dataValues['done'] = n != 0 // is true if is done
+                    if (lessons[i].dataValues['done'] == true) n_done_lessons++;
+                }
+                infos.push({
+                    'id': _routes[y].id,
+                    'title': _routes[y].title,
+                    'title': _routes[y].title,
+                    'description': _routes[y].description,
+                    'createdAt': _routes[y].createdAt,
+                    'updatedAt': _routes[y].updatedAt,
+                    'lessons': lessons,
+                    'progress': {
+                        'done': n_done_lessons,
+                        'total': lessons.length,
+                        'remain': lessons.length - n_done_lessons,
+                        "percentage": Math.floor((((n_done_lessons) / lessons.length) * 100))
+                    }
+                })
+            }
+
+
+            return res.status(200).json(
+                infos
+            );
+        } catch (err) {
+            next(err);
+        }
+
+    },
+    async meIndexWithProgress(req, res, next) {
+        try {
+            var { id } = req.params;
+            var user_id = res.locals.user.id;
+
+            var _route = await Route.findByPk(id, {
+                include: [
+                    {
+                        association: 'lessons',
+                        through: { attributes: [] }
+                    },
+                ],
+            });
+            var lessons = _route.lessons
+            var n_done_lessons = 0
+
+            for (let i = 0; i < lessons.length; i++) {
+                let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
+                lessons[i].dataValues['done'] = n != 0 // is true if is done
+                if (lessons[i].dataValues['done'] == true) n_done_lessons++;
             }
             return res.status(200).json({
-                'routes': _routes,
-                'ids': _lesson_ids,
+                'id': _route.id,
+                'title': _route.title,
+                'title': _route.title,
+                'description': _route.description,
+                'createdAt': _route.createdAt,
+                'updatedAt': _route.updatedAt,
+                'lessons': lessons,
+                'progress': {
+                    'done': n_done_lessons,
+                    'total': lessons.length,
+                    'remain': lessons.length - n_done_lessons,
+                    "percentage": Math.floor((((n_done_lessons) / lessons.length) * 100))
+                }
             });
         } catch (err) {
             next(err);
