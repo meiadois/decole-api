@@ -55,5 +55,7 @@ authorized_routes.route('/me/accounts')
 
 authorized_routes.route('/me/routes')
     .get(AuthService.authorize, RoutesController.meListWithProgress);
+authorized_routes.route('/me/routes/:id')
+    .get(AuthService.authorize, RoutesController.meIndexWithProgress);
 
 module.exports = authorized_routes;
