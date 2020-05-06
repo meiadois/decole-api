@@ -59,8 +59,8 @@ module.exports = {
     },
     async store(req, res, next) {
         try {
-            var { description } = req.body;
-            if (!description) {
+            var { title, description } = req.body;
+            if (!description || !title) {
                 throw new ErrorHandler(400, null);
             }
             const nResults = await Route.count({
@@ -71,7 +71,7 @@ module.exports = {
                 throw new ErrorHandler(400, `Já existe uma rota com a descrição [${description}].`);
             }
             const [_route] = await Route.findOrCreate({
-                where: { description }
+                where: { title, description }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -88,8 +88,8 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { description } = req.body;
-            if (!description) {
+            var { title, description } = req.body;
+            if (!description || !title) {
                 throw new ErrorHandler(400, null);
             }
 
@@ -100,7 +100,7 @@ module.exports = {
             }
 
             _route.description = description;
-
+            _route.title = title;
 
             var _success = await _route.save().then(() => {
                 return true;

@@ -1,5 +1,6 @@
 const database = require('../models')
 const Step = database.Step
+const Lesson = database.Lesson
 const { ErrorHandler } = require('../helpers/error');
 
 module.exports = {
@@ -7,6 +8,28 @@ module.exports = {
         try {
             const _steps = await Step.findAll();
             res.json(_steps);
+        } catch (err) {
+            next(err);
+        }
+    },
+    async listByLesson(req, res, next) {
+        try {
+            var { lesson_id } = req.params;
+            var _lesson = await Lesson.findByPk(lesson_id, {
+                include: [
+                    {
+                        association: 'steps'
+                    },
+                    {
+                        association: 'requirements'
+                    },
+                ]
+            });
+
+            if (_lesson === null) {
+                throw new ErrorHandler(404, `Lição ${id} não encontrada.`);
+            }
+            res.json(_lesson.steps);
         } catch (err) {
             next(err);
         }

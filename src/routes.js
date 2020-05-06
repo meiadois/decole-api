@@ -42,6 +42,9 @@ routes.route('/steps')
     .get(StepsController.list)
     .post(StepsController.store);
 
+routes.route('/steps/lessons/:lesson_id')
+    .get(StepsController.listByLesson);
+
 // Channels
 routes.route('/channels/:id')
     .get(ChannelsController.index)

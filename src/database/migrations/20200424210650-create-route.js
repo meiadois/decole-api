@@ -4,9 +4,14 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('routes', {
       id: {
-        type: Sequelize.UUID,
         allowNull: false,
-        primaryKey: true
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      title: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       description: {
         allowNull: false,

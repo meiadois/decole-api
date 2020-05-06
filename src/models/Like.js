@@ -1,6 +1,4 @@
 'use strict';
-const uuid = require('uuid/v4');
-
 module.exports = (sequelize, DataTypes) => {
   const Like = sequelize.define('Like', {
     sender_id: DataTypes.STRING,
@@ -14,7 +12,5 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsToMany(models.Company, { foreignKey: 'like_id', through: 'company_likes', as: 'companies' });
 
   };
-  Like.beforeCreate(m => m.id = uuid());
-
   return Like;
 };

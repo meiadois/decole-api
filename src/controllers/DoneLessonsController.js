@@ -179,15 +179,16 @@ module.exports = {
     async meStore(req, res, next) {
         try {
             var { lesson_id } = req.body;
-            var { id } = res.locals.user;
-            if (!id || !lesson_id) {
+            var user_id = res.locals.user.id;
+
+            if (!user_id || !lesson_id) {
                 throw new ErrorHandler(400, null);
             }
 
-            const nResults = await Lesson.count({ where: { 'user_id': id, lesson_id } });
+            const nResults = await DoneLesson.count({ where: { user_id, lesson_id } });
 
             if (nResults != 0) {
-                throw new ErrorHandler(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${id}].`);
+                throw new ErrorHandler(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${user_id}].`);
             }
 
             const _lesson = await Lesson.findByPk(lesson_id);
@@ -196,14 +197,14 @@ module.exports = {
                 throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
             }
 
-            const _user = await User.findByPk(id);
+            const _user = await User.findByPk(user_id);
 
             if (!_user) {
-                throw new ErrorHandler(404, `Usuário ${id} não encontrado.`);
+                throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`);
             }
 
             const [_done_lesson] = await DoneLesson.findOrCreate({
-                where: { 'user_id': id, lesson_id }
+                where: { user_id, lesson_id }
             }).catch((err) => {
                 console.log(err);
                 return null;

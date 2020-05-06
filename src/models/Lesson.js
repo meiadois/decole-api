@@ -1,10 +1,7 @@
 'use strict';
-const uuid = require('uuid/v4');
-
 module.exports = (sequelize, DataTypes) => {
   const Lesson = sequelize.define('Lesson', {
     title: DataTypes.STRING,
-    description: DataTypes.STRING
   }, {
     tableName: 'lessons'
   });
@@ -17,7 +14,5 @@ module.exports = (sequelize, DataTypes) => {
     this.hasMany(models.Requirement, { foreignKey: 'lesson_id', as: 'requirements' });
     this.hasMany(models.DoneLesson, { foreignKey: 'lesson_id', as: 'done_lessons' });
   };
-
-  Lesson.beforeCreate(lesson => lesson.id = uuid());
   return Lesson;
 };

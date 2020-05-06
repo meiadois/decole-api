@@ -1,8 +1,7 @@
 'use strict';
-const uuid = require('uuid/v4');
-
 module.exports = (sequelize, DataTypes) => {
   const Route = sequelize.define('Route', {
+    title: DataTypes.STRING,
     description: DataTypes.STRING
   }, {
     tableName: 'routes'
@@ -13,7 +12,5 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsToMany(models.User, { foreignKey: 'route_id', through: 'user_routes', as: 'users' });
     this.hasMany(models.DoneRoute, { foreignKey: 'route_id', as: 'done_routes' });
   };
-  Route.beforeCreate(m => m.id = uuid());
-
   return Route;
 };
