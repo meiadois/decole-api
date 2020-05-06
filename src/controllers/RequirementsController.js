@@ -70,19 +70,33 @@ module.exports = {
                 throw new ErrorHandler(404, `Lição Requerida ${id} não encontrado.`);
             }
 
-            const step = await Step.findOne({ where: { 'lesson_id': required_lesson_id, 'order': step_order } });
+            const step = await Step.findOne({
+                where: {
+                    'lesson_id': required_lesson_id,
+                    'order': step_order
+                }
+            });
 
             if (!step) {
                 throw new ErrorHandler(404, `Etapa ${id} não encontrada.`);
             }
 
-            const nResults = await Lesson.count({
-                where: { lesson_id, required_lesson_id, 'required_step_id': step.id }
-            });
 
+
+            const nResults = await Requirement.findAll({
+                where: {
+                    lesson_id,
+                    required_lesson_id,
+                    'required_step_id': step.id
+                }
+            }).then((result) => {
+                return result.length
+            });
+            console.log(nResults)
             if (nResults != 0) {
                 throw new ErrorHandler(400, `A etapa [${step.id}] da lição [${required_lesson_id}] já é requisito para a lição [${lesson_id}].`);
             }
+
             const _requirement = await Requirement.create({
                 lesson_id,
                 required_lesson_id,
@@ -92,6 +106,7 @@ module.exports = {
                     console.log(err);
                     return null;
                 });
+
             if (!_requirement) {
                 throw new ErrorHandler(500, null);
             }
@@ -108,7 +123,9 @@ module.exports = {
             if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-
+            console.log(`lesson_id: ${lesson_id}`)
+            console.log(`required_lesson_id: ${required_lesson_id}`)
+            console.log(`required_step_id: ${step.id}`)
             return res.status(201).json(_requirement);
         } catch (err) {
             next(err);
