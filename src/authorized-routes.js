@@ -58,4 +58,9 @@ authorized_routes.route('/me/routes')
 authorized_routes.route('/me/routes/:id')
     .get(AuthService.authorize, RoutesController.meIndexWithProgress);
 
+authorized_routes.route('/me/simple/routes')
+    .get(AuthService.authorize, RoutesController.meSimpleListWithProgress);
+authorized_routes.route('/me/simple/routes/:id')
+    .get(AuthService.authorize, RoutesController.meSimpleIndexWithProgress);
+
 module.exports = authorized_routes;
