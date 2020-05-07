@@ -259,6 +259,7 @@ module.exports = {
 
             for (let i = 0; i < lessons.length; i++) {
                 let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
+                lessons[i].dataValues['done'] = n != 0 // is true if is done
                 if (n != 0 ) n_done_lessons++;
             }
             return res.status(200).json({
