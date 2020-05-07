@@ -132,5 +132,8 @@
 ### Subir migrations
 `sequelize-cli db:migrate`
 
+### Remover migration especifica
+`npx sequelize-cli db:migrate:undo --name 20200424210933-create-like.js`
+
 ### Remover todas as migrations do banco
 `sequelize-cli db:migrate:undo:all`
