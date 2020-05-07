@@ -214,7 +214,7 @@ module.exports = {
 
                 for (let i = 0; i < lessons.length; i++) {
                     let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
-                    if (lessons[i].dataValues['done'] == true) n_done_lessons++;
+                    if (n != 0 ) n_done_lessons++;
                 }
                 infos.push({
                     'id': _routes[y].id,
@@ -259,8 +259,7 @@ module.exports = {
 
             for (let i = 0; i < lessons.length; i++) {
                 let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
-                lessons[i].dataValues['done'] = n != 0 // is true if is done
-                if (lessons[i].dataValues['done'] == true) n_done_lessons++;
+                if (n != 0 ) n_done_lessons++;
             }
             return res.status(200).json({
                 'id': _route.id,
