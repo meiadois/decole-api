@@ -195,6 +195,52 @@ module.exports = {
         }
 
     },
+    async meSimpleListWithProgress(req, res, next) {
+        try {
+            var user_id = res.locals.user.id;
+
+            var _routes = await Route.findAll({
+                include: [
+                    {
+                        association: 'lessons',
+                        through: { attributes: [] }
+                    },
+                ],
+            });
+            var infos = []
+            for (let y = 0; y < _routes.length; y++) {
+                let lessons = _routes[y].lessons
+                let n_done_lessons = 0
+
+                for (let i = 0; i < lessons.length; i++) {
+                    let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
+                    if (lessons[i].dataValues['done'] == true) n_done_lessons++;
+                }
+                infos.push({
+                    'id': _routes[y].id,
+                    'title': _routes[y].title,
+                    'title': _routes[y].title,
+                    'description': _routes[y].description,
+                    'createdAt': _routes[y].createdAt,
+                    'updatedAt': _routes[y].updatedAt,
+                    'progress': {
+                        'done': n_done_lessons,
+                        'total': lessons.length,
+                        'remain': lessons.length - n_done_lessons,
+                        "percentage": Math.floor((((n_done_lessons) / lessons.length) * 100))
+                    }
+                })
+            }
+
+
+            return res.status(200).json(
+                infos
+            );
+        } catch (err) {
+            next(err);
+        }
+
+    },
     async meIndexWithProgress(req, res, next) {
         try {
             var { id } = req.params;
@@ -224,6 +270,45 @@ module.exports = {
                 'createdAt': _route.createdAt,
                 'updatedAt': _route.updatedAt,
                 'lessons': lessons,
+                'progress': {
+                    'done': n_done_lessons,
+                    'total': lessons.length,
+                    'remain': lessons.length - n_done_lessons,
+                    "percentage": Math.floor((((n_done_lessons) / lessons.length) * 100))
+                }
+            });
+        } catch (err) {
+            next(err);
+        }
+
+    },
+    async meSimpleIndexWithProgress(req, res, next) {
+        try {
+            var { id } = req.params;
+            var user_id = res.locals.user.id;
+
+            var _route = await Route.findByPk(id, {
+                include: [
+                    {
+                        association: 'lessons',
+                        through: { attributes: [] }
+                    },
+                ],
+            });
+            var lessons = _route.lessons
+            var n_done_lessons = 0
+
+            for (let i = 0; i < lessons.length; i++) {
+                let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
+                if (lessons[i].dataValues['done'] == true) n_done_lessons++;
+            }
+            return res.status(200).json({
+                'id': _route.id,
+                'title': _route.title,
+                'title': _route.title,
+                'description': _route.description,
+                'createdAt': _route.createdAt,
+                'updatedAt': _route.updatedAt,
                 'progress': {
                     'done': n_done_lessons,
                     'total': lessons.length,
