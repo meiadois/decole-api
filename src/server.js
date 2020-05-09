@@ -31,12 +31,13 @@ function wrapAsync(fn) {
     }
 }
 app.get('*', wrapAsync(async function (req, res) {
-    await new Promise(resolve => setTimeout(() => resolve(), 50));
+    //res.status(404).json({message:"Endpoint inexistente."});
+    throw new ErrorHandler(404, `${req.originalUrl} não existente.`);
+    //await new Promise(resolve => setTimeout(() => resolve(), 50));
 }))
 app.use(function (err, req, res, next) {
     handleError(err, res);
 });
-
 
 app.listen(process.env.PORT || 3000, function () {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
