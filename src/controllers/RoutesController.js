@@ -1,6 +1,8 @@
 const database = require('../models');
 const Lesson = database.Lesson;
 const Route = database.Route;
+const Channel = database.Channel;
+
 const Step = database.Step;
 const DoneLesson = database.DoneLesson;
 
@@ -16,6 +18,9 @@ module.exports = {
                     },
                     {
                         association: 'users'
+                    },
+                    {
+                        association: 'channels'
                     },
                 ]
             });
@@ -41,6 +46,9 @@ module.exports = {
                         },
                         {
                             association: 'users'
+                        },
+                        {
+                            association: 'channels'
                         },
                     ]
                 });
@@ -172,11 +180,7 @@ module.exports = {
                 infos.push({
                     'id': _routes[y].id,
                     'title': _routes[y].title,
-                    'title': _routes[y].title,
                     'description': _routes[y].description,
-                    'createdAt': _routes[y].createdAt,
-                    'updatedAt': _routes[y].updatedAt,
-                    'lessons': lessons,
                     'progress': {
                         'done': n_done_lessons,
                         'total': lessons.length,
@@ -214,7 +218,7 @@ module.exports = {
 
                 for (let i = 0; i < lessons.length; i++) {
                     let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
-                    if (n != 0 ) n_done_lessons++;
+                    if (n != 0) n_done_lessons++;
                 }
                 infos.push({
                     'id': _routes[y].id,
@@ -260,15 +264,12 @@ module.exports = {
             for (let i = 0; i < lessons.length; i++) {
                 let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
                 lessons[i].dataValues['done'] = n != 0 // is true if is done
-                if (n != 0 ) n_done_lessons++;
+                if (n != 0) n_done_lessons++;
             }
             return res.status(200).json({
                 'id': _route.id,
                 'title': _route.title,
-                'title': _route.title,
                 'description': _route.description,
-                'createdAt': _route.createdAt,
-                'updatedAt': _route.updatedAt,
                 'lessons': lessons,
                 'progress': {
                     'done': n_done_lessons,
@@ -435,7 +436,7 @@ module.exports = {
             for (var i in lesson_ids) {
                 var _lesson = await Lesson.findByPk(lesson_ids[i]);
                 if (!_lesson) {
-                    throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
+                    throw new ErrorHandler(404, `Lição ${lesson_ids[i]} não encontrada.`);
                 }
 
                 _lessons.push(_lesson);
@@ -457,6 +458,141 @@ module.exports = {
             next(err);
         }
     },
+    async storeChannel(req, res, next) {
+        try {
+            var { id } = req.params;
+            var { channel_ids } = req.body;
+            if (!id || !channel_ids) {
+                throw new ErrorHandler(400, null);
+            }
+
+            const _route = await Route.findByPk(id, {
+                include: [
+                    {
+                        association: 'channels'
+                    },
+                ]
+            });
+            if (!_route) {
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
+            }
+            var _channels = [];
+
+            for (var i in channel_ids) {
+                var _channel = await Channel.findByPk(channel_ids[i]);
+                if (!_channel) {
+                    throw new ErrorHandler(404, `Lição ${channel_ids[i]} não encontrada.`);
+                }
+
+                _channels.push(_channel);
+            }
+
+            var _success = await _route.addChannels(_channels).then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(201).json(await _route.reload());
+        } catch (err) {
+            next(err);
+        }
+    },
+    async updateChannel(req, res, next) {
+        try {
+            var { id } = req.params;
+            var { channel_ids } = req.body;
+            if (!id || !channel_ids) {
+                throw new ErrorHandler(400, null);
+            }
+
+            const _route = await Route.findByPk(id, {
+                include: [
+                    {
+                        association: 'lessons'
+                    },
+                    {
+                        association: 'channels'
+                    },
+                ]
+            });
+            if (!_route) {
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
+            }
+            var _channels = [];
+
+            for (var i in channel_ids) {
+                var _channel = await Channel.findByPk(channel_ids[i]);
+                if (!_channel) {
+                    throw new ErrorHandler(404, `Lição ${channel_ids[i]} não encontrada.`);
+                }
+
+                _channels.push(_channel);
+            }
 
 
+            var _success = await _route.setChannels(_channels).then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(201).json(await _route.reload());
+        } catch (err) {
+            next(err);
+        }
+    },
+    async deleteChannel(req, res, next) {
+        try {
+            var { id } = req.params;
+            var { channel_ids } = req.body;
+            if (!id || !channel_ids) {
+                throw new ErrorHandler(400, null);
+            }
+
+            const _route = await Route.findByPk(id, {
+                include: [
+                    {
+                        association: 'lessons'
+                    },
+                ]
+            });
+
+            if (!_route) {
+                throw new ErrorHandler(404, `Rota ${id} não encontrada.`);
+            }
+            var _channels = [];
+
+            for (var i in channel_ids) {
+                var _channel = await Lesson.findByPk(channel_ids[i]);
+                if (!_channel) {
+                    throw new ErrorHandler(404, `Lição ${channel_ids[i]} não encontrada.`);
+                }
+
+                _channels.push(_channel);
+            }
+
+            var _success = await _route.removeChannels(_channels).then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(204).json({});
+        } catch (err) {
+            next(err);
+        }
+    },
 };
