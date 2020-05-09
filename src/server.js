@@ -8,7 +8,6 @@ require('./models');
 
 const app = express();
 app.use(express.json());
-
 const public_folder = path.join(__dirname, '..', 'public')
 folders_manager.createPublicFolders(public_folder);
 const companies_folder = path.join(public_folder, 'companies')
@@ -19,7 +18,7 @@ app.use('/v1', routes);
 app.use('/v1', authorized_routes);
 
 
-app.get('/', async function (req, res) {
+app.get('/', async function (req, res, next) {
     res.json({
         "Mensagem": "Seja bem vindo(a)! Para consultar nossas rotas, utilize o INSOMNIA e realize a importação do Workspace contido na pasta /docs do nosso GITHUB."
     })
@@ -42,3 +41,5 @@ app.use(function (err, req, res, next) {
 app.listen(process.env.PORT || 3000, function () {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
+
+

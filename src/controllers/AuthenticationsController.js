@@ -2,6 +2,7 @@ const database = require('../models');
 const User = database.User;
 const LoginService = require('../services/login-service');
 const AuthService = require('../services/auth-service');
+const Logger = require('../services/Logger');
 
 const { ErrorHandler } = require('../helpers/error');
 
@@ -36,6 +37,7 @@ module.exports = {
                     'name': _user.name
                 }
             });
+            Logger.info(`Usuário ${_user.email} realizou o login com sucesso`, req);
             return res.status(200).json({
                 'message': "Login realizado com sucesso",
                 'user': {
@@ -86,6 +88,7 @@ module.exports = {
                     'name': _user.name
                 }
             });
+            Logger.info(`Usuário ${_user.email} cadastrado com sucesso com sucesso`, req);
             return res.status(200).json({
                 'message': "Login realizado com sucesso",
                 'user': {
