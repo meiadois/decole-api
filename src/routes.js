@@ -100,6 +100,10 @@ routes.route('/routes/:id/lessons')
     .put(RoutesController.updateLesson)
     .delete(RoutesController.deleteLesson);
 
+routes.route('/routes/:id/channels')
+    .post(RoutesController.storeChannel)
+    .put(RoutesController.updateChannel)
+    .delete(RoutesController.deleteChannel);
 
 
 // Users
