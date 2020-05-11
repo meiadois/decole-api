@@ -137,3 +137,16 @@
 
 ### Remover todas as migrations do banco
 `sequelize-cli db:migrate:undo:all`
+
+
+### Criar Seed
+`sequelize seed:generate --name users`
+
+## Subir Seeds
+`sequelize-cli db:seed:all`
+
+## Remover Seed especifico
+`sequelize-cli db:seed:undo --seed name-of-seed-as-in-data`
+
+## Remover todos os Seeds
+`sequelize-cli db:seed:undo:all`

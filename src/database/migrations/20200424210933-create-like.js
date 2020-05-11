@@ -9,16 +9,23 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       sender_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        type: Sequelize.STRING
+        references: { model: 'companies', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       recipient_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        type: Sequelize.STRING
+        references: { model: 'companies', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       status: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.ENUM,
+        values: ['pending', 'accepted', 'denied', 'deleted']
       },
       createdAt: {
         allowNull: false,

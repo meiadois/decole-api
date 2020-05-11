@@ -21,6 +21,8 @@ const DoneLessonsController = require('./controllers/DoneLessonsController');
 const DoneRoutesController = require('./controllers/DoneRoutesController');
 const AuthenticationsController = require('./controllers/AuthenticationsController');
 const AccountsController = require('./controllers/AccountsController');
+const LikesController = require('./controllers/LikesController');
+
 
 
 
@@ -165,6 +167,15 @@ routes.route('/accounts')
     .get(AccountsController.list)
     .post(AccountsController.store);
 
+// Companies
+routes.route('/likes/:id')
+    .get(LikesController.index)
+    .put(LikesController.update)
+    .delete(LikesController.delete);
+
+routes.route('/likes')
+    .get(LikesController.list)
+    .post(LikesController.store);
 
 // Me Routes
 
