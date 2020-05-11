@@ -8,7 +8,7 @@ const { ErrorHandler } = require('../helpers/error');
 module.exports = {
     async list(req, res, next) {
         try {
-            var { status, sender_company } = req.query;
+            var { status, sender_company, recipient_company } = req.query;
             let where = {}
             if (status != undefined) {
                 where['status'] = status
@@ -16,6 +16,10 @@ module.exports = {
             if (sender_company != undefined) {
                 where['sender_company'] = sender_company
             }
+            if (recipient_company != undefined) {
+                where['recipient_company'] = recipient_company
+            }
+
             const _likes = await Like.findAll({
                 where,
                 include: [
