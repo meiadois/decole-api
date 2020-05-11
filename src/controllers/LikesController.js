@@ -8,7 +8,16 @@ const { ErrorHandler } = require('../helpers/error');
 module.exports = {
     async list(req, res, next) {
         try {
+            var { status, sender_company } = req.query;
+            let where = {}
+            if (status != undefined) {
+                where['status'] = status
+            }
+            if (sender_company != undefined) {
+                where['sender_company'] = sender_company
+            }
             const _likes = await Like.findAll({
+                where,
                 include: [
                     {
                         association: 'sender_company'
@@ -25,14 +34,16 @@ module.exports = {
     },
     async index(req, res, next) {
         try {
-            var { id } = req.params;
 
+            var { id } = req.params;
+            let where = {}
             if (!id) {
                 throw new ErrorHandler(404, null);
             }
             var _like = null;
             try {
                 _like = await Like.findByPk(id, {
+                    where,
                     include: [
                         {
                             association: 'sender_company'
@@ -85,7 +96,7 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { sender_id, recipient_id } = req.body;
+            var { sender_id, recipient_id, status = null } = req.body;
             if (!sender_id || !recipient_id) {
                 throw new ErrorHandler(400, null);
             }
@@ -110,6 +121,9 @@ module.exports = {
 
             _like.sender_id = sender_id;
             _like.recipient_id = recipient_id;
+            if (status !== null) {
+                _like.status = status
+            }
 
 
             var _success = await _like.save().then(() => {
