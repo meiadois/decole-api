@@ -11,7 +11,10 @@ module.exports = {
             const _company = await Company.findAll({
                 include: [
                     {
-                        association: 'likes'
+                        association: 'sent_likes'
+                    },
+                    {
+                        association: 'received_likes'
                     },
                     {
                         association: 'users'

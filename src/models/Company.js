@@ -10,10 +10,11 @@ module.exports = (sequelize, DataTypes) => {
   });
   Company.associate = function (models) {
     // associations can be defined here
-    this.belongsToMany(models.Like, { foreignKey: 'company_id', through: 'company_likes', as: 'likes' });
     // TODO Ajustar relação 1 x N 
     this.belongsTo(models.Segment, { foreignKey: 'segment_id', as: 'segment' });
     this.belongsToMany(models.User, { foreignKey: 'company_id', through: 'user_companies', as: 'users' });
+    this.hasMany(models.Like, { foreignKey: 'sender_id', as: 'sent_likes' });
+    this.hasMany(models.Like, { foreignKey: 'recipient_id', as: 'received_likes' });
   };
   return Company;
 };

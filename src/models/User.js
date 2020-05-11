@@ -15,8 +15,6 @@ module.exports = (sequelize, DataTypes) => {
     this.hasMany(models.DoneLesson, { foreignKey: 'user_id', as: 'done_lessons' });
     this.hasMany(models.DoneRoute, { foreignKey: 'user_id', as: 'done_routes' });
     this.hasMany(models.Account, { foreignKey: 'user_id', as: 'accounts' });
-    this.hasMany(models.Like, { foreignKey: 'sender_id', as: 'sended_likes' });
-    this.hasMany(models.Like, { foreignKey: 'recipient_id', as: 'received_likes' });
   };
   return User;
 };

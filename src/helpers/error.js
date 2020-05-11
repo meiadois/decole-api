@@ -28,6 +28,7 @@ const handleError = (err, res) => {
         }
         if (!statusCode) statusCode = 500;
     } else {
+        console.log(err);
         var log_message = Logger.get_message_from_error(err);
         Logger.error(log_message).catch((err) => {
             console.log(`Erro do log ignorado`);
