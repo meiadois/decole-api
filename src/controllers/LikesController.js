@@ -5,6 +5,10 @@ const User = database.User
 
 const { ErrorHandler } = require('../helpers/error');
 
+const VALID_STATUS = ['pending', 'accepted', 'denied', 'deleted']
+function is_valid_status(status) {
+    return VALID_STATUS.indexOf(status) >= 0
+}
 module.exports = {
     async list(req, res, next) {
         try {
@@ -103,6 +107,11 @@ module.exports = {
             var { sender_id, recipient_id, status = null } = req.body;
             if (!sender_id || !recipient_id) {
                 throw new ErrorHandler(400, null);
+            }
+            if (status != null) {
+                if (!is_valid_status(status)) {
+                    throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`);
+                }
             }
 
             const nResultsSender = await Company.count({ where: { id: sender_id } });

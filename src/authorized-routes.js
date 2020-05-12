@@ -33,8 +33,10 @@ authorized_routes.route('/me/companies')
 
 // Done Routes    
 authorized_routes.route('/me/done_routes')
-    .get(AuthService.authorize, DoneRoutesController.meList)
+    .get(AuthService.authorize, DoneRoutesController.meList);
+authorized_routes.route('/me/done_routes/:route_id')
     .post(AuthService.authorize, DoneRoutesController.meStore)
+//.post(AuthService.authorize, DoneRoutesController.meIndex);
 
 
 // Done Lessons  
