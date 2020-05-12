@@ -25,12 +25,22 @@ authorized_routes.route('/me')
 authorized_routes.route('/me/introduce')
     .post(AuthService.authorize, UsersController.meIntroduce);
 // Companies
+
 authorized_routes.route('/me/companies')
+    .get(AuthService.authorize, CompaniesController.meList)
+    .post(AuthService.authorize, CompaniesController.meStore)
+
+authorized_routes.route('/me/companies/:id')
+    .get(AuthService.authorize, CompaniesController.meIndex)
+    .put(AuthService.authorize, CompaniesController.meUpdate)
+    .delete(AuthService.authorize, CompaniesController.meDelete)
+
+
+authorized_routes.route('/me/users/companies')
     .get(AuthService.authorize, UsersController.listMeCompany)
     .post(AuthService.authorize, UsersController.storeMeCompany)
     .put(AuthService.authorize, UsersController.updateMeCompany)
     .delete(AuthService.authorize, UsersController.deleteMeCompany);
-
 // Done Routes    
 authorized_routes.route('/me/done_routes')
     .get(AuthService.authorize, DoneRoutesController.meList);
