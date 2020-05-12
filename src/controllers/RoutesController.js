@@ -5,6 +5,8 @@ const Channel = database.Channel;
 
 const Step = database.Step;
 const DoneLesson = database.DoneLesson;
+const DoneRoute = database.DoneRoute;
+
 
 const { ErrorHandler } = require('../helpers/error');
 
@@ -165,12 +167,16 @@ module.exports = {
                         association: 'lessons',
                         through: { attributes: [] }
                     },
+                    {
+                        association: 'required_routes'
+                    }
                 ],
             });
             var infos = []
             for (let y = 0; y < _routes.length; y++) {
                 let lessons = _routes[y].lessons
-                console.log(` lessons.length: ${lessons.length}`);
+                let required_routes = _routes[y].required_routes
+
                 let n_done_lessons = 0
 
                 for (let i = 0; i < lessons.length; i++) {
@@ -178,13 +184,22 @@ module.exports = {
                     lessons[i].dataValues['done'] = n != 0 // is true if is done
                     if (lessons[i].dataValues['done'] == true) n_done_lessons++;
                 }
-
+                var locked = false
+                for (let i = 0; i < required_routes.length; i++) {
+                    let n = await DoneRoute.count({ where: { user_id, 'route_id': required_routes[i].required_route_id } });
+                    console.log(`Rota concluida:\n user_id: ${user_id} \n required_route: ${required_routes[i].required_route_id}\n ${n}`)
+                    if (n == 0) {
+                        locked = true;
+                        break;
+                    }
+                }
                 percentage = n_done_lessons === 0 ? 0 : Math.floor((n_done_lessons * 100) / lessons.length);
 
                 infos.push({
                     'id': _routes[y].id,
                     'title': _routes[y].title,
                     'description': _routes[y].description,
+                    locked,
                     'progress': {
                         'done': n_done_lessons,
                         'total': lessons.length,
@@ -263,9 +278,13 @@ module.exports = {
                         association: 'lessons',
                         through: { attributes: [] }
                     },
+                    {
+                        association: 'required_routes'
+                    }
                 ],
             });
             var lessons = _route.lessons
+            var required_routes = _route.required_routes
             var n_done_lessons = 0
 
             for (let i = 0; i < lessons.length; i++) {
@@ -273,11 +292,22 @@ module.exports = {
                 lessons[i].dataValues['done'] = n != 0 // is true if is done
                 if (n != 0) n_done_lessons++;
             }
+            var locked = false
+            for (let i = 0; i < required_routes.length; i++) {
+                let n = await DoneRoute.count({ where: { user_id, 'route_id': required_routes[i].required_route_id } });
+                console.log(`Rota concluida:\n user_id: ${user_id} \n required_route: ${required_routes[i].required_route_id}\n ${n}`)
+                if (n == 0) {
+                    locked = true;
+                    break;
+                }
+            }
+
             return res.status(200).json({
                 'id': _route.id,
                 'title': _route.title,
                 'description': _route.description,
                 'lessons': lessons,
+                locked,
                 'progress': {
                     'done': n_done_lessons,
                     'total': lessons.length,

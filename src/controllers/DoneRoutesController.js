@@ -171,7 +171,12 @@ module.exports = {
                     {
                         association: 'route'
                     },
-                ]
+                ],
+                attributes: {
+                    exclude: ['user_id']
+                }
+
+
             });
 
             //_done_route.user.password = null;
@@ -182,7 +187,7 @@ module.exports = {
     },
     async meStore(req, res, next) {
         try {
-            var { route_id } = req.body;
+            var { route_id } = req.params;
             var user_id = res.locals.user.id;
             if (!user_id || !route_id) {
                 throw new ErrorHandler(400, null);
@@ -212,10 +217,8 @@ module.exports = {
                 throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`);
             }
 
-
-
-            const [_done_route] = await DoneRoute.findOrCreate({
-                where: { user_id, route_id }
+            var [_done_route] = await DoneRoute.findOrCreate({
+                where: { user_id, route_id },
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -223,6 +226,13 @@ module.exports = {
             if (!_done_route) {
                 throw new ErrorHandler(500, null);
             }
+            delete _done_route.dataValues['user_id']
+            /*
+            var _done_route = await DoneRoute.findByPk(_done_route.id, {
+                attributes: {
+                    exclude: ['user_id']
+                }
+            });*/
 
             for (var i in _route.lessons) {
                 const [_done_lesson] = await DoneLesson.findOrCreate({

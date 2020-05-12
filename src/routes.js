@@ -14,6 +14,8 @@ const ChannelsController = require('./controllers/ChannelsController');
 const SegmentsController = require('./controllers/SegmentsController');
 const LessonsController = require('./controllers/LessonsController');
 const RequirementsController = require('./controllers/RequirementsController');
+const RouteRequirementsController = require('./controllers/RouteRequirementsController');
+
 const RoutesController = require('./controllers/RoutesController');
 const UsersController = require('./controllers/UsersController');
 const CompaniesController = require('./controllers/CompaniesController');
@@ -177,7 +179,15 @@ routes.route('/likes')
     .get(LikesController.list)
     .post(LikesController.store);
 
-// Me Routes
+// Requirements
+routes.route('/route_requirements/:id')
+    .get(RouteRequirementsController.index)
+    .put(RouteRequirementsController.update)
+    .delete(RouteRequirementsController.delete);
+
+routes.route('/route_requirements')
+    .get(RouteRequirementsController.list)
+    .post(RouteRequirementsController.store);
 
 routes.get('/nova-imagem', (req, res, next) => {
     res.send(`
