@@ -60,8 +60,8 @@ module.exports = {
     },
     async store(req, res, next) {
         try {
-            var { name, cep, thumbnail, cnpj, segment_id } = req.body;
-            if (!name || !cep || !thumbnail || !cnpj || !segment_id) {
+            var { name, cep, thumbnail, cnpj, segment_id, description } = req.body;
+            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description) {
                 throw new ErrorHandler(400, null);
             }
             const nResults = await Company.count({ where: { cnpj } });
@@ -71,7 +71,7 @@ module.exports = {
             }
 
             const [_company] = await Company.findOrCreate({
-                where: { name, cep, thumbnail, cnpj, segment_id }
+                where: { name, cep, thumbnail, cnpj, segment_id, description }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -88,8 +88,8 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { name, cep, thumbnail, cnpj, segment_id } = req.body;
-            if (!name || !cep || !thumbnail || !cnpj || !segment_id) {
+            var { name, cep, thumbnail, cnpj, description, segment_id } = req.body;
+            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description) {
                 throw new ErrorHandler(400, null);
             }
 
@@ -104,6 +104,8 @@ module.exports = {
             _company.thumbnail = thumbnail;
             _company.cnpj = cnpj;
             _company.segment_id = segment_id;
+            _company.description = description;
+
 
 
             var _success = await _company.save().then(() => {
