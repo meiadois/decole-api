@@ -295,7 +295,7 @@ module.exports = {
             var locked = false
             for (let i = 0; i < required_routes.length; i++) {
                 let n = await DoneRoute.count({ where: { user_id, 'route_id': required_routes[i].required_route_id } });
-                console.log(`Rota concluida:\n user_id: ${user_id} \n required_route: ${required_routes[i].required_route_id}\n ${n}`)
+
                 if (n == 0) {
                     locked = true;
                     break;
