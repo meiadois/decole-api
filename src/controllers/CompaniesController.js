@@ -1,5 +1,6 @@
 const database = require('../models');
 const Lesson = database.Lesson;
+const User = database.User;
 const Company = database.Company;
 const Step = database.Step;
 
@@ -92,7 +93,7 @@ module.exports = {
         try {
             var { id } = req.params;
             var { name, cep, thumbnail, cnpj, description, segment_id } = req.body;
-            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description) {
+            if (!name || !cep || !thumbnail || !segment_id || !description) {
                 throw new ErrorHandler(400, null);
             }
 
@@ -105,7 +106,7 @@ module.exports = {
             _company.name = name;
             _company.cep = cep;
             _company.thumbnail = thumbnail;
-            _company.cnpj = cnpj;
+            if (cnpj != null) _company.cnpj = cnpj;
             _company.segment_id = segment_id;
             _company.description = description;
 
@@ -152,6 +153,283 @@ module.exports = {
             }
             return res.status(204).json({});
 
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meList(req, res, next) {
+        try {
+            var user_id = res.locals.user.id;
+
+            if (!user_id) {
+                throw new ErrorHandler(400, null);
+            }
+
+            var _company = await Company.findAll({
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'segment_id'],
+                },
+                include: [
+                    {
+                        association: 'users',
+                        attributes: [],
+                        where: {
+                            id: user_id
+                        }
+                    },
+                    {
+                        association: 'segment',
+                        attributes: ['name'],
+                    }
+                ]
+            });
+            /*
+            const _user = await User.findByPk(user_id, {
+                include: [
+                    {
+                        association: 'companies'
+                    },
+                    {
+                        association: 'segment',
+                    }
+                ]
+            });
+
+            if (!_user) {
+                throw new ErrorHandler(404, "Usuário não encontrada");
+            }*/
+
+            return res.status(200).json(_company);
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meIndex(req, res, next) {
+        try {
+            var { id } = req.params;
+            var user_id = res.locals.user.id;
+
+            if (!user_id) {
+                throw new ErrorHandler(400, null);
+            }
+
+            var nResults = await Company.count({
+                where: { id },
+            });
+
+            if (nResults == 0) {
+                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
+            }
+
+            var nResults = await User.count({ where: { id: user_id }, });
+
+            if (nResults == 0) {
+                throw new ErrorHandler(404, "Usuário não encontrado");
+            }
+
+            var _company = await Company.findOne({
+                where: {
+                    id
+                },
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'segment_id'],
+                },
+                include: [
+                    {
+                        association: 'users',
+                        attributes: [],
+                        where: {
+                            id: user_id
+                        }
+                    },
+                    {
+                        association: 'segment',
+                        attributes: ['name'],
+                    }
+                ]
+            });
+            if (!_company) {
+                throw new ErrorHandler(400, `O usuário ${user_id} não é proprietário da empresa ${id}`);
+            }
+
+            return res.status(200).json(_company);
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meStore(req, res, next) {
+        try {
+            var user_id = res.locals.user.id;
+
+            var { name, cep, thumbnail, cnpj, segment_id, description } = req.body;
+            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !user_id) {
+                throw new ErrorHandler(400, null);
+            }
+            if (cnpj != null) {
+                var nResults = await Company.count({ where: { cnpj } });
+
+                if (nResults != 0) {
+                    throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`);
+                }
+            }
+
+
+            const _user = await User.findByPk(user_id);
+            if (!_user) {
+                throw new ErrorHandler(404, "Usuário não encontrada");
+            }
+
+            const [_company] = await Company.findOrCreate({
+                where: { name, cep, thumbnail, cnpj, segment_id, description }
+            }).catch((err) => {
+                console.log(err);
+                return null;
+            });
+
+            if (!_company) {
+                throw new ErrorHandler(500, null);
+            }
+
+            var _success = await _user.addCompany([_company]).then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+
+            return res.status(201).json(await _company.reload());
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meUpdate(req, res, next) {
+        try {
+            var { id } = req.params;
+            var user_id = res.locals.user.id;
+            var { name, cep, thumbnail, cnpj, segment_id, description } = req.body;
+
+            if (!name || !cep || !thumbnail || !segment_id || !description || !user_id) {
+                throw new ErrorHandler(400, null);
+            }
+
+            if (!user_id) {
+                throw new ErrorHandler(400, null);
+            }
+
+            var nResults = await Company.count({
+                where: { id },
+            });
+
+            if (nResults == 0) {
+                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
+            }
+
+            var _company = await Company.findOne({
+                where: {
+                    id
+                },
+                include: [
+                    {
+                        association: 'users',
+                        where: {
+                            id: user_id
+                        }
+                    },
+                ]
+            });
+
+            if (!_company) {
+                throw new ErrorHandler(400, `O usuário ${user_id} não é proprietário da empresa ${id}`);
+            }
+
+            if (cnpj != null && cnpj != _company.cnpj) {
+                var nResults = await Company.count({ where: { cnpj } });
+
+                if (nResults != 0) {
+                    throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`);
+                }
+            }
+
+            _company.name = name;
+            _company.cep = cep;
+            _company.thumbnail = thumbnail;
+            if (cnpj != null) _company.cnpj = cnpj;
+            _company.segment_id = segment_id;
+            _company.description = description;
+
+
+
+            var _success = await _company.save().then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(200).json(_company);
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meDelete(req, res, next) {
+        try {
+            var { id } = req.params;
+            var user_id = res.locals.user.id;
+
+            if (!user_id) {
+                throw new ErrorHandler(400, null);
+            }
+
+            var nResults = await Company.count({
+                where: { id },
+            });
+
+            if (nResults == 0) {
+                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
+            }
+
+            var nResults = await User.count({ where: { id: user_id }, });
+
+            if (nResults == 0) {
+                throw new ErrorHandler(404, "Usuário não encontrado");
+            }
+
+            var _company = await Company.findOne({
+                where: {
+                    id
+                },
+                include: [
+                    {
+                        association: 'users',
+                        where: {
+                            id: user_id
+                        }
+                    },
+                ]
+            });
+
+            if (!_company) {
+                throw new ErrorHandler(400, `O usuário ${user_id} não é proprietário da empresa ${id}`);
+            }
+
+            var _success = await _company.destroy().then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(204).json({});
         } catch (err) {
             next(err);
         }
