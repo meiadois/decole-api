@@ -2,39 +2,48 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('channels', [
+    return queryInterface.bulkInsert('requirements', [
       {
         id: 1,
-        name: 'MercadoLivre',
-        category: 'Marketplace',
+        lesson_id: 2,
+        required_lesson_id: 1,
+        step_order: 3,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 2,
-        name: 'Instagram',
-        category: 'SocialNetwork',
+        lesson_id: 3,
+        required_lesson_id: 2,
+        step_order: 6,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 3,
-        name: 'Facebook',
-        category: 'SocialNetwork',
+        lesson_id: 4,
+        required_lesson_id: 3,
+        step_order: 3,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 4,
-        name: 'Twitter',
-        category: 'SocialNetwork',
+        lesson_id: 5,
+        required_lesson_id: 3,
+        step_order: 8,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+
+
+
+
+
     ], {});
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('channels', null, {});
+    return queryInterface.bulkDelete('requirements', null, {});
   }
 };
