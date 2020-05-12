@@ -170,6 +170,7 @@ module.exports = {
             var infos = []
             for (let y = 0; y < _routes.length; y++) {
                 let lessons = _routes[y].lessons
+                console.log(` lessons.length: ${lessons.length}`);
                 let n_done_lessons = 0
 
                 for (let i = 0; i < lessons.length; i++) {
@@ -177,6 +178,9 @@ module.exports = {
                     lessons[i].dataValues['done'] = n != 0 // is true if is done
                     if (lessons[i].dataValues['done'] == true) n_done_lessons++;
                 }
+
+                percentage = n_done_lessons === 0 ? 0 : Math.floor((n_done_lessons * 100) / lessons.length);
+
                 infos.push({
                     'id': _routes[y].id,
                     'title': _routes[y].title,
@@ -185,7 +189,7 @@ module.exports = {
                         'done': n_done_lessons,
                         'total': lessons.length,
                         'remain': lessons.length - n_done_lessons,
-                        "percentage": Math.floor((((n_done_lessons) / lessons.length) * 100))
+                        "percentage": percentage
                     }
                 })
             }
@@ -220,6 +224,9 @@ module.exports = {
                     let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
                     if (n != 0) n_done_lessons++;
                 }
+
+                percentage = n_done_lessons === 0 ? 0 : Math.floor((n_done_lessons * 100) / lessons.length);
+
                 infos.push({
                     'id': _routes[y].id,
                     'title': _routes[y].title,
@@ -231,7 +238,7 @@ module.exports = {
                         'done': n_done_lessons,
                         'total': lessons.length,
                         'remain': lessons.length - n_done_lessons,
-                        "percentage": Math.floor((((n_done_lessons) / lessons.length) * 100))
+                        "percentage": percentage
                     }
                 })
             }
