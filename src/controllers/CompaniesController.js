@@ -38,7 +38,10 @@ module.exports = {
                 _company = await Company.findByPk(id, {
                     include: [
                         {
-                            association: 'likes'
+                            association: 'received_likes'
+                        },
+                        {
+                            association: 'sent_likes'
                         },
                         {
                             association: 'users'
