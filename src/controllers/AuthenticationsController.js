@@ -120,6 +120,7 @@ module.exports = {
             const user_id = await User.findOne({ where: { email } }).then((user) => user.id);
 
             if (user_id == null) {
+                console.log("b")
                 throw new ErrorHandler(404, `Não há usuários com o email ${email}.`);
             }
             await ResetPassword.destroy({ where: { user_id } });
@@ -138,13 +139,11 @@ module.exports = {
             if (!reset_password) {
                 throw new ErrorHandler(500, null);
             }
-            var sent_email = await NodeMailer.sendMail(email, "Esqueci minha senha", `O seu token de recuperação é ${token}`);
-            if (sent_email !== true) {
-                throw sent_email;
-                //throw new ErrorHandler(400, `O email de recuperação não pode ser enviado.`);
-            }
+            await NodeMailer.sendMail(email, "Esqueci minha senha", `O seu token de recuperação é ${token}`);
+
             res.json({ token });
         } catch (err) {
+            console.log(err)
             next(err);
         }
     },

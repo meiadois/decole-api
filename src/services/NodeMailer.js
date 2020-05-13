@@ -21,8 +21,6 @@ module.exports = {
                 console.log(err);
                 throw err; // Oops, algo de errado aconteceu.
             }
-
-            return true;
             console.log('Email enviado para ' + email);
         });
     }
