@@ -112,71 +112,79 @@ module.exports = {
         }
     },
     async generate_reset_password(req, res, next) {
-        const { email } = req.body;
-        if (!isEmail(email)) {
-            throw new ErrorHandler(400, `[${email}] não é um email válido.`);
-        }
-        const user_id = await User.findOne({ where: { email } }).then((user) => user.id);
+        try {
+            const { email } = req.body;
+            if (!isEmail(email)) {
+                throw new ErrorHandler(400, `[${email}] não é um email válido.`);
+            }
+            const user_id = await User.findOne({ where: { email } }).then((user) => user.id);
 
-        if (user_id == null) {
-            throw new ErrorHandler(404, `Não há usuários com o email ${email}.`);
-        }
-        await ResetPassword.destroy({ where: { user_id } });
+            if (user_id == null) {
+                throw new ErrorHandler(404, `Não há usuários com o email ${email}.`);
+            }
+            await ResetPassword.destroy({ where: { user_id } });
 
-        const token = crypto.randomBytes(4).toString('hex');
-        const expiresAt = moment.utc().add(180, 'seconds')
+            const token = crypto.randomBytes(4).toString('hex');
+            const expiresAt = moment.utc().add(180, 'seconds')
 
-        const reset_password = await ResetPassword.create({
-            user_id,
-            token,
-            expiresAt
-        }).catch((err) => {
-            console.log(err);
-            return null;
-        });
-        if (!reset_password) {
-            throw new ErrorHandler(500, null);
+            const reset_password = await ResetPassword.create({
+                user_id,
+                token,
+                expiresAt
+            }).catch((err) => {
+                console.log(err);
+                return null;
+            });
+            if (!reset_password) {
+                throw new ErrorHandler(500, null);
+            }
+            var sent_email = await NodeMailer.sendMail(email, "Esqueci minha senha", `O seu token de recuperação é ${token}`);
+            if (sent_email !== true) {
+                throw sent_email;
+                //throw new ErrorHandler(400, `O email de recuperação não pode ser enviado.`);
+            }
+            res.json({ token });
+        } catch (err) {
+            next(err);
         }
-        var sent_email = await NodeMailer.sendMail(email, "Esqueci minha senha", `O seu token de recuperação é ${token}`);
-        if (sent_email !== true) {
-            throw sent_email;
-            //throw new ErrorHandler(400, `O email de recuperação não pode ser enviado.`);
-        }
-        res.json({ token });
     },
     async forgot_password(req, res, next) {
-        var { token, password } = req.body;
-        const now = moment.utc()
+        try {
+            var { token, password } = req.body;
+            const now = moment.utc()
 
-        const reset_password = await ResetPassword.findOne({ where: { token } });
-        if (reset_password == null) {
-            throw new ErrorHandler(404, `Não há reset_passwords com o token ${token}.`);
+            const reset_password = await ResetPassword.findOne({ where: { token } });
+            if (reset_password == null) {
+                throw new ErrorHandler(404, `Não há reset_passwords com o token ${token}.`);
+            }
+
+            if (reset_password.expiresAt < now) {
+                throw new ErrorHandler(400, `O token [${token}] já expirou.`);
+            }
+
+            const user = await User.findByPk(reset_password.user_id);
+
+            if (user == null) {
+                throw new ErrorHandler(404, `Não há usuários com o id ${reset_password.user_id}.`);
+            }
+
+            user.password = await LoginService.createHashedPassword(password);
+
+            var _success = await user.save().then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+
+            await ResetPassword.destroy({ where: { user_id: reset_password.user_id } });
+            return res.status(200).json();
+        } catch (err) {
+            next(err);
         }
-
-        if (reset_password.expiresAt < now) {
-            throw new ErrorHandler(400, `O token [${token}] já expirou.`);
-        }
-
-        const user = await User.findByPk(reset_password.user_id);
-
-        if (user == null) {
-            throw new ErrorHandler(404, `Não há usuários com o id ${reset_password.user_id}.`);
-        }
-
-        user.password = await LoginService.createHashedPassword(password);
-
-        var _success = await user.save().then(() => {
-            return true;
-        }).catch((err) => {
-            console.log(err);
-            return false;
-        });
-
-        if (!_success) {
-            throw new ErrorHandler(500, null);
-        }
-
-        await ResetPassword.destroy({ where: { user_id: reset_password.user_id } });
-        return res.status(200).json();
     }
 }
