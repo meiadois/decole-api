@@ -140,7 +140,7 @@ module.exports = {
                 throw new ErrorHandler(500, null);
             }
             await NodeMailer.sendMail(email, "Esqueci minha senha", `O seu token de recuperação é ${token}`);
-
+            Logger.info(`Usuário ${email} recebeu o código de recuperação de senha com sucesso.`, req);
             res.json({ token });
         } catch (err) {
             console.log(err)
@@ -181,6 +181,7 @@ module.exports = {
             }
 
             await ResetPassword.destroy({ where: { user_id: reset_password.user_id } });
+            Logger.info(`Senha do usuário ${user.id} alterada com sucesso.`, req);
             return res.status(200).json();
         } catch (err) {
             next(err);
