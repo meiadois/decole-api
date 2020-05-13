@@ -1,6 +1,7 @@
 const database = require('../models');
 const Company = database.Company;
 const User = database.User;
+const LoginService = require('../services/login-service');
 
 const { ErrorHandler } = require('../helpers/error');
 
@@ -216,6 +217,37 @@ module.exports = {
             }
             _user.password = null;
             return res.status(200).json(_user);
+        } catch (err) {
+            next(err);
+        }
+
+    },
+    async meChangePassword(req, res, next) {
+        try {
+            var { id } = res.locals.user;
+            var { password } = req.body;
+            if (!password) {
+                throw new ErrorHandler(400, null);
+            }
+            const _user = await User.findByPk(id);
+
+            if (!_user) {
+                throw new ErrorHandler(404, `Usuario ${id} não encontrado.`);
+            }
+
+            _user.password = await LoginService.createHashedPassword(password);
+
+            var _success = await _user.save().then(() => {
+                return true;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
+
+            if (!_success) {
+                throw new ErrorHandler(500, null);
+            }
+            return res.status(200).json();
         } catch (err) {
             next(err);
         }
