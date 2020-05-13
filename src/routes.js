@@ -122,6 +122,8 @@ routes.route('/users')
 
 
 
+
+
 routes.route('/users/:id/companies')
     .post(UsersController.storeCompany)
     .put(UsersController.updateCompany)
@@ -159,6 +161,9 @@ routes.route('/done_routes')
 
 routes.post('/login', AuthenticationsController.login);
 routes.post('/register', AuthenticationsController.register);
+routes.post('/generate_reset_password', AuthenticationsController.generate_reset_password);
+routes.post('/forgot_password', AuthenticationsController.forgot_password);
+
 // Accounts
 routes.route('/accounts/:id')
     .get(AccountsController.index)

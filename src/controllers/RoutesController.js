@@ -187,7 +187,6 @@ module.exports = {
                 var locked = false
                 for (let i = 0; i < required_routes.length; i++) {
                     let n = await DoneRoute.count({ where: { user_id, 'route_id': required_routes[i].required_route_id } });
-                    console.log(`Rota concluida:\n user_id: ${user_id} \n required_route: ${required_routes[i].required_route_id}\n ${n}`)
                     if (n == 0) {
                         locked = true;
                         break;
@@ -200,55 +199,6 @@ module.exports = {
                     'title': _routes[y].title,
                     'description': _routes[y].description,
                     locked,
-                    'progress': {
-                        'done': n_done_lessons,
-                        'total': lessons.length,
-                        'remain': lessons.length - n_done_lessons,
-                        "percentage": percentage
-                    }
-                })
-            }
-
-
-            return res.status(200).json(
-                infos
-            );
-        } catch (err) {
-            next(err);
-        }
-
-    },
-    async meSimpleListWithProgress(req, res, next) {
-        try {
-            var user_id = res.locals.user.id;
-
-            var _routes = await Route.findAll({
-                include: [
-                    {
-                        association: 'lessons',
-                        through: { attributes: [] }
-                    },
-                ],
-            });
-            var infos = []
-            for (let y = 0; y < _routes.length; y++) {
-                let lessons = _routes[y].lessons
-                let n_done_lessons = 0
-
-                for (let i = 0; i < lessons.length; i++) {
-                    let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
-                    if (n != 0) n_done_lessons++;
-                }
-
-                percentage = n_done_lessons === 0 ? 0 : Math.floor((n_done_lessons * 100) / lessons.length);
-
-                infos.push({
-                    'id': _routes[y].id,
-                    'title': _routes[y].title,
-                    'title': _routes[y].title,
-                    'description': _routes[y].description,
-                    'createdAt': _routes[y].createdAt,
-                    'updatedAt': _routes[y].updatedAt,
                     'progress': {
                         'done': n_done_lessons,
                         'total': lessons.length,
@@ -308,45 +258,6 @@ module.exports = {
                 'description': _route.description,
                 'lessons': lessons,
                 locked,
-                'progress': {
-                    'done': n_done_lessons,
-                    'total': lessons.length,
-                    'remain': lessons.length - n_done_lessons,
-                    "percentage": Math.floor((((n_done_lessons) / lessons.length) * 100))
-                }
-            });
-        } catch (err) {
-            next(err);
-        }
-
-    },
-    async meSimpleIndexWithProgress(req, res, next) {
-        try {
-            var { id } = req.params;
-            var user_id = res.locals.user.id;
-
-            var _route = await Route.findByPk(id, {
-                include: [
-                    {
-                        association: 'lessons',
-                        through: { attributes: [] }
-                    },
-                ],
-            });
-            var lessons = _route.lessons
-            var n_done_lessons = 0
-
-            for (let i = 0; i < lessons.length; i++) {
-                let n = await DoneLesson.count({ where: { user_id, 'lesson_id': lessons[i].id } });
-                if (lessons[i].dataValues['done'] == true) n_done_lessons++;
-            }
-            return res.status(200).json({
-                'id': _route.id,
-                'title': _route.title,
-                'title': _route.title,
-                'description': _route.description,
-                'createdAt': _route.createdAt,
-                'updatedAt': _route.updatedAt,
                 'progress': {
                     'done': n_done_lessons,
                     'total': lessons.length,
