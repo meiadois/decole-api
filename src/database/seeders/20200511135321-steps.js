@@ -48,7 +48,7 @@ module.exports = {
       },
       {
         id: 6,
-        message: "Clique em bio.",
+        message: "Clique em BIO.",
         order: 3,
         lesson_id: 2,
         createdAt: new Date(),
@@ -56,11 +56,7 @@ module.exports = {
       },
       {
         id: 7,
-        message: "Em 150 caracteres, a BIO é o espaço onde sua empresa terá para descrever de" +
-          " forma breve o que é ou do que se trata o perfil. Com múltiplas funções, a BIO pode" +
-          " alcançar, engajar, ganhar ou fidelizar clientes. Para potencializar o alcance da sua" +
-          " BIO e explorar seu potencial, separamos duas dicas para te ajudar com a sua" +
-          " criação e estruturação.",
+        message: "Em 150 caracteres, a BIO é o espaço onde sua empresa terá para descrever de  forma breve o que é ou do que se trata o perfil. Com múltiplas funções, a BIO pode alcançar, engajar, ganhar ou fidelizar clientes. Para potencializar o alcance da sua BIO e explorar seu potencial, separamos duas dicas para te ajudar com a sua criação e estruturação.",
         order: 4,
         lesson_id: 2,
         createdAt: new Date(),
@@ -68,11 +64,7 @@ module.exports = {
       },
       {
         id: 8,
-        message: "Exponha claramente o objetivo do perfil," +
-          "Do que ele trata? É uma empresa de serviços? Uma loja? Qual a sua" +
-          " razão de ser? Deixar isso claro não apenas é o primeiro filtro, mas" +
-          " também prepara o seguidor, ou visitante ao conteúdo o deixando" +
-          " mais confortável e interessados nas publicações.",
+        message: "Exponha claramente o objetivo do perfil, do que ele trata? É uma empresa de serviços? Uma loja? Qual a sua razão de ser? Deixar isso claro não apenas é o primeiro filtro, mas também prepara o seguidor, ou visitante ao conteúdo o deixando mais confortável e interessados nas publicações.",
         order: 5,
         lesson_id: 2,
         createdAt: new Date(),
@@ -81,9 +73,7 @@ module.exports = {
 
       {
         id: 9,
-        message: "Deixe clara a personalidade da empresa," +
-          " Os seus seguidores serão aqueles que se identificam com os valores" +
-          " da sua empresa.",
+        message: "Deixe clara a personalidade da empresa, os seus seguidores serão aqueles que se identificam com os valores da sua empresa.",
         order: 6,
         lesson_id: 2,
         createdAt: new Date(),
@@ -118,7 +108,7 @@ module.exports = {
       //lesson 4
       {
         id: 13,
-        message: "Logue no seu facebook pessoal se não tiver crie.",
+        message: "Logue no seu Facebook pessoal se não tiver crie.",
         order: 1,
         lesson_id: 4,
         createdAt: new Date(),
@@ -257,7 +247,7 @@ module.exports = {
       //lesson 7
       {
         id: 30,
-        message: "Acesse seu perfil e clique no ícone de Configurações.",
+        message: "Acesse seu perfil e clique no ícone de configurações.",
         order: 1,
         lesson_id: 7,
         createdAt: new Date(),
@@ -265,7 +255,7 @@ module.exports = {
       },
       {
         id: 31,
-        message: "Selecione Conta.",
+        message: "Selecione conta.",
         order: 2,
         lesson_id: 7,
         createdAt: new Date(),
@@ -281,10 +271,7 @@ module.exports = {
       },
       {
         id: 33,
-        message: "O instagram recomenda conectar sua conta comercial à Página" +
-          " do Facebook da sua empresa, o que facilitará o uso dos recursos" +
-          " disponíveis para as empresas. No momento, somente uma Página" +
-          " do Facebook pode ser conectada à sua conta comercial.",
+        message: "O instagram recomenda conectar sua conta comercial à Página  do Facebook da sua empresa, o que facilitará o uso dos recursos disponíveis para as empresas. No momento, somente uma Página do Facebook pode ser conectada à sua conta comercial.",
         order: 4,
         lesson_id: 7,
         createdAt: new Date(),
@@ -292,8 +279,7 @@ module.exports = {
       },
       {
         id: 34,
-        message: "Inclua os detalhes, como a categoria da conta ou empresa e" +
-          " informações de contato. ",
+        message: "Inclua os detalhes, como a categoria da conta ou empresa e informações de contato.",
         order: 5,
         lesson_id: 7,
         createdAt: new Date(),

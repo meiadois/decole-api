@@ -6,19 +6,19 @@ module.exports = {
       // routes 1 instagram
       {
         id: 1,
-        title: 'Como criar conta no Instagram',
+        title: 'Como criar conta no Instagram.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 2,
-        title: 'Como mudar as informações de sua Bio',
+        title: 'Como mudar as informações de sua bio.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 3,
-        title: 'como muda a foto do seu perfil ',
+        title: 'Como muda a foto do seu perfil.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
@@ -26,19 +26,19 @@ module.exports = {
       // routes 2 facebook e conexão
       {
         id: 4,
-        title: 'Como criar um perfil comercial e não um perfil pessoal',
+        title: 'Como criar um perfil comercial e não um perfil pessoal.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 5,
-        title:'Como muda a foto do seu perfil',
+        title:'Como muda a foto do seu perfil.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 6,
-        title: 'Como mudar a foto de capa ',
+        title: 'Como mudar a foto de capa.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
@@ -46,44 +46,44 @@ module.exports = {
       
       {
         id: 7,
-        title: 'Como transformar sua conta em Comercial',
+        title: 'Como transformar sua conta em comercial.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 8,
-        title: 'Proporções ideais para suas publicações',
+        title: 'Proporções ideais para suas publicações.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 9,
-        title: 'Como criar #umahashtagperfeita',
+        title: 'Como criar #umahashtagperfeita.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 10,
-        title: 'Como fazer um story',
+        title: 'Como fazer um story.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 11,
-        title: 'Como postar um vídeo',
+        title: 'Como postar um vídeo.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
       {
         id: 12,
-        title: 'Como escolher a capa do vídeo',
+        title: 'Como escolher a capa do vídeo.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
 
       {
         id: 13,
-        title: 'Como fazer uma publicação na timeline',
+        title: 'Como fazer uma publicação na timeline.',
         createdAt:new Date(),
         updatedAt:new Date(),
       },
