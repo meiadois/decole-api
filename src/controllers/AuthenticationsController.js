@@ -138,8 +138,9 @@ module.exports = {
             throw new ErrorHandler(500, null);
         }
         var sent_email = await NodeMailer.sendMail(email, "Esqueci minha senha", `O seu token de recuperação é ${token}`);
-        if (!sent_email) {
-            throw new ErrorHandler(400, `O email de recuperação não pode ser enviado.`);
+        if (sent_email !== true) {
+            throw sent_email;
+            //throw new ErrorHandler(400, `O email de recuperação não pode ser enviado.`);
         }
         res.json({ token });
     },
