@@ -17,8 +17,11 @@ module.exports = {
             html: html // O conteúdo do e-mail
         };
         return transporter.sendMail(email, function (err, info) {
-            if (err)
+            if (err) {
+                console.log(err);
                 throw err; // Oops, algo de errado aconteceu.
+            }
+
             return true;
             console.log('Email enviado para ' + email);
         });
