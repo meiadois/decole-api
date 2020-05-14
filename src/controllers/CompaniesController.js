@@ -171,7 +171,7 @@ module.exports = {
                 throw new ErrorHandler(400, null);
             }
 
-            var _company = await Company.findAll({
+            var _company = await Company.findOne({
                 attributes: {
                     exclude: ['createdAt', 'updatedAt', 'segment_id'],
                 },
@@ -266,6 +266,23 @@ module.exports = {
     async meStore(req, res, next) {
         try {
             var user_id = res.locals.user.id;
+
+            var company_ = await Company.findOne(
+                {
+                    include: [
+                        {
+                            association: 'users',
+                            attributes: [],
+                            where: {
+                                id: user_id
+                            }
+                        },
+                    ]
+                });
+
+            if (company_ != null) {
+                throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`);
+            }
 
             var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible } = req.body;
             if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !user_id || !cellphone || !email || !visible) {

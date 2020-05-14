@@ -340,6 +340,22 @@ module.exports = {
     async storeCompany(req, res, next) {
         try {
             var { id } = req.params;
+            var company_ = await Company.findOne(
+                {
+                    include: [
+                        {
+                            association: 'users',
+                            attributes: [],
+                            where: {
+                                id: user_id
+                            }
+                        },
+                    ]
+                });
+
+            if (company_ != null) {
+                throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${id}].`);
+            }
             var { company_ids } = req.body;
             if (!id || !company_ids) {
                 throw new ErrorHandler(400, null);
