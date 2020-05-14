@@ -54,8 +54,8 @@ authorized_routes.route('/me/done_routes/:route_id')
 // Done Lessons  
 authorized_routes.route('/me/done_lessons')
     .get(AuthService.authorize, DoneLessonsController.meList)
+authorized_routes.route('/me/done_lessons/:lesson_id')
     .post(AuthService.authorize, DoneLessonsController.meStore)
-
 // Accounts
 authorized_routes.route('/me/accounts/:channel_name')
     .get(AuthService.authorize, AccountsController.meIndex)
