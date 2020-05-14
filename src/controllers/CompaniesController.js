@@ -64,8 +64,9 @@ module.exports = {
     },
     async store(req, res, next) {
         try {
-            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email } = req.body;
-            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !cellphone || !email) {
+            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible } = req.body;
+            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !cellphone || !email || visible == undefined) {
+                console.log("A")
                 throw new ErrorHandler(400, null);
             }
             const nResults = await Company.count({ where: { cnpj } });
@@ -75,7 +76,7 @@ module.exports = {
             }
 
             const [_company] = await Company.findOrCreate({
-                where: { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email }
+                where: { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -92,8 +93,8 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { name, cep, thumbnail, cnpj, description, segment_id, cellphone, email } = req.body;
-            if (!name || !cep || !thumbnail || !segment_id || !description || !cellphone || !email) {
+            var { name, cep, thumbnail, cnpj, description, segment_id, cellphone, email, visible } = req.body;
+            if (!name || !cep || !thumbnail || !segment_id || !description || !cellphone || !email || !visible) {
                 throw new ErrorHandler(400, null);
             }
 
@@ -111,6 +112,8 @@ module.exports = {
             _company.description = description;
             _company.cellphone = cellphone;
             _company.email = email;
+            _company.visible = visible;
+
 
 
 
@@ -264,8 +267,8 @@ module.exports = {
         try {
             var user_id = res.locals.user.id;
 
-            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email } = req.body;
-            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !user_id || !cellphone || !email) {
+            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible } = req.body;
+            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !user_id || !cellphone || !email || !visible) {
                 throw new ErrorHandler(400, null);
             }
             if (cnpj != null) {
@@ -283,7 +286,7 @@ module.exports = {
             }
 
             const [_company] = await Company.findOrCreate({
-                where: { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email }
+                where: { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -313,9 +316,9 @@ module.exports = {
         try {
             var { id } = req.params;
             var user_id = res.locals.user.id;
-            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email } = req.body;
+            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible } = req.body;
 
-            if (!name || !cep || !thumbnail || !segment_id || !description || !user_id || !cellphone || !email) {
+            if (!name || !cep || !thumbnail || !segment_id || !description || !user_id || !cellphone || !email || !visible) {
                 throw new ErrorHandler(400, null);
             }
 
@@ -365,6 +368,8 @@ module.exports = {
             _company.description = description;
             _company.cellphone = cellphone;
             _company.email = email;
+            _company.visible = visible;
+
 
 
             var _success = await _company.save().then(() => {
