@@ -6,11 +6,9 @@ module.exports = {
     async list(req, res, next) {
         try {
             const _segments = await Segment.findAll({
-                include: [
-                    {
-                        association: 'companies'
-                    }
-                ]
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt'],
+                },
             });
             res.json(_segments);
         } catch (err) {
