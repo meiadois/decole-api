@@ -178,7 +178,7 @@ module.exports = {
     },
     async meStore(req, res, next) {
         try {
-            var { lesson_id } = req.body;
+            var { lesson_id } = req.params;
             var user_id = res.locals.user.id;
 
             if (!user_id || !lesson_id) {
