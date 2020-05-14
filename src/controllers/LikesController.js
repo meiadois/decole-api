@@ -12,16 +12,16 @@ function is_valid_status(status) {
 module.exports = {
     async list(req, res, next) {
         try {
-            var { status, sender_company, recipient_company } = req.query;
+            var { status, sender_id, recipient_id } = req.query;
             let where = {}
             if (status != undefined) {
                 where['status'] = status
             }
-            if (sender_company != undefined) {
-                where['sender_company'] = sender_company
+            if (sender_id != undefined) {
+                where['sender_id'] = sender_id
             }
-            if (recipient_company != undefined) {
-                where['recipient_company'] = recipient_company
+            if (recipient_id != undefined) {
+                where['recipient_id'] = recipient_id
             }
 
             const _likes = await Like.findAll({
