@@ -21,6 +21,8 @@ function isEmail(email) {
 module.exports = {
     async login(req, res, next) {
         try {
+            var now = moment.utc();
+
             var { email, password } = req.body;
 
             if (!isEmail(email)) {
@@ -37,11 +39,13 @@ module.exports = {
             if (!success) {
                 throw new ErrorHandler(404, `Email ou Senha incorretos.`);
             }
+
             var token = await AuthService.generateToken({
                 'user': {
                     'id': _user.id,
                     'email': _user.email,
-                    'name': _user.name
+                    'name': _user.name,
+                    'paid_access': (moment(_user.paid_access_expiration).isAfter(now)),
                 }
             });
             Logger.info(`Usuário ${_user.email} realizou o login com sucesso`, req);
@@ -51,6 +55,7 @@ module.exports = {
                     'email': _user.email,
                     'name': _user.name,
                     'introduced': _user.introduced,
+                    'paid_access': (moment(_user.paid_access_expiration).isAfter(now)),
                     token
                 }
 
@@ -61,6 +66,17 @@ module.exports = {
     },
     async register(req, res, next) {
         try {
+            var promotion_expiration_date = moment("2020-07-01");
+            var now = moment.utc();
+
+            var paid_exp_date = moment.utc();
+            if (!now.isAfter(promotion_expiration_date)) {
+                console.log("Promotion is valid")
+                paid_exp_date = now.add(30, 'days');
+            } else {
+                console.log("Promotion is not valid")
+            }
+
             var { name, email, password } = req.body;
             if (!name || !email || !password) {
                 throw new ErrorHandler(400, null);
@@ -77,7 +93,7 @@ module.exports = {
             password = await LoginService.createHashedPassword(password);
 
             const [_user] = await User.findOrCreate({
-                where: { name, email, password }
+                where: { name, email, password, paid_access_expiration: paid_exp_date }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -92,7 +108,8 @@ module.exports = {
                 'user': {
                     'id': _user.id,
                     'email': _user.email,
-                    'name': _user.name
+                    'name': _user.name,
+                    'paid_access': paid_exp_date.isAfter(now)
                 }
             });
             Logger.info(`Usuário ${_user.email} cadastrado com sucesso com sucesso`, req);
@@ -102,7 +119,8 @@ module.exports = {
                     'email': _user.email,
                     'name': _user.name,
                     'introduced': _user.introduced,
-                    token
+                    'paid_access': paid_exp_date.isAfter(now),
+                    token,
                 }
 
             });
