@@ -21,7 +21,7 @@ function isEmail(email) {
 module.exports = {
     async login(req, res, next) {
         try {
-            var now = moment.utc();
+            var now = moment();
 
             var { email, password } = req.body;
 
@@ -67,9 +67,9 @@ module.exports = {
     async register(req, res, next) {
         try {
             var promotion_expiration_date = moment("2020-07-01");
-            var now = moment.utc();
+            var now = moment();
 
-            var paid_exp_date = moment.utc();
+            var paid_exp_date = moment();
             if (!now.isAfter(promotion_expiration_date)) {
                 console.log("Promotion is valid")
                 paid_exp_date = now.add(30, 'days');
@@ -144,7 +144,7 @@ module.exports = {
             await ResetPassword.destroy({ where: { user_id } });
 
             const token = crypto.randomBytes(4).toString('hex');
-            const expiresAt = moment.utc().add(180, 'seconds')
+            const expiresAt = moment().add(180, 'seconds')
 
             const reset_password = await ResetPassword.create({
                 user_id,
@@ -168,7 +168,7 @@ module.exports = {
     async forgot_password(req, res, next) {
         try {
             var { token, password } = req.body;
-            const now = moment.utc()
+            const now = moment()
 
             const reset_password = await ResetPassword.findOne({ where: { token } });
             if (reset_password == null) {

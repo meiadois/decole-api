@@ -24,6 +24,8 @@ const DoneRoutesController = require('./controllers/DoneRoutesController');
 const AuthenticationsController = require('./controllers/AuthenticationsController');
 const AccountsController = require('./controllers/AccountsController');
 const LikesController = require('./controllers/LikesController');
+const PaymentsController = require('./controllers/PaymentsController');
+
 
 
 
@@ -193,6 +195,16 @@ routes.route('/route_requirements/:id')
 routes.route('/route_requirements')
     .get(RouteRequirementsController.list)
     .post(RouteRequirementsController.store);
+
+// Payments
+routes.route('/payments/:id')
+    .get(PaymentsController.index)
+    .put(PaymentsController.update)
+    .delete(PaymentsController.delete);
+
+routes.route('/payments')
+    .get(PaymentsController.list)
+    .post(PaymentsController.store);
 
 routes.get('/nova-imagem', (req, res, next) => {
     res.send(`
