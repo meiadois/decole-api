@@ -25,12 +25,13 @@ const AuthenticationsController = require('./controllers/AuthenticationsControll
 const AccountsController = require('./controllers/AccountsController');
 const LikesController = require('./controllers/LikesController');
 const PaymentsController = require('./controllers/PaymentsController');
-
-
+const CepController = require('./controllers/CepController');
 
 
 
 const routes = express.Router();
+
+routes.get('/cep/:cep', CepController.index);
 
 routes.get('/insta/user', InstagramController.getUserByNickname);
 routes.get('/insta/user-profile', InstagramController.getUserProfileByNickname);

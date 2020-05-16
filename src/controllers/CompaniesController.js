@@ -3,6 +3,7 @@ const Lesson = database.Lesson;
 const User = database.User;
 const Company = database.Company;
 const Step = database.Step;
+var cepPromise = require("cep-promise")
 
 const { ErrorHandler } = require('../helpers/error');
 
@@ -64,19 +65,22 @@ module.exports = {
     },
     async store(req, res, next) {
         try {
-            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible } = req.body;
-            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !cellphone || !email || visible == undefined) {
-                console.log("A")
+            var { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body;
+            if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible == undefined || !city || !neighborhood || !state || !street) {
                 throw new ErrorHandler(400, null);
             }
+
             const nResults = await Company.count({ where: { cnpj } });
 
             if (nResults != 0) {
                 throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`);
             }
+            console.log(`Banner: ${banner}`)
+            console.log(`cep_infos: ${cep_infos}`)
 
-            const [_company] = await Company.findOrCreate({
-                where: { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible }
+            const _company = await Company.create({
+                name, cep, thumbnail, banner, cnpj, segment_id, description,
+                cellphone, email, visible, city, neighborhood, state, street
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -93,8 +97,8 @@ module.exports = {
     async update(req, res, next) {
         try {
             var { id } = req.params;
-            var { name, cep, thumbnail, cnpj, description, segment_id, cellphone, email, visible } = req.body;
-            if (!name || !cep || !thumbnail || !segment_id || !description || !cellphone || !email || !visible) {
+            var { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body;
+            if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible == undefined || !city || !neighborhood || !state || !street) {
                 throw new ErrorHandler(400, null);
             }
 
@@ -113,10 +117,11 @@ module.exports = {
             _company.cellphone = cellphone;
             _company.email = email;
             _company.visible = visible;
-
-
-
-
+            _company.banner = banner;
+            _company.city = city;
+            _company.neighborhood = neighborhood;
+            _company.state = state;
+            _company.street = street;
 
             var _success = await _company.save().then(() => {
                 return true;
@@ -204,7 +209,9 @@ module.exports = {
             if (!_user) {
                 throw new ErrorHandler(404, "Usuário não encontrada");
             }*/
-
+            if (_company === null) {
+                throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`);
+            }
             return res.status(200).json(_company);
         } catch (err) {
             next(err);
@@ -284,8 +291,8 @@ module.exports = {
                 throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`);
             }
 
-            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible } = req.body;
-            if (!name || !cep || !thumbnail || !cnpj || !segment_id || !description || !user_id || !cellphone || !email || !visible) {
+            var { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body;
+            if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible == undefined || !city || !neighborhood || !state || !street) {
                 throw new ErrorHandler(400, null);
             }
             if (cnpj != null) {
@@ -303,7 +310,7 @@ module.exports = {
             }
 
             const [_company] = await Company.findOrCreate({
-                where: { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible }
+                where: { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street }
             }).catch((err) => {
                 console.log(err);
                 return null;
@@ -331,42 +338,42 @@ module.exports = {
     },
     async meUpdate(req, res, next) {
         try {
-            var { id } = req.params;
             var user_id = res.locals.user.id;
-            var { name, cep, thumbnail, cnpj, segment_id, description, cellphone, email, visible } = req.body;
-
-            if (!name || !cep || !thumbnail || !segment_id || !description || !user_id || !cellphone || !email || !visible) {
+            var { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body;
+            if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible == undefined || !city || !neighborhood || !state || !street) {
                 throw new ErrorHandler(400, null);
             }
 
             if (!user_id) {
                 throw new ErrorHandler(400, null);
             }
-
-            var nResults = await Company.count({
-                where: { id },
-            });
+            var nResults = await User.count({ where: { id: user_id }, });
 
             if (nResults == 0) {
-                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
+                throw new ErrorHandler(404, "Usuário não encontrado");
             }
 
             var _company = await Company.findOne({
-                where: {
-                    id
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'segment_id'],
                 },
                 include: [
                     {
                         association: 'users',
+                        attributes: [],
                         where: {
                             id: user_id
                         }
                     },
+                    {
+                        association: 'segment',
+                        attributes: ['name'],
+                    }
                 ]
             });
 
-            if (!_company) {
-                throw new ErrorHandler(400, `O usuário ${user_id} não é proprietário da empresa ${id}`);
+            if (_company == null) {
+                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
             }
 
             if (cnpj != null && cnpj != _company.cnpj) {
@@ -386,8 +393,12 @@ module.exports = {
             _company.cellphone = cellphone;
             _company.email = email;
             _company.visible = visible;
+            _company.banner = banner;
 
-
+            _company.city = city;
+            _company.neighborhood = neighborhood;
+            _company.state = state;
+            _company.street = street;
 
             var _success = await _company.save().then(() => {
                 return true;
@@ -399,7 +410,7 @@ module.exports = {
             if (!_success) {
                 throw new ErrorHandler(500, null);
             }
-            return res.status(200).json(_company);
+            return res.status(200).json(await _company.reload());
         } catch (err) {
             next(err);
         }
@@ -412,15 +423,6 @@ module.exports = {
             if (!user_id) {
                 throw new ErrorHandler(400, null);
             }
-
-            var nResults = await Company.count({
-                where: { id },
-            });
-
-            if (nResults == 0) {
-                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
-            }
-
             var nResults = await User.count({ where: { id: user_id }, });
 
             if (nResults == 0) {
@@ -428,21 +430,26 @@ module.exports = {
             }
 
             var _company = await Company.findOne({
-                where: {
-                    id
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'segment_id'],
                 },
                 include: [
                     {
                         association: 'users',
+                        attributes: [],
                         where: {
                             id: user_id
                         }
                     },
+                    {
+                        association: 'segment',
+                        attributes: ['name'],
+                    }
                 ]
             });
 
-            if (!_company) {
-                throw new ErrorHandler(400, `O usuário ${user_id} não é proprietário da empresa ${id}`);
+            if (_company == null) {
+                throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`);
             }
 
             var _success = await _company.destroy().then(() => {
