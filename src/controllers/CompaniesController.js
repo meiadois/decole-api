@@ -463,7 +463,15 @@ module.exports = {
     },
     async search(req, res, next) {
         try {
-            var { name, segment_id, email, cep, cnpj, cellphone, city, neighborhood, state, street } = req.query;
+            var { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood, state, street } = req.query;
+
+            if (typeof limit != 'number') {
+                limit = parseInt(limit);
+            }
+            if (typeof offset != 'number') {
+                offset = parseInt(offset);
+            }
+
 
             var user_where = {}
             var ANDs = []
@@ -564,6 +572,8 @@ module.exports = {
 
 
             const _company = await Company.findAll({
+                limit,
+                offset,
                 where,
                 attributes: {
                     exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',

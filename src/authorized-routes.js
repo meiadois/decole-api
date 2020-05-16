@@ -14,6 +14,8 @@ const DoneRoutesController = require('./controllers/DoneRoutesController');
 const AuthenticationsController = require('./controllers/AuthenticationsController');
 const AccountsController = require('./controllers/AccountsController');
 const PaymentsController = require('./controllers/PaymentsController');
+const LikesController = require('./controllers/LikesController');
+
 
 
 
@@ -83,4 +85,6 @@ authorized_routes.route('/me/payments')
     .get(AuthService.authorize, PaymentsController.meList)
     .post(AuthService.authorize, PaymentsController.meStore);
 
+authorized_routes.route('/me/likes')
+    .get(AuthService.authorize, LikesController.meList)
 module.exports = authorized_routes;
