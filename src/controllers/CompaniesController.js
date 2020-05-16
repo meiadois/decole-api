@@ -1,4 +1,6 @@
+const Sequelize = require('sequelize');
 const database = require('../models');
+
 const Lesson = database.Lesson;
 const User = database.User;
 const Company = database.Company;
@@ -455,6 +457,121 @@ module.exports = {
                 throw new ErrorHandler(500, null);
             }
             return res.status(204).json({});
+        } catch (err) {
+            next(err);
+        }
+    },
+    async search(req, res, next) {
+        try {
+            var { name, segment_id, email, cep, cnpj, cellphone, city, neighborhood, state, street } = req.query;
+
+            var user_where = {}
+            var ANDs = []
+            var ORs = []
+            var include = []
+
+            ANDs.push({
+                visible: true
+            });
+
+            if (name != undefined) {
+                name = `%${name}%`
+                ORs.push({
+                    name: {
+                        [Sequelize.Op.like]: name
+                    }
+                })
+                ORs.push({
+                    description: {
+                        [Sequelize.Op.like]: name
+                    }
+                })
+            }
+
+            if (segment_id != undefined) {
+                ANDs.push({
+                    segment_id,
+                })
+            }
+            if (street != undefined) {
+                ANDs.push({
+                    street,
+                })
+            }
+            if (state != undefined) {
+                ANDs.push({
+                    state,
+                })
+            }
+            if (neighborhood != undefined) {
+                ANDs.push({
+                    neighborhood,
+                })
+            }
+            if (city != undefined) {
+                ANDs.push({
+                    city,
+                })
+            }
+            if (cellphone != undefined) {
+                ANDs.push({
+                    cellphone,
+                })
+            }
+            if (cnpj != undefined) {
+                ANDs.push({
+                    cnpj,
+                })
+            }
+            if (cep != undefined) {
+                ANDs.push({
+                    cep,
+                })
+            }
+
+
+            if (email != undefined) {
+                ANDs.push({
+                    email,
+                })
+            }
+
+            if (ORs.length > 0) {
+                var where = {
+                    [Sequelize.Op.and]: ANDs,
+                    [Sequelize.Op.or]: ORs,
+                }
+            } else {
+                var where = {
+                    [Sequelize.Op.and]: ANDs,
+                }
+            }
+
+
+            include.push(
+                {
+                    association: 'segment',
+                    attributes: ['name'],
+                }
+            );
+            if (Object.keys(user_where).length != 0) {
+                include.push({
+                    association: 'users',
+                    attributes: [],
+                    where: user_where
+                })
+            }
+
+
+            const _company = await Company.findAll({
+                where,
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',
+                        'city', 'neighborhood', 'state', 'street', 'cep'],
+                },
+                include,
+            });
+            res.json(_company);
         } catch (err) {
             next(err);
         }
