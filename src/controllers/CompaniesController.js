@@ -209,6 +209,7 @@ module.exports = {
             if (!_user) {
                 throw new ErrorHandler(404, "Usuário não encontrada");
             }*/
+
             if (_company === null) {
                 throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`);
             }
@@ -219,6 +220,7 @@ module.exports = {
     },
     async meIndex(req, res, next) {
         try {
+            var { id } = req.params;
             var user_id = res.locals.user.id;
 
             if (!user_id) {
@@ -232,6 +234,9 @@ module.exports = {
             }
 
             var _company = await Company.findOne({
+                where: {
+                    id
+                },
                 attributes: {
                     exclude: ['createdAt', 'updatedAt', 'segment_id'],
                 },
@@ -250,7 +255,7 @@ module.exports = {
                 ]
             });
             if (!_company) {
-                throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`);
+                throw new ErrorHandler(404, `Empresa ${id} do usuário ${user_id} não encontrada.`);
             }
 
             return res.status(200).json(_company);

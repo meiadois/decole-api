@@ -33,10 +33,10 @@ authorized_routes.route('/me/introduce')
 authorized_routes.route('/me/companies')
     .get(AuthService.authorize, CompaniesController.meList)
     .post(AuthService.authorize, CompaniesController.meStore)
-    .get(AuthService.authorize, CompaniesController.meIndex)
     .put(AuthService.authorize, CompaniesController.meUpdate)
-    .delete(AuthService.authorize, CompaniesController.meDelete)
-
+    .delete(AuthService.authorize, CompaniesController.meDelete);
+authorized_routes.route('/me/companies/:id')
+    .get(AuthService.authorize, CompaniesController.meIndex)
 
 
 authorized_routes.route('/me/users/companies')
