@@ -142,6 +142,8 @@ routes.route('/companies')
     .get(CompaniesController.list)
     .post(CompaniesController.store);
 
+routes.route('/search/companies')
+    .get(CompaniesController.search)
 // Done Lessons
 routes.route('/done_lessons/:id')
     .get(DoneLessonsController.index)

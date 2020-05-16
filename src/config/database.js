@@ -1,6 +1,6 @@
 require('dotenv/config');
 module.exports = {
-  logging: false,
+  logging: console.log,
   dialect: process.env.DB_SEQUELIZE_DIALECT,
   host: process.env.DB_SEQUELIZE_HOST,
   username: process.env.DB_SEQUELIZE_USERNAME,

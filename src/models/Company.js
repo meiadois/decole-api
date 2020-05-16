@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     neighborhood: DataTypes.STRING,
     state: DataTypes.STRING,
     street: DataTypes.STRING,
+    segment_id: DataTypes.STRING,
   }, {
     tableName: 'companies'
   });
