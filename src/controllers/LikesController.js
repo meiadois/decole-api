@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const database = require('../models')
 const Like = database.Like
 const Company = database.Company
@@ -13,8 +14,14 @@ module.exports = {
     async list(req, res, next) {
         try {
             var { status, sender_id, recipient_id } = req.query;
+
             let where = {}
             if (status != undefined) {
+                if (status != null) {
+                    if (!is_valid_status(status)) {
+                        throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`);
+                    }
+                }
                 where['status'] = status
             }
             if (sender_id != undefined) {
@@ -180,6 +187,56 @@ module.exports = {
             }
             return res.status(204).json({});
 
+        } catch (err) {
+            next(err);
+        }
+    },
+    async meList(req, res, next) {
+        try {
+            var user_id = res.locals.user.id;
+
+            var { status } = req.query;
+            var ANDs = []
+            var ORs = []
+
+
+            if (status != undefined) {
+                if (status != null) {
+                    if (!is_valid_status(status)) {
+                        throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`);
+                    }
+                }
+                ANDs.push({ status });
+            }
+            ORs.push({
+                sender_id: user_id
+            })
+            ORs.push({
+                recipient_id: user_id
+            })
+
+            if (ORs.length > 0) {
+                var where = {
+                    [Sequelize.Op.and]: ANDs,
+                    [Sequelize.Op.or]: ORs,
+                }
+            } else {
+                var where = {
+                    [Sequelize.Op.and]: ANDs,
+                }
+            }
+            const _likes = await Like.findAll({
+                where,
+                include: [
+                    {
+                        association: 'sender_company'
+                    },
+                    {
+                        association: 'recipient_company'
+                    },
+                ]
+            });
+            res.json(_likes);
         } catch (err) {
             next(err);
         }
