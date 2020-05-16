@@ -227,12 +227,33 @@ module.exports = {
             }
             const _likes = await Like.findAll({
                 where,
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'sender_id', 'recipient_id'],
+                },
                 include: [
                     {
-                        association: 'sender_company'
+                        association: 'sender_company',
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'segment_id'],
+                        },
+                        include: {
+                            association: 'segment',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt'],
+                            },
+                        },
                     },
                     {
-                        association: 'recipient_company'
+                        association: 'recipient_company',
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'segment_id'],
+                        },
+                        include: {
+                            association: 'segment',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt'],
+                            },
+                        },
                     },
                 ]
             });
