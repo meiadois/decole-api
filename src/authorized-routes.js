@@ -13,6 +13,8 @@ const DoneLessonsController = require('./controllers/DoneLessonsController');
 const DoneRoutesController = require('./controllers/DoneRoutesController');
 const AuthenticationsController = require('./controllers/AuthenticationsController');
 const AccountsController = require('./controllers/AccountsController');
+const PaymentsController = require('./controllers/PaymentsController');
+
 
 
 const authorized_routes = express.Router();
@@ -31,11 +33,10 @@ authorized_routes.route('/me/introduce')
 authorized_routes.route('/me/companies')
     .get(AuthService.authorize, CompaniesController.meList)
     .post(AuthService.authorize, CompaniesController.meStore)
-
-authorized_routes.route('/me/companies/:id')
     .get(AuthService.authorize, CompaniesController.meIndex)
     .put(AuthService.authorize, CompaniesController.meUpdate)
     .delete(AuthService.authorize, CompaniesController.meDelete)
+
 
 
 authorized_routes.route('/me/users/companies')
@@ -71,5 +72,15 @@ authorized_routes.route('/me/routes')
     .get(AuthService.authorize, RoutesController.meListWithProgress);
 authorized_routes.route('/me/routes/:id')
     .get(AuthService.authorize, RoutesController.meIndexWithProgress);
+
+
+authorized_routes.route('/me/payments/:id')
+    .get(AuthService.authorize, PaymentsController.meIndex)
+    .put(AuthService.authorize, PaymentsController.meUpdate)
+    .delete(AuthService.authorize, PaymentsController.meDelete);
+
+authorized_routes.route('/me/payments')
+    .get(AuthService.authorize, PaymentsController.meList)
+    .post(AuthService.authorize, PaymentsController.meStore);
 
 module.exports = authorized_routes;

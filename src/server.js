@@ -5,6 +5,8 @@ const authorized_routes = require('./authorized-routes');
 const folders_manager = require('./helpers/folders_manager');
 const { handleError, ErrorHandler } = require('./helpers/error');
 require('./models');
+const moment = require('moment');
+moment.tz.setDefault("America/Sao_Paulo");
 
 const app = express();
 app.use(express.json());

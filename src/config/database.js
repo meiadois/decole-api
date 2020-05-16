@@ -13,6 +13,7 @@ module.exports = {
   pool: {
     maxConnections: 5, maxIdleTime: 30,
   },
+  timezone: '-03:00',
   define: {
     timestamps: true,
   },

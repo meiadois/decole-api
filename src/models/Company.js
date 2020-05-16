@@ -4,11 +4,16 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     cep: DataTypes.STRING,
     thumbnail: DataTypes.STRING,
+    banner: DataTypes.STRING,
     cnpj: DataTypes.STRING,
     cellphone: DataTypes.STRING,
     email: DataTypes.STRING,
     description: DataTypes.STRING,
     visible: DataTypes.BOOLEAN,
+    city: DataTypes.STRING,
+    neighborhood: DataTypes.STRING,
+    state: DataTypes.STRING,
+    street: DataTypes.STRING,
   }, {
     tableName: 'companies'
   });
