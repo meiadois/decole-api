@@ -209,6 +209,7 @@ module.exports = {
             if (!_user) {
                 throw new ErrorHandler(404, "Usuário não encontrada");
             }*/
+
             if (_company === null) {
                 throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`);
             }
@@ -224,14 +225,6 @@ module.exports = {
 
             if (!user_id) {
                 throw new ErrorHandler(400, null);
-            }
-
-            var nResults = await Company.count({
-                where: { id },
-            });
-
-            if (nResults == 0) {
-                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
             }
 
             var nResults = await User.count({ where: { id: user_id }, });
@@ -262,7 +255,7 @@ module.exports = {
                 ]
             });
             if (!_company) {
-                throw new ErrorHandler(400, `O usuário ${user_id} não é proprietário da empresa ${id}`);
+                throw new ErrorHandler(404, `Empresa ${id} do usuário ${user_id} não encontrada.`);
             }
 
             return res.status(200).json(_company);
@@ -373,7 +366,7 @@ module.exports = {
             });
 
             if (_company == null) {
-                throw new ErrorHandler(404, `Empresa ${id} não encontrada.`);
+                throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`);
             }
 
             if (cnpj != null && cnpj != _company.cnpj) {
@@ -417,7 +410,6 @@ module.exports = {
     },
     async meDelete(req, res, next) {
         try {
-            var { id } = req.params;
             var user_id = res.locals.user.id;
 
             if (!user_id) {
@@ -467,146 +459,4 @@ module.exports = {
             next(err);
         }
     },
-    /*
-    async storeLesson(req, res, next) {
-        try {
-            var { id } = req.params;
-            var { lesson_ids } = req.body;
-            if (!id || !lesson_ids) {
-                throw new ErrorHandler(400, null);
-            }
-
-            const _company = await Company.findByPk(id, {
-                include: [
-                    {
-                        association: 'lessons'
-                    },
-                ]
-            });
-            console.log("ROUTE: " + _company);
-            if (!_company) {
-                throw new ErrorHandler(404, "Rota não encontrada");
-            }
-            var _lessons = [];
-
-            for (var i in lesson_ids) {
-                var _lesson = await Lesson.findByPk(lesson_ids[i]);
-                if (!_lesson) {
-                    throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
-                }
-
-                _lessons.push(_lesson);
-            }
-
-
-            var _success = await _company.addLessons(_lessons).then(() => {
-                return true;
-            }).catch((err) => {
-                console.log(err);
-                return false;
-            });
-
-            if (!_success) {
-                throw new ErrorHandler(500, null);
-            }
-            return res.status(201).json(await _company.reload());
-        } catch (err) {
-            next(err);
-        }
-    },
-    async updateLesson(req, res, next) {
-        try {
-            var { id } = req.params;
-            var { lesson_ids } = req.body;
-            if (!id || !lesson_ids) {
-                throw new ErrorHandler(400, null);
-            }
-
-            const _company = await Company.findByPk(id, {
-                include: [
-                    {
-                        association: 'lessons'
-                    },
-                ]
-            });
-            console.log("ROUTE: " + _company);
-            if (!_company) {
-                throw new ErrorHandler(404, "Rota não encontrada");
-            }
-            var _lessons = [];
-
-            for (var i in lesson_ids) {
-                var _lesson = await Lesson.findByPk(lesson_ids[i]);
-                if (!_lesson) {
-                    throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
-                }
-
-                _lessons.push(_lesson);
-            }
-
-
-            var _success = await _company.setLessons(_lessons).then((l) => {
-                console.log(l)
-                return true;
-            }).catch((err) => {
-                console.log(err);
-                return false;
-            });
-
-            if (!_success) {
-                throw new ErrorHandler(500, null);
-            }
-            return res.status(201).json(await _company.reload());
-        } catch (err) {
-            next(err);
-        }
-    },
-    async deleteLesson(req, res, next) {
-        try {
-            var { id } = req.params;
-            var { lesson_ids } = req.body;
-            if (!id || !lesson_ids) {
-                throw new ErrorHandler(400, null);
-            }
-
-            const _company = await Company.findByPk(id, {
-                include: [
-                    {
-                        association: 'lessons'
-                    },
-                ]
-            });
-            console.log("ROUTE: " + _company);
-            if (!_company) {
-                throw new ErrorHandler(404, "Rota não encontrada");
-            }
-            var _lessons = [];
-
-            for (var i in lesson_ids) {
-                var _lesson = await Lesson.findByPk(lesson_ids[i]);
-                if (!_lesson) {
-                    throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`);
-                }
-
-                _lessons.push(_lesson);
-            }
-
-
-            var _success = await _company.removeLessons(_lessons).then(() => {
-                return true;
-            }).catch((err) => {
-                console.log(err);
-                return false;
-            });
-
-            if (!_success) {
-                throw new ErrorHandler(500, null);
-            }
-            return res.status(204).json({});
-        } catch (err) {
-            next(err);
-        }
-    },*/
-
-
 };

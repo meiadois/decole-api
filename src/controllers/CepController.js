@@ -19,7 +19,7 @@ module.exports = {
                     return null
                 });
             if (cep_infos == null) {
-                throw new ErrorHandler(400, `CEP [${cep}] não encontrado ou mal formulado.`);
+                throw new ErrorHandler(400, `CEP [${cep}] não encontrado ou mal formado.`);
             }
             res.json(cep_infos);
         } catch (err) {
