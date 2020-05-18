@@ -1,10 +1,9 @@
 import app from './app'
-
-// import { sequelize } from './database'
+import { sequelize } from './database'
 
 app.listen(3000, () => {
   console.log(`App running at ${3000}`)
-  /*
+
   sequelize.authenticate().then(async () => {
     console.log('Database connected')
 
@@ -15,7 +14,7 @@ app.listen(3000, () => {
     }
   }).catch((err: Error) => {
     console.log(err.message)
-  }) */
+  })
 })
 
 console.log(process.env.APP_ID)

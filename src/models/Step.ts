@@ -5,7 +5,7 @@ export interface StepI{
     first_name: string;
     last_name: string;
     email: string;
-    password;
+    password: string;
 }
 
 @Table(
@@ -40,5 +40,5 @@ export default class Step extends Model implements StepI {
     @Column
     @AllowNull(false)
     @NotEmpty
-    password;
+    password: string;
 }
