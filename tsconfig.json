@@ -1,25 +1,28 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "es6",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "sourceMap": true,
-      "declaration": true,
-      "strictNullChecks": true,
-      "noUnusedLocals": true,
-      "skipLibCheck": true,
-      "pretty": true,
-      "outDir": "dist",
-      "lib": ["es2017"]
-    },
-    "include": [
-      "src"
-    ],
-    "exclude": [
-      "node_modules",
-      "examples",
-      "test"
+  "compilerOptions": {
+    "target": "es6",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitUseStrict": false,
+    "outDir": "dist/",
+    "baseUrl": "src/app.ts",
+    "listFiles": false,
+    "noEmitHelpers": false,
+    "noImplicitReturns": true,
+    "strict": true,
+    "suppressImplicitAnyIndexErrors": false,
+    "types": [
+      "node"
     ]
-  }
-  
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compileOnSave": false
+}

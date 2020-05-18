@@ -1,21 +1,8 @@
-import { Sequelize } from 'sequelize-typescript'
+import { Sequelize } from 'sequelize'
 import * as path from 'path'
-
-export const sequelize = new Sequelize({
-  dialect: 'mysql',
-  host: process.env.DB_SEQUELIZE_HOST,
-  database: process.env.DB_SEQUELIZE_DATABASE,
-  username: process.env.DB_SEQUELIZE_USERNAME,
-  password: process.env.DB_SEQUELIZE_PASSWORD,
-  storage: ':memory:',
-  models: [path.join(__dirname, 'models')]
-})
-
-/*
-export const sequelize = new Sequelize(
-  'sql10341480', 'sql10341480',
-  'pvH1X3wtku', {
-    dialect: 'mysql',
-    host: process.env.DB_SEQUELIZE_HOST
-  })
-*/
+// import { databaseConfig, databaseOptions } from './config/database'
+require('dotenv').config()
+// console.log(databaseOptions)
+// import dbConfig from './config/database'
+const dbConfig = require('./config/database.js')
+export const database = new Sequelize(dbConfig)

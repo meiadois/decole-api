@@ -1,25 +1,42 @@
+import { database } from './database'
+import routes from './routes'
+import * as cors from 'cors'
+import * as express from 'express'
 
-import StepsController from './controllers/StepsController'
-import cors = require('cors')
-import express = require('express')
-require('dotenv').config()
 class App {
-    public express: express.Application
+  public express: express.Application
 
-    public constructor () {
-      this.express = express()
-      this.middlewares()
-      this.routes()
-    }
+  public constructor () {
+    this.express = express()
 
-    public middlewares (): void {
-      this.express.use(express.json())
-      this.express.use(cors())
-    }
+    this.middlewares()
+    this.database()
+    this.routes()
+  }
 
-    private routes (): void {
-      this.express.get('/', StepsController.list)
-    }
+  private middlewares (): void {
+    this.express.use(express.json())
+    this.express.use(cors())
+  }
+
+  private database (): void {
+    database.authenticate().then(async () => {
+      console.log('Database connected')
+
+      try {
+        await database.sync({ force: false })
+        console.log('Database is up to date')
+      } catch (err) {
+        console.log(err.message)
+      }
+    }).catch((err: Error) => {
+      console.log(err.message)
+    })
+  }
+
+  private routes (): void {
+    this.express.use(routes)
+  }
 }
 
 export default new App().express

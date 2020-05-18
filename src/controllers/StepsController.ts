@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import db from '../models/index'
 
 class A {
     public a = ''
@@ -8,12 +9,13 @@ class A {
 }
 class StepsController {
   public async list (req: Request, res: Response): Promise<Response> {
-    const objects: Array<A> = [new A(), new A()]
-    return res.json(objects)
+    const steps = await db.Step.findAll()
+    return res.json(steps)
   }
 
-  public async index (req: Request, res: Response): Promise<A> {
-    return new A()
+  public async index (req: Request, res: Response): Promise<Response> {
+    const segments = await db.Segment.findAll()
+    return res.json(segments)
   }
 }
 export default new StepsController()

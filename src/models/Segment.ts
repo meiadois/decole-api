@@ -1,14 +1,12 @@
 import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
 
-export interface StepI {
+export interface SegmentI {
   id?: number | null;
-  message: string;
-  order: number;
+  name: string;
 }
-export class Step extends Model implements StepI {
+export class SegmentModel extends Model implements SegmentI {
   public id?: number;
-  public message!: string;
-  public order!: number;
+  public name!: string;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -18,26 +16,26 @@ export class Step extends Model implements StepI {
     projects: Association<User, Project>;
   }; */
 }
-export function initStep (sequelize: Sequelize): void {
-  Step.init(
+export function initSegment (sequelize: Sequelize): void {
+  SegmentModel.init(
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
       },
-      order: {
-        type: DataTypes.INTEGER,
+      name: {
+        type: DataTypes.TEXT,
         allowNull: false
       }
     },
     {
-      tableName: 'steps',
+      tableName: 'segments',
       sequelize: sequelize // this bit is important
     }
   )
 }
 
-export function associateStep (): void {
-  console.log('Step dont have associations')
+export function associateSegment (): void {
+  console.log('Segment dont have associations')
 }
