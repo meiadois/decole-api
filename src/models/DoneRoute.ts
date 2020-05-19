@@ -1,16 +1,14 @@
 import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
 
-export interface StepI {
+export interface DoneRouteI {
   id?: number | null;
-  lesson_id: number;
-  message: string;
-  order: number;
+  user_id: number;
+  route_id: number;
 }
-export class Step extends Model implements StepI {
+export class DoneRoute extends Model implements DoneRouteI {
   public id?: number;
-  public message!: string;
-  public order!: number;
-  public lesson_id!: number;
+  public route_id!: number;
+  public user_id!: number;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -21,28 +19,28 @@ export class Step extends Model implements StepI {
   }; */
 }
 export function init (sequelize: Sequelize): void {
-  Step.init(
+  DoneRoute.init(
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
       },
-      lesson_id: {
+      user_id: {
         type: DataTypes.INTEGER.UNSIGNED
       },
-      order: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      route_id: {
+        type: DataTypes.INTEGER.UNSIGNED
       }
     },
     {
-      tableName: 'steps',
+      tableName: 'done_routes',
       sequelize: sequelize // this bit is important
     }
   )
 }
 
 export function associate (sequelize: Sequelize): void {
-  Step.belongsTo(sequelize.models.Lesson, { foreignKey: 'lesson_id', as: 'lesson' })
+  DoneRoute.belongsTo(sequelize.models.User, { foreignKey: 'user_id', as: 'user' })
+  DoneRoute.belongsTo(sequelize.models.Route, { foreignKey: 'route_id', as: 'route' })
 }

@@ -1,16 +1,16 @@
 import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
 
-export interface StepI {
+export interface LikeI {
   id?: number | null;
-  lesson_id: number;
-  message: string;
-  order: number;
+  status: string;
+  sender_id: number;
+  recipient_id: number;
 }
-export class Step extends Model implements StepI {
+export class Like extends Model implements LikeI {
   public id?: number;
-  public message!: string;
-  public order!: number;
-  public lesson_id!: number;
+  public status!: string;
+  public sender_id!: number;
+  public recipient_id!: number;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -21,28 +21,32 @@ export class Step extends Model implements StepI {
   }; */
 }
 export function init (sequelize: Sequelize): void {
-  Step.init(
+  Like.init(
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
       },
-      lesson_id: {
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      sender_id: {
         type: DataTypes.INTEGER.UNSIGNED
       },
-      order: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      recipient_id: {
+        type: DataTypes.INTEGER.UNSIGNED
       }
     },
     {
-      tableName: 'steps',
+      tableName: 'likes',
       sequelize: sequelize // this bit is important
     }
   )
 }
 
 export function associate (sequelize: Sequelize): void {
-  Step.belongsTo(sequelize.models.Lesson, { foreignKey: 'lesson_id', as: 'lesson' })
+  Like.belongsTo(sequelize.models.Company, { foreignKey: 'sender_id', as: 'sender_company' })
+  Like.belongsTo(sequelize.models.Company, { foreignKey: 'recipient_id', as: 'recipient_company' })
 }

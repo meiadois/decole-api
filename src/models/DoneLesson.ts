@@ -1,16 +1,14 @@
 import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
 
-export interface StepI {
+export interface DoneLessonI {
   id?: number | null;
+  user_id: number;
   lesson_id: number;
-  message: string;
-  order: number;
 }
-export class Step extends Model implements StepI {
+export class DoneLesson extends Model implements DoneLessonI {
   public id?: number;
-  public message!: string;
-  public order!: number;
   public lesson_id!: number;
+  public user_id!: number;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -21,28 +19,28 @@ export class Step extends Model implements StepI {
   }; */
 }
 export function init (sequelize: Sequelize): void {
-  Step.init(
+  DoneLesson.init(
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
       },
-      lesson_id: {
+      user_id: {
         type: DataTypes.INTEGER.UNSIGNED
       },
-      order: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      lesson_id: {
+        type: DataTypes.INTEGER.UNSIGNED
       }
     },
     {
-      tableName: 'steps',
+      tableName: 'done_lessons',
       sequelize: sequelize // this bit is important
     }
   )
 }
 
 export function associate (sequelize: Sequelize): void {
-  Step.belongsTo(sequelize.models.Lesson, { foreignKey: 'lesson_id', as: 'lesson' })
+  DoneLesson.belongsTo(sequelize.models.User, { foreignKey: 'user_id', as: 'user' })
+  DoneLesson.belongsTo(sequelize.models.Lesson, { foreignKey: 'lesson_id', as: 'lesson' })
 }

@@ -1,23 +1,32 @@
 import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
+import { Company } from './Company'
 
 export interface SegmentI {
   id?: number | null;
   name: string;
 }
-export class SegmentModel extends Model implements SegmentI {
+export class Segment extends Model implements SegmentI {
   public id?: number;
   public name!: string;
+
+  public getCompanies!: HasManyGetAssociationsMixin<Company>; // Note the null assertions!
+  public addCompany!: HasManyAddAssociationMixin<Company, number>;
+  public hasCompany!: HasManyHasAssociationMixin<Company, number>;
+  public countCompanies!: HasManyCountAssociationsMixin;
+  public createCompany!: HasManyCreateAssociationMixin<Company>;
+
+  public readonly companies?: Company[];
 
   // timestamps!
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-  /*
+
   public static associations: {
-    projects: Association<User, Project>;
-  }; */
+    companies: Association<Segment, Company>;
+  };
 }
-export function initSegment (sequelize: Sequelize): void {
-  SegmentModel.init(
+export function init (sequelize: Sequelize): void {
+  Segment.init(
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -36,6 +45,6 @@ export function initSegment (sequelize: Sequelize): void {
   )
 }
 
-export function associateSegment (): void {
-  console.log('Segment dont have associations')
+export function associate (sequelize: Sequelize): void {
+  Segment.hasMany(sequelize.models.Company, { foreignKey: 'segment_id', as: 'companies' })
 }

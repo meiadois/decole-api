@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import db from '../models/index'
 import { ErrorHandler } from '../helpers/error'
 import { Segment } from '../models/Segment'
-const Segment = db.Segment
 
 class StepsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response> {
@@ -14,7 +12,7 @@ class StepsController {
     return res.json(_segments)
   }
 
-  async index (req: Request, res: Response, next: NextFunction): Promise<Segment> {
+  async index (req: Request, res: Response, next: NextFunction): Promise<Response> {
     const { id } = req.params
 
     if (!id) {
@@ -26,13 +24,15 @@ class StepsController {
           association: 'companies'
         }
       ]
+    }).catch((err: any) => {
+      console.log(err)
     })
 
     if (_segment === null) {
       throw new ErrorHandler(404, `Segmento ${id} não encontrada.`)
     }
 
-    return _segment
+    return res.json(_segment)
   }
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response> {
@@ -47,7 +47,7 @@ class StepsController {
     if (nResults !== 0) {
       throw new ErrorHandler(400, `Já existe um segmento com o nome [${name}].`)
     }
-    const [_segment] = await Segment.findOrCreate({
+    const _segment = await Segment.findOrCreate({
       where: { name }
     }).catch((err: any) => {
       console.log(err)
