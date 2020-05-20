@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { User } from '../models/User'
 import { Payment } from '../models/Payment'
 import { ErrorHandler } from '../helpers/ErrorHandler'
-import moment = require('moment-timezone')
+import * as moment from 'moment-timezone'
 
 const PAYMENT_STATUS = ['confirmed', 'pending', 'denied', 'refunded']
 function is_valid_payment_status (status: string): boolean {

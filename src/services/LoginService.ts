@@ -1,4 +1,4 @@
-import bcrypt = require('bcrypt');
+import * as bcrypt from 'bcrypt'
 class LoginService {
   async createHashedPassword (password: string): Promise<string> {
     const salt = await bcrypt.genSalt()

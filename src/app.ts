@@ -2,8 +2,8 @@ import Database from './models/index'
 import routes from './routes'
 import { HandleErrorMiddleware, NotFoundRoute } from './helpers/ErrorHandler'
 import * as express from 'express'
-import cors = require ('cors')
-import moment = require('moment-timezone')
+import * as cors from 'cors'
+import * as moment from 'moment-timezone'
 moment.tz.setDefault('America/Sao_Paulo')
 
 class App {

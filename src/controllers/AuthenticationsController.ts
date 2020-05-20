@@ -7,10 +7,11 @@ import LoginService from '../services/LoginService'
 import AuthService from '../services/AuthService'
 import { ResetPassword } from '../models/ResetPassword'
 import * as crypto from 'crypto'
-import moment = require('moment-timezone')
+import * as moment from 'moment-timezone'
 
 function isEmail (email: string): boolean {
-  const re = /^(([^<>()[\]\\.,;:\s@\\"]+(\.[^<>()[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+  const re = new RegExp(pattern)
   return re.test(email)
 }
 

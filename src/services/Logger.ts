@@ -1,4 +1,4 @@
-import Discord = require('discord.js')
+import * as Discord from 'discord.js'
 const client = new Discord.Client()
 const INFO_CHANNEL_ID = String(process.env.DISCORD_INFO_CHANNEL_ID)
 const ERROR_CHANNEL_ID = String(process.env.DISCORD_ERROR_CHANNEL_ID)
