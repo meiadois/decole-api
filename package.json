@@ -6,8 +6,8 @@
     "author": "Guilherme Cunha <guiscunha@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "watch": "babel --watch src --out-dir dist --extensions .ts,.tsx",
-        "build": "babel src --out-dir dist --extensions .ts,.tsx",
+        "watch": "babel --watch src --out-dir dist --extensions .ts,.tsx,.js",
+        "build": "babel src --out-dir dist --extensions .ts,.tsx,.js",
         "postinstall": "yarn tsc",
         "start": "ts-node src/server.ts",
         "dev": "nodemon src/server.ts",
