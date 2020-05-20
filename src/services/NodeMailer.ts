@@ -1,5 +1,5 @@
+import * as nodemailer from 'nodemailer'
 require('dotenv/config')
-const nodemailer = require('nodemailer')
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -16,7 +16,7 @@ class NodeMailer {
       subject: subject, // Um assunto bacana :-)
       html: html // O conteúdo do e-mail
     }
-    return transporter.sendMail(email, function (err, info) {
+    return transporter.sendMail(email, function (err) {
       if (err) {
         console.log(err)
         throw err // Oops, algo de errado aconteceu.

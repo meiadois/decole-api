@@ -64,7 +64,7 @@ export class Company extends Model implements CompanyI {
   public readonly updatedAt!: Date;
 
   public static associations: {
-    projects: Association<Company, User>;
+    users: Association<Company, User>;
     sent_likes: Association<Company, Like>;
     received_likes: Association<Company, Like>;
   };

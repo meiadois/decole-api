@@ -1,27 +1,33 @@
-'use strict';
-const uuidv4 = require('uuid/v4');
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('route_lessons', {
+    return queryInterface.createTable('lesson_requirements', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      route_id: {
+      required_step_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'routes', key: 'id' },
+        references: { model: 'steps', key: 'id' },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      required_lesson_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'lessons', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       lesson_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'lessons', key: 'id' },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -31,9 +37,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('route_lessons');
+    return queryInterface.dropTable('lesson_requirements')
   }
-};
+}

@@ -1,256 +1,243 @@
-import { Request, Response } from 'express'
-import { ErrorHandler } from '../helpers/error'
+import { Request, Response, NextFunction } from 'express'
+import { ErrorHandler } from '../helpers/ErrorHandler'
 import { Company } from '../models/Company'
 import { User } from '../models/User'
 
-import { Op } from 'sequelize/types'
+import { Op, Model, where } from 'sequelize'
 
 class CompaniesController {
-  async list (req: Request, res: Response): Promise<Response> {
-    const _company = await Company.findAll({
-      include: [
-        {
-          association: 'sent_likes'
-        },
-        {
-          association: 'received_likes'
-        },
-        {
-          association: 'users'
-        }
-      ]
-    })
-    return res.json(_company)
+  async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const _company = await Company.findAll({
+        include: [
+          Company.associations.sent_likes,
+          Company.associations.received_likes,
+          Company.associations.users
+        ]
+      })
+      return res.json(_company)
+    } catch (err) {
+      next(err)
+    }
   }
 
-  async index (req: Request, res: Response): Promise<Response> {
-    const { id } = req.params
-
-    if (!id) {
-      throw new ErrorHandler(404, '')
-    }
-    let _company = null
+  async index (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      _company = await Company.findByPk(id, {
+      const { id } = req.params
+
+      if (!id) {
+        throw new ErrorHandler(404, '')
+      }
+      let _company = null
+      try {
+        _company = await Company.findByPk(id, {
+          include: [
+            Company.associations.sent_likes,
+            Company.associations.received_likes,
+            Company.associations.users
+          ]
+        })
+      } catch (err) {
+        console.log(err)
+      }
+
+      if (_company === null) {
+        throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
+      }
+      return res.status(200).json(_company)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
+      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+        throw new ErrorHandler(400, '')
+      }
+
+      const nResults = await Company.count({ where: { cnpj } })
+
+      if (nResults !== 0) {
+        throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
+      }
+      const _company = await Company.create({
+        name,
+        cep,
+        thumbnail,
+        banner,
+        cnpj,
+        segment_id,
+        description,
+        cellphone,
+        email,
+        visible,
+        city,
+        neighborhood,
+        state,
+        street
+      }).catch((err) => {
+        console.log(err)
+        return null
+      })
+      if (!_company) {
+        throw new ErrorHandler(500, '')
+      }
+
+      return res.status(201).json(_company)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async update (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const { id } = req.params
+      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
+      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+        throw new ErrorHandler(400, '')
+      }
+
+      const _company = await Company.findByPk(id)
+
+      if (!_company) {
+        throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
+      }
+
+      _company.name = name
+      _company.cep = cep
+      _company.thumbnail = thumbnail
+      if (cnpj !== null) _company.cnpj = cnpj
+      _company.segment_id = segment_id
+      _company.description = description
+      _company.cellphone = cellphone
+      _company.email = email
+      _company.visible = visible
+      _company.banner = banner
+      _company.city = city
+      _company.neighborhood = neighborhood
+      _company.state = state
+      _company.street = street
+
+      const _success = await _company.save().then(() => {
+        return true
+      }).catch((err) => {
+        console.log(err)
+        return false
+      })
+
+      if (!_success) {
+        throw new ErrorHandler(500, '')
+      }
+      return res.status(200).json(_company)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async delete (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const { id } = req.params
+      if (!id) {
+        throw new ErrorHandler(400, '')
+      }
+
+      const _company = await Company.findByPk(id)
+
+      if (!_company) {
+        throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
+      }
+
+      const _success = await _company.destroy().then(() => {
+        return true
+      }).catch((err) => {
+        console.log(err)
+        return false
+      })
+
+      if (!_success) {
+        throw new ErrorHandler(500, '')
+      }
+      return res.status(204).json({})
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meList (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+
+      if (!user_id) {
+        throw new ErrorHandler(400, '')
+      }
+
+      const _company = await Company.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'segment_id']
+        },
         include: [
           {
-            association: 'received_likes'
+            association: Company.associations.users,
+            attributes: [],
+            where: {
+              id: user_id
+            }
           },
           {
-            association: 'sent_likes'
-          },
-          {
-            association: 'users'
+            association: 'segment',
+            attributes: ['name']
           }
         ]
       })
+      /*
+              const _user = await User.findByPk(user_id, {
+                  include: [
+                      {
+                          association: 'companies'
+                      },
+                      {
+                          association: 'segment',
+                      }
+                  ]
+              });
+
+              if (!_user) {
+                  throw new ErrorHandler(404, "Usuário não encontrada");
+              } */
+
+      if (_company === null) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+      }
+      return res.status(200).json(_company)
     } catch (err) {
-      console.log(err)
+      next(err)
     }
-
-    if (_company === null) {
-      throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
-    }
-    return res.status(200).json(_company)
   }
 
-  async store (req: Request, res: Response): Promise<Response> {
-    const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-    if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
-      throw new ErrorHandler(400, '')
-    }
+  async meIndex (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const { id } = req.params
+      const user_id = res.locals.user.id
 
-    const nResults = await Company.count({ where: { cnpj } })
+      if (!user_id) {
+        throw new ErrorHandler(400, '')
+      }
 
-    if (nResults !== 0) {
-      throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
-    }
-    const _company = await Company.create({
-      name,
-      cep,
-      thumbnail,
-      banner,
-      cnpj,
-      segment_id,
-      description,
-      cellphone,
-      email,
-      visible,
-      city,
-      neighborhood,
-      state,
-      street
-    }).catch((err) => {
-      console.log(err)
-      return null
-    })
-    if (!_company) {
-      throw new ErrorHandler(500, '')
-    }
+      const nResults = await User.count({ where: { id: user_id } })
 
-    return res.status(201).json(_company)
-  }
+      if (nResults === 0) {
+        throw new ErrorHandler(404, 'Usuário não encontrado')
+      }
 
-  async update (req: Request, res: Response): Promise<Response> {
-    const { id } = req.params
-    const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-    if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
-      throw new ErrorHandler(400, '')
-    }
-
-    const _company = await Company.findByPk(id)
-
-    if (!_company) {
-      throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
-    }
-
-    _company.name = name
-    _company.cep = cep
-    _company.thumbnail = thumbnail
-    if (cnpj !== null) _company.cnpj = cnpj
-    _company.segment_id = segment_id
-    _company.description = description
-    _company.cellphone = cellphone
-    _company.email = email
-    _company.visible = visible
-    _company.banner = banner
-    _company.city = city
-    _company.neighborhood = neighborhood
-    _company.state = state
-    _company.street = street
-
-    const _success = await _company.save().then(() => {
-      return true
-    }).catch((err) => {
-      console.log(err)
-      return false
-    })
-
-    if (!_success) {
-      throw new ErrorHandler(500, '')
-    }
-    return res.status(200).json(_company)
-  }
-
-  async delete (req: Request, res: Response): Promise<Response> {
-    const { id } = req.params
-    if (!id) {
-      throw new ErrorHandler(400, '')
-    }
-
-    const _company = await Company.findByPk(id)
-
-    if (!_company) {
-      throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
-    }
-
-    const _success = await _company.destroy().then(() => {
-      return true
-    }).catch((err) => {
-      console.log(err)
-      return false
-    })
-
-    if (!_success) {
-      throw new ErrorHandler(500, '')
-    }
-    return res.status(204).json({})
-  }
-
-  async meList (req: Request, res: Response): Promise<Response> {
-    const user_id = res.locals.user.id
-
-    if (!user_id) {
-      throw new ErrorHandler(400, '')
-    }
-
-    const _company = await Company.findOne({
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'segment_id']
-      },
-      include: [
-        {
-          association: 'users',
-          attributes: [],
-          where: {
-            id: user_id
-          }
+      const _company = await Company.findOne({
+        where: {
+          id
         },
-        {
-          association: 'segment',
-          attributes: ['name']
-        }
-      ]
-    })
-    /*
-            const _user = await User.findByPk(user_id, {
-                include: [
-                    {
-                        association: 'companies'
-                    },
-                    {
-                        association: 'segment',
-                    }
-                ]
-            });
-
-            if (!_user) {
-                throw new ErrorHandler(404, "Usuário não encontrada");
-            } */
-
-    if (_company === null) {
-      throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
-    }
-    return res.status(200).json(_company)
-  }
-
-  async meIndex (req: Request, res: Response): Promise<Response> {
-    const { id } = req.params
-    const user_id = res.locals.user.id
-
-    if (!user_id) {
-      throw new ErrorHandler(400, '')
-    }
-
-    const nResults = await User.count({ where: { id: user_id } })
-
-    if (nResults === 0) {
-      throw new ErrorHandler(404, 'Usuário não encontrado')
-    }
-
-    const _company = await Company.findOne({
-      where: {
-        id
-      },
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'segment_id']
-      },
-      include: [
-        {
-          association: 'users',
-          attributes: [],
-          where: {
-            id: user_id
-          }
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'segment_id']
         },
-        {
-          association: 'segment',
-          attributes: ['name']
-        }
-      ]
-    })
-    if (!_company) {
-      throw new ErrorHandler(404, `Empresa ${id} do usuário ${user_id} não encontrada.`)
-    }
-
-    return res.status(200).json(_company)
-  }
-
-  async meStore (req: Request, res: Response): Promise<Response> {
-    const user_id = res.locals.user.id
-
-    const company_ = await Company.findOne(
-      {
         include: [
           {
             association: 'users',
@@ -258,290 +245,335 @@ class CompaniesController {
             where: {
               id: user_id
             }
+          },
+          {
+            association: 'segment',
+            attributes: ['name']
+          }
+        ]
+      })
+      if (!_company) {
+        throw new ErrorHandler(404, `Empresa ${id} do usuário ${user_id} não encontrada.`)
+      }
+
+      return res.status(200).json(_company)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meStore (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+
+      const company_ = await Company.findOne(
+        {
+          include: [
+            {
+              association: 'users',
+              attributes: [],
+              where: {
+                id: user_id
+              }
+            }
+          ]
+        })
+
+      if (company_ !== null) {
+        throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`)
+      }
+
+      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
+      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+        throw new ErrorHandler(400, '')
+      }
+      if (cnpj !== null) {
+        const nResults = await Company.count({ where: { cnpj } })
+
+        if (nResults !== 0) {
+          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
+        }
+      }
+
+      const _user = await User.findByPk(user_id)
+      if (!_user) {
+        throw new ErrorHandler(404, 'Usuário não encontrada')
+      }
+
+      const _company = await Company.create({
+        name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street
+      }).catch((err) => {
+        console.log(err)
+        return null
+      })
+
+      if (!_company) {
+        throw new ErrorHandler(500, '')
+      }
+
+      const _success = await _user.addCompany(_company).then(() => {
+        return true
+      }).catch((err: any) => {
+        console.log(err)
+        return false
+      })
+
+      if (!_success) {
+        throw new ErrorHandler(500, '')
+      }
+
+      return res.status(201).json(await _company.reload())
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meUpdate (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
+      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+        throw new ErrorHandler(400, '')
+      }
+
+      if (!user_id) {
+        throw new ErrorHandler(400, '')
+      }
+      const nResults = await User.count({ where: { id: user_id } })
+
+      if (nResults === 0) {
+        throw new ErrorHandler(404, 'Usuário não encontrado')
+      }
+
+      const _company = await Company.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'segment_id']
+        },
+        include: [
+          {
+            association: 'users',
+            attributes: [],
+            where: {
+              id: user_id
+            }
+          },
+          {
+            association: 'segment',
+            attributes: ['name']
           }
         ]
       })
 
-    if (company_ !== null) {
-      throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`)
-    }
-
-    const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-    if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
-      throw new ErrorHandler(400, '')
-    }
-    if (cnpj !== null) {
-      const nResults = await Company.count({ where: { cnpj } })
-
-      if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
+      if (_company == null) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
+
+      if (cnpj !== null && cnpj !== _company.cnpj) {
+        const nResults = await Company.count({ where: { cnpj } })
+
+        if (nResults !== 0) {
+          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
+        }
+      }
+
+      _company.name = name
+      _company.cep = cep
+      _company.thumbnail = thumbnail
+      if (cnpj !== null) _company.cnpj = cnpj
+      _company.segment_id = segment_id
+      _company.description = description
+      _company.cellphone = cellphone
+      _company.email = email
+      _company.visible = visible
+      _company.banner = banner
+
+      _company.city = city
+      _company.neighborhood = neighborhood
+      _company.state = state
+      _company.street = street
+
+      const _success = await _company.save().then(() => {
+        return true
+      }).catch((err) => {
+        console.log(err)
+        return false
+      })
+
+      if (!_success) {
+        throw new ErrorHandler(500, '')
+      }
+      return res.status(200).json(await _company.reload())
+    } catch (err) {
+      next(err)
     }
-
-    const _user = await User.findByPk(user_id)
-    if (!_user) {
-      throw new ErrorHandler(404, 'Usuário não encontrada')
-    }
-
-    const _company = await Company.create({
-      name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street
-    }).catch((err) => {
-      console.log(err)
-      return null
-    })
-
-    if (!_company) {
-      throw new ErrorHandler(500, '')
-    }
-
-    const _success = await _user.addCompany(_company).then(() => {
-      return true
-    }).catch((err: any) => {
-      console.log(err)
-      return false
-    })
-
-    if (!_success) {
-      throw new ErrorHandler(500, '')
-    }
-
-    return res.status(201).json(await _company.reload())
   }
 
-  async meUpdate (req: Request, res: Response): Promise<Response> {
-    const user_id = res.locals.user.id
-    const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-    if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
-      throw new ErrorHandler(400, '')
-    }
+  async meDelete (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
 
-    if (!user_id) {
-      throw new ErrorHandler(400, '')
-    }
-    const nResults = await User.count({ where: { id: user_id } })
+      if (!user_id) {
+        throw new ErrorHandler(400, '')
+      }
+      const nResults = await User.count({ where: { id: user_id } })
 
-    if (nResults === 0) {
-      throw new ErrorHandler(404, 'Usuário não encontrado')
-    }
+      if (nResults === 0) {
+        throw new ErrorHandler(404, 'Usuário não encontrado')
+      }
 
-    const _company = await Company.findOne({
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'segment_id']
-      },
-      include: [
-        {
-          association: 'users',
-          attributes: [],
-          where: {
-            id: user_id
-          }
+      const _company = await Company.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'segment_id']
         },
+        include: [
+          {
+            association: 'users',
+            attributes: [],
+            where: {
+              id: user_id
+            }
+          },
+          {
+            association: 'segment',
+            attributes: ['name']
+          }
+        ]
+      })
+
+      if (_company == null) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+      }
+
+      const _success = await _company.destroy().then(() => {
+        return true
+      }).catch((err) => {
+        console.log(err)
+        return false
+      })
+
+      if (!_success) {
+        throw new ErrorHandler(500, '')
+      }
+      return res.status(204).json({})
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async search (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood, state, street } = req.query
+      limit = limit as number
+      offset = offset as number
+      const user_where = {}
+      const ANDs = []
+      const ORs = []
+      const include = []
+
+      ANDs.push({
+        visible: true
+      })
+
+      if (name !== undefined) {
+        name = `%${name}%`
+        ORs.push({
+          name: {
+            [Op.like]: name
+          }
+        })
+        ORs.push({
+          description: {
+            [Op.like]: name
+          }
+        })
+      }
+
+      if (segment_id !== undefined) {
+        ANDs.push({
+          segment_id
+        })
+      }
+      if (street !== undefined) {
+        ANDs.push({
+          street
+        })
+      }
+      if (state !== undefined) {
+        ANDs.push({
+          state
+        })
+      }
+      if (neighborhood !== undefined) {
+        ANDs.push({
+          neighborhood
+        })
+      }
+      if (city !== undefined) {
+        ANDs.push({
+          city
+        })
+      }
+      if (cellphone !== undefined) {
+        ANDs.push({
+          cellphone
+        })
+      }
+      if (cnpj !== undefined) {
+        ANDs.push({
+          cnpj
+        })
+      }
+      if (cep !== undefined) {
+        ANDs.push({
+          cep
+        })
+      }
+
+      if (email !== undefined) {
+        ANDs.push({
+          email
+        })
+      }
+      let where = {}
+      if (ORs.length > 0) {
+        where = {
+          [Op.and]: ANDs,
+          [Op.or]: ORs
+        }
+      } else {
+        where = {
+          [Op.and]: ANDs
+        }
+      }
+
+      include.push(
         {
           association: 'segment',
           attributes: ['name']
         }
-      ]
-    })
-
-    if (_company == null) {
-      throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
-    }
-
-    if (cnpj !== null && cnpj !== _company.cnpj) {
-      const nResults = await Company.count({ where: { cnpj } })
-
-      if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
-      }
-    }
-
-    _company.name = name
-    _company.cep = cep
-    _company.thumbnail = thumbnail
-    if (cnpj !== null) _company.cnpj = cnpj
-    _company.segment_id = segment_id
-    _company.description = description
-    _company.cellphone = cellphone
-    _company.email = email
-    _company.visible = visible
-    _company.banner = banner
-
-    _company.city = city
-    _company.neighborhood = neighborhood
-    _company.state = state
-    _company.street = street
-
-    const _success = await _company.save().then(() => {
-      return true
-    }).catch((err) => {
-      console.log(err)
-      return false
-    })
-
-    if (!_success) {
-      throw new ErrorHandler(500, '')
-    }
-    return res.status(200).json(await _company.reload())
-  }
-
-  async meDelete (req: Request, res: Response): Promise<Response> {
-    const user_id = res.locals.user.id
-
-    if (!user_id) {
-      throw new ErrorHandler(400, '')
-    }
-    const nResults = await User.count({ where: { id: user_id } })
-
-    if (nResults === 0) {
-      throw new ErrorHandler(404, 'Usuário não encontrado')
-    }
-
-    const _company = await Company.findOne({
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'segment_id']
-      },
-      include: [
-        {
+      )
+      if (Object.keys(user_where).length !== 0) {
+        include.push({
           association: 'users',
           attributes: [],
-          where: {
-            id: user_id
-          }
+          where: user_where
+        })
+      }
+
+      const _company = await Company.findAll({
+        limit,
+        offset,
+        where,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',
+            'city', 'neighborhood', 'state', 'street', 'cep']
         },
-        {
-          association: 'segment',
-          attributes: ['name']
-        }
-      ]
-    })
-
-    if (_company == null) {
-      throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
-    }
-
-    const _success = await _company.destroy().then(() => {
-      return true
-    }).catch((err) => {
-      console.log(err)
-      return false
-    })
-
-    if (!_success) {
-      throw new ErrorHandler(500, '')
-    }
-    return res.status(204).json({})
-  }
-
-  async search (req: Request, res: Response): Promise<Response> {
-    let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood, state, street } = req.query
-    limit = limit as number
-    offset = offset as number
-    const user_where = {}
-    const ANDs = []
-    const ORs = []
-    const include = []
-
-    ANDs.push({
-      visible: true
-    })
-
-    if (name !== undefined) {
-      name = `%${name}%`
-      ORs.push({
-        name: {
-          [Op.like]: name
-        }
+        include
       })
-      ORs.push({
-        description: {
-          [Op.like]: name
-        }
-      })
+      return res.json(_company)
+    } catch (err) {
+      next(err)
     }
-
-    if (segment_id !== undefined) {
-      ANDs.push({
-        segment_id
-      })
-    }
-    if (street !== undefined) {
-      ANDs.push({
-        street
-      })
-    }
-    if (state !== undefined) {
-      ANDs.push({
-        state
-      })
-    }
-    if (neighborhood !== undefined) {
-      ANDs.push({
-        neighborhood
-      })
-    }
-    if (city !== undefined) {
-      ANDs.push({
-        city
-      })
-    }
-    if (cellphone !== undefined) {
-      ANDs.push({
-        cellphone
-      })
-    }
-    if (cnpj !== undefined) {
-      ANDs.push({
-        cnpj
-      })
-    }
-    if (cep !== undefined) {
-      ANDs.push({
-        cep
-      })
-    }
-
-    if (email !== undefined) {
-      ANDs.push({
-        email
-      })
-    }
-    let where = {}
-    if (ORs.length > 0) {
-      where = {
-        [Op.and]: ANDs,
-        [Op.or]: ORs
-      }
-    } else {
-      where = {
-        [Op.and]: ANDs
-      }
-    }
-
-    include.push(
-      {
-        association: 'segment',
-        attributes: ['name']
-      }
-    )
-    if (Object.keys(user_where).length !== 0) {
-      include.push({
-        association: 'users',
-        attributes: [],
-        where: user_where
-      })
-    }
-
-    const _company = await Company.findAll({
-      limit,
-      offset,
-      where,
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',
-          'city', 'neighborhood', 'state', 'street', 'cep']
-      },
-      include
-    })
-    return res.json(_company)
   }
 }
 export default new CompaniesController()

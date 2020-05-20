@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin } from 'sequelize'
+import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, HasManyRemoveAssociationMixin } from 'sequelize'
 import { Route } from './Route'
 import { Company } from './Company'
 import { DoneRoute } from './DoneRoute'
@@ -24,36 +24,43 @@ export class User extends Model implements UserI {
   public getRoutes!: BelongsToManyGetAssociationsMixin<Route>; // Note the null assertions!
   public addRoute!: BelongsToManyAddAssociationMixin<Route, number>;
   public hasRoute!: BelongsToManyHasAssociationMixin<Route, number>;
+  public removeRoute!: HasManyRemoveAssociationMixin<Route, number>;
   public countRoutes!: BelongsToManyCountAssociationsMixin;
   public createRoute!: BelongsToManyCreateAssociationMixin<Route>;
 
   public getCompanies!: BelongsToManyGetAssociationsMixin<Company>; // Note the null assertions!
   public addCompany!: BelongsToManyAddAssociationMixin<Company, number>;
   public hasCompany!: BelongsToManyHasAssociationMixin<Company, number>;
+  public removeCompany!: HasManyRemoveAssociationMixin<Company, number>;
   public countCompanies!: BelongsToManyCountAssociationsMixin;
   public createCompany!: BelongsToManyCreateAssociationMixin<Company>;
 
   public getDoneRoutes!: HasManyGetAssociationsMixin<DoneRoute>; // Note the null assertions!
   public addDoneRoute!: HasManyAddAssociationMixin<DoneRoute, number>;
   public hasDoneRoute!: HasManyHasAssociationMixin<DoneRoute, number>;
+  public removeDoneRoute!: HasManyRemoveAssociationMixin<DoneRoute, number>;
   public countDoneRoutes!: HasManyCountAssociationsMixin;
   public createDoneRoute!: HasManyCreateAssociationMixin<DoneRoute>;
 
   public getDoneLessons!: HasManyGetAssociationsMixin<DoneLesson>; // Note the null assertions!
   public addDoneLesson!: HasManyAddAssociationMixin<DoneLesson, number>;
   public hasDoneLesson!: HasManyHasAssociationMixin<DoneLesson, number>;
+  public removeDoneLesson!: HasManyRemoveAssociationMixin<DoneLesson, number>;
+
   public countDoneLessons!: HasManyCountAssociationsMixin;
   public createDoneLesson!: HasManyCreateAssociationMixin<DoneLesson>;
 
   public getAccounts!: HasManyGetAssociationsMixin<Account>; // Note the null assertions!
   public addAccount!: HasManyAddAssociationMixin<Account, number>;
   public hasAccount!: HasManyHasAssociationMixin<Account, number>;
+  public removeAccount!: HasManyRemoveAssociationMixin<Account, number>;
   public countAccounts!: HasManyCountAssociationsMixin;
   public createAccount!: HasManyCreateAssociationMixin<Account>;
 
   public getPayments!: HasManyGetAssociationsMixin<Payment>; // Note the null assertions!
   public addPayment!: HasManyAddAssociationMixin<Payment, number>;
   public hasPayment!: HasManyHasAssociationMixin<Payment, number>;
+  public removePayment!: HasManyRemoveAssociationMixin<Payment, number>;
   public countPayments!: HasManyCountAssociationsMixin;
   public createPayment!: HasManyCreateAssociationMixin<Payment>;
 
@@ -94,7 +101,8 @@ export function init (sequelize: Sequelize): void {
       },
       introduced: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
+        defaultValue: false,
+        allowNull: true
       },
       paid_access_expiration: {
         type: DataTypes.DATE,

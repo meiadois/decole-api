@@ -26,30 +26,43 @@ function process_message (message: string): string {
   return message
 }
 class Logger {
-  async info (message: string): Promise<void> {
-    message = `:information_source:\n[Mensagem] ${message}`
-
+  async info (message: string, url?: string): Promise<void> {
+    if (url === undefined) {
+      message = `:information_source:\n[Mensagem] ${message}`
+    } else {
+      message = `:information_source:\n[URL] ${url}\n[Mensagem] ${message}`
+    }
     message = process_message(message)
     INFO_CHANNEL.send(message)
   }
 
-  async debug (message: string): Promise<void> {
-    message = `:mag:\n[Mensagem] ${message}`
-
+  async debug (message: string, url?: string): Promise<void> {
+    if (url === undefined) {
+      message = `:mag:\n[Mensagem] ${message}`
+    } else {
+      message = `:mag:\n[URL] ${url}\n[Mensagem] ${message}`
+    }
     message = process_message(message)
     DEBUG_CHANNEL.send(message)
   }
 
-  async error (message: string): Promise<void> {
-    message = `:octagonal_sign: ${message}`
+  async error (message: string, url?: string): Promise<void> {
+    if (url === undefined) {
+      message = `:octagonal_sign: ${message}`
+    } else {
+      message = `:octagonal_sign:\n[URL] ${url}\n${message}`
+    }
     message = process_message(message)
 
     ERROR_CHANNEL.send(message)
   }
 
-  async warn (message: string): Promise<void> {
-    message = `:warning:\n[Mensagem] ${message}`
-
+  async warn (message: string, url?: string): Promise<void> {
+    if (url === undefined) {
+      message = `:warning:\n[Mensagem] ${message}`
+    } else {
+      message = `:warning:\n[URL] ${url}\n[Mensagem] ${message}`
+    }
     message = process_message(message)
     WARN_CHANNEL.send(message)
   }

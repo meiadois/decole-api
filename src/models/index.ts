@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { Sequelize } from 'sequelize'
 
-const dbConfig = require('../config/database')
+const dbConfig = require('../config/database.js')
 
 export default class Database {
     private static instance: Database
@@ -35,9 +35,7 @@ export default class Database {
             // console.log('processado.')
             // console.log(db[model_name])
           })
-          console.log(`${file} processado.`)
         })
-      console.log('All models are OK')
     }
 
     public associateModels (): void {
@@ -56,8 +54,6 @@ export default class Database {
             // console.log('processado.')
             // console.log(db[model_name])
           })
-          console.log(`${file} processado.`)
         })
-      console.log(this.sequelize.models)
     }
 }

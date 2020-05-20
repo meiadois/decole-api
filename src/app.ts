@@ -1,8 +1,9 @@
 import Database from './models/index'
 import routes from './routes'
-import * as cors from 'cors'
+import { HandleErrorMiddleware, NotFoundRoute } from './helpers/ErrorHandler'
 import * as express from 'express'
-import * as moment from 'moment-timezone'
+import cors = require ('cors')
+import moment = require('moment-timezone')
 moment.tz.setDefault('America/Sao_Paulo')
 
 class App {
@@ -14,6 +15,7 @@ class App {
     this.middlewares()
     this.database()
     this.routes()
+    this.errorHandler()
   }
 
   private middlewares (): void {
@@ -41,6 +43,11 @@ class App {
 
   private routes (): void {
     this.express.use('/v1', routes)
+    this.express.get('*', NotFoundRoute)
+  }
+
+  private errorHandler (): void {
+    this.express.use(HandleErrorMiddleware)
   }
 }
 

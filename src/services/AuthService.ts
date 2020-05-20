@@ -1,6 +1,6 @@
-import { NextFunction } from 'express'
+import { NextFunction, Response, Request } from 'express'
 import * as jwt from 'jsonwebtoken'
-import { ErrorHandler } from '../helpers/error'
+import { ErrorHandler } from '../helpers/ErrorHandler'
 
 interface User {
     id: number;
@@ -21,19 +21,19 @@ class AuthService {
     return data
   }
 
-  authorize (req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.get('x-access-token')
+  authorize (req: Request, res: Response, next: NextFunction): void {
+    let token = req.headers['x-access-token']
     if (!token) {
       throw new ErrorHandler(401, 'Token inválido')
     } else {
+      token = token as string
       jwt.verify(token, String(process.env.SALT_KEY), async function (err, decoded) {
         if (err) {
           console.log(err)
           return next(new ErrorHandler(401, 'Token inválido'))
         }
         const token_infos = decoded as TokenInfos
-        const ID_HEADER_KEY = '_user_id_'
-        res.headers.set(ID_HEADER_KEY, String(token_infos.user.id))
+        res.locals.user = token_infos.user
         next()
       })
     }

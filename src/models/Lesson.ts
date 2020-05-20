@@ -8,19 +8,28 @@ import { DoneLesson } from './DoneLesson'
 export interface LessonI {
   id?: number | null;
   title: string;
+  description: string;
   order: number;
+  route_id: number;
+  done: boolean;
+
 }
 export class Lesson extends Model implements LessonI {
   public id?: number;
   public title!: string;
+  public description!: string;
   public order!: number;
+  public route_id!: number;
+  public done!: boolean;
 
+  // Removendo N x N
+  /*
   public getRoutes!: BelongsToManyGetAssociationsMixin<Route>; // Note the null assertions!
   public addRoute!: BelongsToManyAddAssociationMixin<Route, number>;
   public hasRoute!: BelongsToManyHasAssociationMixin<Route, number>;
   public countRoutes!: BelongsToManyCountAssociationsMixin;
   public createRoute!: BelongsToManyCreateAssociationMixin<Route>;
-
+*/
   public getChannels!: BelongsToManyGetAssociationsMixin<Channel>; // Note the null assertions!
   public addChannel!: BelongsToManyAddAssociationMixin<Channel, number>;
   public hasChannel!: BelongsToManyHasAssociationMixin<Channel, number>;
@@ -51,7 +60,7 @@ export class Lesson extends Model implements LessonI {
   public countDoneLessons!: HasManyCountAssociationsMixin;
   public createDoneLesson!: HasManyCreateAssociationMixin<DoneLesson>;
 
-  public readonly routes?: Route[];
+  // public readonly routes?: Route[]; // Removendo N x N
   public readonly channels?: Channel[];
   public readonly steps?: Step[];
   public readonly requirements?: LessonRequirement[];
@@ -63,7 +72,7 @@ export class Lesson extends Model implements LessonI {
   public readonly updatedAt!: Date;
 
   public static associations: {
-    routes: Association<Lesson, Route>;
+    // routes: Association<Lesson, Route>;// Removendo N x N
     channels: Association<Lesson, Channel>;
     steps: Association<Lesson, Step>;
     requirements: Association<Lesson, LessonRequirement>;
@@ -79,13 +88,23 @@ export function init (sequelize: Sequelize): void {
         autoIncrement: true,
         primaryKey: true
       },
+      route_id: {
+        type: DataTypes.INTEGER.UNSIGNED
+      },
       title: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      description: {
         type: DataTypes.STRING,
         allowNull: false
       },
       order: {
         type: DataTypes.INTEGER,
         allowNull: false
+      },
+      done: {
+        type: DataTypes.VIRTUAL
       }
     },
     {
@@ -96,7 +115,8 @@ export function init (sequelize: Sequelize): void {
 }
 
 export function associate (sequelize: Sequelize): void {
-  Lesson.belongsToMany(sequelize.models.Route, { foreignKey: 'lesson_id', through: 'route_lessons', as: 'routes' })
+  // Lesson.belongsToMany(sequelize.models.Route, { foreignKey: 'lesson_id', through: 'route_lessons', as: 'routes' })
+  Lesson.belongsTo(sequelize.models.Route, { foreignKey: 'route_id', as: 'route' })
   Lesson.belongsToMany(sequelize.models.Channel, { foreignKey: 'lesson_id', through: 'channel_lessons', as: 'channels' })
   Lesson.hasMany(sequelize.models.Step, { foreignKey: 'lesson_id', as: 'steps' })
   Lesson.hasMany(sequelize.models.LessonRequirement, { foreignKey: 'required_lesson_id', as: 'belongs_to_requirements' })
