@@ -12,6 +12,7 @@
         "build": "sucrase ./src -d ./dist --transforms typescript,imports",
         "prebuild": "rimraf dist",
         "start": "sucrase-node src/server.ts",
+        "start-dist": "yarn sucrase-node dist/server.js",
         "dev": "nodemon src/server.ts",
         "tsc": "tsc"
     },
