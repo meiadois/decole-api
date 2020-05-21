@@ -6,10 +6,12 @@
     "author": "Guilherme Cunha <guiscunha@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "watch": "babel --watch src --out-dir dist --extensions .ts,.tsx,.js",
-        "build": "babel src --out-dir dist --extensions .ts,.tsx,.js",
-        "postinstall": "yarn tsc",
-        "start": "ts-node src/server.ts",
+        "babel-watch": "babel --watch src --out-dir dist --extensions .ts,.tsx",
+        "babel-build": "babel src --out-dir dist --extensions .ts,.tsx",
+        "babel-start": "ts-node src/server.ts",
+        "build": "sucrase ./src -d ./dist --transforms typescript,imports",
+        "prebuild": "rimraf dist",
+        "start": "sucrase-node src/server.ts",
         "dev": "nodemon src/server.ts",
         "tsc": "tsc"
     },
@@ -44,6 +46,7 @@
     "devDependencies": {
         "@babel/cli": "^7.8.4",
         "@babel/core": "^7.9.6",
+        "@babel/plugin-transform-runtime": "^7.9.6",
         "@babel/preset-env": "^7.9.6",
         "@babel/preset-typescript": "^7.9.0",
         "@babel/register": "^7.9.0",
@@ -61,6 +64,7 @@
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.1",
         "nodemon": "^2.0.4",
+        "sucrase": "^3.15.0",
         "typescript": "^3.9.2"
     }
 }

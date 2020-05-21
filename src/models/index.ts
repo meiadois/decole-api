@@ -2,13 +2,14 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { Sequelize } from 'sequelize'
 
-const dbConfig = require('../config/database.js')
+// const dbConfig = require('../config/database.js')
+import databaseConfig from '../config/database'
 
 export default class Database {
     private static instance: Database
     public sequelize: Sequelize
     private constructor () {
-      this.sequelize = new Sequelize(dbConfig)
+      this.sequelize = new Sequelize(databaseConfig)
     }
 
     public static getInstance (): Database {
