@@ -1,2 +1,3 @@
 import app from './app'
-app.listen(Number(process.env.SERVER_PORT) | 3000)
+require('dotenv/config')
+app.listen(Number(process.env.PORT) | 3000)
