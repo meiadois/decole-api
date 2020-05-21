@@ -1,1 +1,1 @@
-web: yarn start-dist
+web: yarn start
