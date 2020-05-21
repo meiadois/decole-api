@@ -4,6 +4,6 @@
     ],
     "ext": "ts",
     "execMap": {
-        "ts": "sucrase-node src/server.ts"
+        "ts": "ts-node src/server.ts"
     }
 }

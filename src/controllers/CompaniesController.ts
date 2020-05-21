@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { ErrorHandler } from '../helpers/ErrorHandler'
-import { Company } from '../models/Company'
+import { Company, CompanyI } from '../models/Company'
 import { User } from '../models/User'
 
 import { Op, Model, where } from 'sequelize'
@@ -52,35 +52,21 @@ class CompaniesController {
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+      const company = req.body as CompanyI
+      /* if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
         throw new ErrorHandler(400, '')
-      }
-
-      const nResults = await Company.count({ where: { cnpj } })
+      } */
+      // return res.json(company)
+      const nResults = await Company.count({ where: { id: company.cnpj } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
+        throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
       }
-      const _company = await Company.create({
-        name,
-        cep,
-        thumbnail,
-        banner,
-        cnpj,
-        segment_id,
-        description,
-        cellphone,
-        email,
-        visible,
-        city,
-        neighborhood,
-        state,
-        street
-      }).catch((err) => {
-        console.log(err)
-        return null
-      })
+      const _company = await Company.create(company)
+        .catch((err) => {
+          console.log(err)
+          return null
+        })
       if (!_company) {
         throw new ErrorHandler(500, '')
       }
@@ -94,8 +80,8 @@ class CompaniesController {
   async update (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { id } = req.params
-      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood } = req.body
+      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood) {
         throw new ErrorHandler(400, '')
       }
 
@@ -117,8 +103,6 @@ class CompaniesController {
       _company.banner = banner
       _company.city = city
       _company.neighborhood = neighborhood
-      _company.state = state
-      _company.street = street
 
       const _success = await _company.save().then(() => {
         return true
@@ -283,8 +267,8 @@ class CompaniesController {
         throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`)
       }
 
-      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood } = req.body
+      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood) {
         throw new ErrorHandler(400, '')
       }
       if (cnpj !== null) {
@@ -301,7 +285,7 @@ class CompaniesController {
       }
 
       const _company = await Company.create({
-        name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street
+        name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood
       }).catch((err) => {
         console.log(err)
         return null
@@ -331,8 +315,8 @@ class CompaniesController {
   async meUpdate (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user_id = res.locals.user.id
-      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood, state, street } = req.body
-      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
+      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood } = req.body
+      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood) {
         throw new ErrorHandler(400, '')
       }
 
@@ -389,8 +373,6 @@ class CompaniesController {
 
       _company.city = city
       _company.neighborhood = neighborhood
-      _company.state = state
-      _company.street = street
 
       const _success = await _company.save().then(() => {
         return true
@@ -462,7 +444,7 @@ class CompaniesController {
 
   async search (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood, state, street } = req.query
+      let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood } = req.query
       limit = limit as number
       offset = offset as number
       const user_where = {}
@@ -491,16 +473,6 @@ class CompaniesController {
       if (segment_id !== undefined) {
         ANDs.push({
           segment_id
-        })
-      }
-      if (street !== undefined) {
-        ANDs.push({
-          street
-        })
-      }
-      if (state !== undefined) {
-        ANDs.push({
-          state
         })
       }
       if (neighborhood !== undefined) {
@@ -566,7 +538,7 @@ class CompaniesController {
         where,
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',
-            'city', 'neighborhood', 'state', 'street', 'cep']
+            'city', 'neighborhood', 'cep']
         },
         include
       })

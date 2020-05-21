@@ -1,29 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "moduleResolution": "node",
     "module": "commonjs",
-    "allowJs": true,
-    "declaration": true,
-    "noEmit": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "noImplicitUseStrict": false,
-    "outDir": "dist/",
-    "baseUrl": "src/app.ts",
-    "listFiles": false,
-    "noEmitHelpers": false,
-    "noImplicitReturns": true,
-    "strict": true,
+    "moduleResolution": "node",
     //"esModuleInterop": true,
-    "jsx": "react",
-    "suppressImplicitAnyIndexErrors": false,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "outDir": "./dist",
+    "target": "es6",
+    //"allowSyntheticDefaultImports": true,
     "types": [
       "node"
     ]
   },
   "include": [
-    "src"
+    "./src/**/*"
   ],
   "exclude": [
     "node_modules"

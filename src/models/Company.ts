@@ -4,38 +4,35 @@ import { Like } from './Like'
 
 export interface CompanyI {
   id?: number | null;
+
   name: string;
-  cep: string;
-  thumbnail: string;
-  banner: string;
+  description: string;
+  segment_id: number;
   cnpj: string;
   cellphone: string;
   email: string;
-  description: string;
-  visible: boolean;
+  thumbnail?: string;
+  banner?: string;
+  cep: string;
   city: string;
   neighborhood: string;
-  state: string;
-  street: string;
-  segment_id: number;
+  visible?: boolean;
 }
 export class Company extends Model implements CompanyI {
   public id?: number;
   public name!: string;
-  public cep!: string;
-  public thumbnail!: string;
-  public banner!: string;
+  public description!: string;
+  public segment_id!: number;
   public cnpj!: string;
   public cellphone!: string;
   public email!: string;
-  public description!: string;
-  public visible!: boolean;
+  public thumbnail?: string;
+  public banner?: string;
+  public cep!: string;
   public city!: string;
   public neighborhood!: string;
-  public state!: string;
-  public street!: string;
 
-  public segment_id!: number;
+  public visible?: boolean;
 
   public getUsers!: BelongsToManyGetAssociationsMixin<User>; // Note the null assertions!
   public addUser!: BelongsToManyAddAssociationMixin<User, number>;
@@ -77,24 +74,16 @@ export function init (sequelize: Sequelize): void {
         autoIncrement: true,
         primaryKey: true
       },
-      segment_id: {
-        type: DataTypes.INTEGER.UNSIGNED
-      },
       name: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      cep: {
+      description: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      thumbnail: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      banner: {
-        type: DataTypes.STRING,
-        allowNull: false
+      segment_id: {
+        type: DataTypes.INTEGER.UNSIGNED
       },
       cnpj: {
         type: DataTypes.STRING,
@@ -108,13 +97,16 @@ export function init (sequelize: Sequelize): void {
         type: DataTypes.STRING,
         allowNull: false
       },
-      description: {
+      thumbnail: {
         type: DataTypes.STRING,
         allowNull: false
       },
-
-      visible: {
-        type: DataTypes.BOOLEAN,
+      banner: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      cep: {
+        type: DataTypes.STRING,
         allowNull: false
       },
       city: {
@@ -125,12 +117,9 @@ export function init (sequelize: Sequelize): void {
         type: DataTypes.STRING,
         allowNull: false
       },
-      state: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      street: {
-        type: DataTypes.STRING,
+      visible: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
         allowNull: false
       }
     },
