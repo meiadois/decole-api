@@ -9,7 +9,23 @@ export default class Database {
     private static instance: Database
     public sequelize: Sequelize
     private constructor () {
-      this.sequelize = new Sequelize(databaseConfig)
+      // this.sequelize = new Sequelize(databaseConfig)
+      this.sequelize = new Sequelize(
+        String(process.env.DB_SEQUELIZE_DATABASE),
+        String(process.env.DB_SEQUELIZE_USERNAME),
+        String(process.env.DB_SEQUELIZE_PASSWORD), {
+          logging: false,
+          dialect: 'mysql',
+          host: process.env.DB_SEQUELIZE_HOST,
+          port: Number(process.env.DB_SEQUELIZE_PORT),
+          ssl: false,
+          timezone: '-03:00',
+          define: {
+            timestamps: true
+          }
+        }
+
+      )
     }
 
     public static getInstance (): Database {
