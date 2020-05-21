@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express'
+
 import AccountsRouter from './routes/AccountsRouter'
 import AuthenticationsRouter from './routes/AuthenticationsRouter'
 import CepsRouter from './routes/CepsRouter'
@@ -22,9 +23,9 @@ import AuthService from './services/AuthService'
 
 const routes = Router()
 
-routes.get('/', (req: Request, res: Response): string => {
+routes.get('/', (req: Request, res: Response): Response => {
   const message = 'Okay'
-  return message
+  return res.json(message)
 })
 
 routes.use('/accounts', AccountsRouter)

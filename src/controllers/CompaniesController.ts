@@ -4,6 +4,7 @@ import { Company, CompanyI } from '../models/Company'
 import { User } from '../models/User'
 
 import { Op, Model, where } from 'sequelize'
+import { validate } from 'class-validator'
 
 class CompaniesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -52,11 +53,8 @@ class CompaniesController {
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const company = req.body as CompanyI
-      /* if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood || !state || !street) {
-        throw new ErrorHandler(400, '')
-      } */
-      // return res.json(company)
+      const company = req.body as Company
+
       const nResults = await Company.count({ where: { id: company.cnpj } })
 
       if (nResults !== 0) {
@@ -80,29 +78,26 @@ class CompaniesController {
   async update (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { id } = req.params
-      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood } = req.body
-      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood) {
-        throw new ErrorHandler(400, '')
-      }
-
+      const company = req.body as Company
       const _company = await Company.findByPk(id)
 
       if (!_company) {
         throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
       }
 
-      _company.name = name
-      _company.cep = cep
-      _company.thumbnail = thumbnail
-      if (cnpj !== null) _company.cnpj = cnpj
-      _company.segment_id = segment_id
-      _company.description = description
-      _company.cellphone = cellphone
-      _company.email = email
-      _company.visible = visible
-      _company.banner = banner
-      _company.city = city
-      _company.neighborhood = neighborhood
+      _company.name = company.name
+      _company.cep = company.cep
+      _company.segment_id = company.segment_id
+      _company.description = company.description
+      _company.cellphone = company.cellphone
+      _company.email = company.email
+      _company.visible = company.visible
+      _company.city = company.city
+      _company.neighborhood = company.neighborhood
+
+      if (company.thumbnail !== null) _company.thumbnail = company.thumbnail
+      if (company.banner !== null) _company.banner = company.banner
+      if (company.cnpj !== null) _company.cnpj = company.cnpj
 
       const _success = await _company.save().then(() => {
         return true
@@ -267,15 +262,13 @@ class CompaniesController {
         throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`)
       }
 
-      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood } = req.body
-      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood) {
-        throw new ErrorHandler(400, '')
-      }
-      if (cnpj !== null) {
-        const nResults = await Company.count({ where: { cnpj } })
+      const company = req.body as Company
+
+      if (company.cnpj !== null) {
+        const nResults = await Company.count({ where: { cnpj: company.cnpj } })
 
         if (nResults !== 0) {
-          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
+          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
         }
       }
 
@@ -284,9 +277,7 @@ class CompaniesController {
         throw new ErrorHandler(404, 'Usuário não encontrada')
       }
 
-      const _company = await Company.create({
-        name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood
-      }).catch((err) => {
+      const _company = await Company.create(company).catch((err) => {
         console.log(err)
         return null
       })
@@ -315,10 +306,7 @@ class CompaniesController {
   async meUpdate (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user_id = res.locals.user.id
-      const { name, cep, thumbnail, banner, cnpj, segment_id, description, cellphone, email, visible, city, neighborhood } = req.body
-      if (!name || !cep || !thumbnail || !banner || !cnpj || !segment_id || !description || !cellphone || !email || visible === undefined || !city || !neighborhood) {
-        throw new ErrorHandler(400, '')
-      }
+      const company = req.body as Company
 
       if (!user_id) {
         throw new ErrorHandler(400, '')
@@ -352,27 +340,27 @@ class CompaniesController {
         throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
 
-      if (cnpj !== null && cnpj !== _company.cnpj) {
-        const nResults = await Company.count({ where: { cnpj } })
+      if (company.cnpj !== null && company.cnpj !== _company.cnpj) {
+        const nResults = await Company.count({ where: { cnpj: company.cnpj } })
 
         if (nResults !== 0) {
-          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${cnpj}].`)
+          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
         }
       }
 
-      _company.name = name
-      _company.cep = cep
-      _company.thumbnail = thumbnail
-      if (cnpj !== null) _company.cnpj = cnpj
-      _company.segment_id = segment_id
-      _company.description = description
-      _company.cellphone = cellphone
-      _company.email = email
-      _company.visible = visible
-      _company.banner = banner
+      _company.name = company.name
+      _company.cep = company.cep
+      _company.segment_id = company.segment_id
+      _company.description = company.description
+      _company.cellphone = company.cellphone
+      _company.email = company.email
+      _company.visible = company.visible
+      _company.city = company.city
+      _company.neighborhood = company.neighborhood
 
-      _company.city = city
-      _company.neighborhood = neighborhood
+      if (company.thumbnail !== null) _company.thumbnail = company.thumbnail
+      if (company.banner !== null) _company.banner = company.banner
+      if (company.cnpj !== null) _company.cnpj = company.cnpj
 
       const _success = await _company.save().then(() => {
         return true

@@ -1,10 +1,10 @@
-import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin } from 'sequelize'
+import { Sequelize, Model, DataTypes, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin } from 'sequelize'
+
 import { User } from './User'
 import { Like } from './Like'
 
 export interface CompanyI {
   id?: number | null;
-
   name: string;
   description: string;
   segment_id: number;
@@ -31,7 +31,6 @@ export class Company extends Model implements CompanyI {
   public cep!: string;
   public city!: string;
   public neighborhood!: string;
-
   public visible?: boolean;
 
   public getUsers!: BelongsToManyGetAssociationsMixin<User>; // Note the null assertions!

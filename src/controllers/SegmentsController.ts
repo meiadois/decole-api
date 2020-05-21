@@ -49,20 +49,16 @@ class SegmentsController {
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { name } = req.body
-      if (!name) {
-        throw new ErrorHandler(400, '')
-      }
+      const segment = req.body as Segment
+
       const nResults = await Segment.count({
-        where: { name }
+        where: { name: segment.name }
       })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe um segmento com o nome [${name}].`)
+        throw new ErrorHandler(400, `Já existe um segmento com o nome [${segment.name}].`)
       }
-      const _segment = await Segment.create({
-        name
-      }).catch((err: any) => {
+      const _segment = await Segment.create(segment).catch((err: any) => {
         console.log(err)
         return null
       })

@@ -68,20 +68,16 @@ class RoutesController {
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { title, description } = req.body
-      if (!description || !title) {
-        throw new ErrorHandler(400, '')
-      }
+      const route = req.body as Route
+
       const nResults = await Route.count({
-        where: { description }
+        where: { description: route.description }
       })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma rota com a descrição [${description}].`)
+        throw new ErrorHandler(400, `Já existe uma rota com a descrição [${route.description}].`)
       }
-      const _route = await Route.create({
-        title, description
-      }).catch((err) => {
+      const _route = await Route.create(route).catch((err) => {
         console.log(err)
         return null
       })

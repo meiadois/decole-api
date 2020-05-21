@@ -1,15 +1,18 @@
 import { Router } from 'express'
 import RoutesController from '../controllers/RoutesController'
+import { RouteStoreDTO } from '../validators/Routes/RouteStoreDTO'
+import ValidationMiddleware from '../helpers/ValidationMiddleware'
+import { RouteUpdateDTO } from '../validators/Routes/RouteUpdateDTO'
 
 const RoutesRouter = Router()
 
 RoutesRouter.route('/')
   .get(RoutesController.list)
-  .post(RoutesController.store)
+  .post(ValidationMiddleware(RouteStoreDTO), RoutesController.store)
 
 RoutesRouter.route('/:id')
   .get(RoutesController.index)
-  .put(RoutesController.update)
+  .put(ValidationMiddleware(RouteUpdateDTO), RoutesController.update)
   .delete(RoutesController.delete)
 
 RoutesRouter.route('/:id/lessons')

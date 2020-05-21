@@ -56,20 +56,16 @@ class StepsController {
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { message, order, lesson_id } = req.body
-      if (!message || !order || !lesson_id) {
-        throw new ErrorHandler(400, '')
-      }
+      const step = req.body as Step
+
       const nResults = await Step.count({
-        where: { message, lesson_id }
+        where: { message: step.message, lesson_id: step.lesson_id }
       })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma etapa com a mensagem [${message}] na lição [${lesson_id}].`)
+        throw new ErrorHandler(400, `Já existe uma etapa com a mensagem [${step.message}] na lição [${step.lesson_id}].`)
       }
-      const _step = await Step.create({
-        message, order, lesson_id
-      }).catch((err) => {
+      const _step = await Step.create(step).catch((err) => {
         console.log(err)
         return null
       })
@@ -85,11 +81,7 @@ class StepsController {
   async update (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { id } = req.params
-      const { message, order } = req.body
-
-      if (!id || !message || !order) {
-        throw new ErrorHandler(400, '')
-      }
+      const { message, order, lesson_id } = req.body
 
       const _step = await Step.findByPk(id)
 
@@ -99,6 +91,7 @@ class StepsController {
 
       _step.message = message
       _step.order = order
+      _step.lesson_id = lesson_id
 
       const _success = await _step.save().then(() => {
         return true
