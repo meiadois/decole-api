@@ -23,7 +23,7 @@ import AuthService from './services/AuthService'
 const routes = Router()
 
 routes.get('/', (req, res) => {
-  res.json({ message: 'okay' })
+  return res.json({ message: 'okay' })
 })
 
 routes.use('/accounts', AccountsRouter)
