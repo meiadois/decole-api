@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { ErrorHandler } from '../helpers/ErrorHandler'
-import { Company, CompanyI } from '../models/Company'
-import { User } from '../models/User'
+import { Company } from '../models/Company'
+import User from '../models/User'
 
 import { Op, Model, where } from 'sequelize'
 import { validate } from 'class-validator'

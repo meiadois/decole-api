@@ -13,7 +13,8 @@
         "build": "tsc",
         "prebuild": "rimraf dist",
         "sucrase-start": "sucrase-node src/server.ts",
-        "start": "node dist/server.js",
+        "start": "ts-node src/server.ts",
+        "start-js": "node dist/server.js",
         "dev": "nodemon src/server.ts",
         "tsc": "tsc"
     },

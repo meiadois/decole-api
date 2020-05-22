@@ -1,6 +1,8 @@
 import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, HasManyRemoveAssociationMixin } from 'sequelize'
 import { Route } from './Route'
 import { Company } from './Company'
+import { Account } from './Account'
+
 import { DoneRoute } from './DoneRoute'
 import { DoneLesson } from './DoneLesson'
 import { Payment } from './Payment'
@@ -13,7 +15,7 @@ export interface UserI {
   introduced: boolean;
   paid_access_expiration: Date;
 }
-export class User extends Model implements UserI {
+export default class User extends Model implements UserI {
   public id?: number | null;
   public name!: string;
   public email!: string;
@@ -74,10 +76,16 @@ export class User extends Model implements UserI {
   // timestamps!
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-  /*
+
   public static associations: {
-    projects: Association<User, Project>;
-  }; */
+    routes: Association<User, Route>;
+    companies: Association<User, Company>;
+    done_routes: Association<User, DoneRoute>;
+    done_lessons: Association<User, DoneLesson>;
+    accounts: Association<User, Account>;
+    payments: Association<User, Payment>;
+
+  };
 }
 export function init (sequelize: Sequelize): void {
   User.init(

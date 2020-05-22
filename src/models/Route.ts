@@ -1,6 +1,6 @@
 import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, HasManyRemoveAssociationMixin } from 'sequelize'
 import { Channel } from './Channel'
-import { User } from './User'
+import User from './User'
 import { Lesson } from './Lesson'
 import { RouteRequirement } from './RouteRequirement'
 import { DoneRoute } from './DoneRoute'

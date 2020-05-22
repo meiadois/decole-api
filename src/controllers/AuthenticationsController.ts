@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { User } from '../models/User'
+import User from '../models/User'
 import NodeMailer from '../services/NodeMailer'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import Logger from '../services/Logger'

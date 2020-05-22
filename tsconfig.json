@@ -7,13 +7,14 @@
     "experimentalDecorators": true,
     "outDir": "./dist",
     "target": "es6",
+    "noEmit": true,
     //"allowSyntheticDefaultImports": true,
     "types": [
       "node"
     ]
   },
   "include": [
-    "./src/**/*"
+    "src"
   ],
   "exclude": [
     "node_modules"

@@ -1,21 +1,18 @@
 import { Request, Response, NextFunction } from 'express'
 import { ErrorHandler } from '../helpers/ErrorHandler'
-import { User } from '../models/User'
+import User from '../models/User'
 import { Company } from '../models/Company'
 
 import LoginService from '../services/LoginService'
+import { Route } from '../models/Route'
 
 class UsersController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const _users = await User.findAll({
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          }
+          User.associations.routes,
+          User.associations.companies
         ]
       })
       res.json(_users)
@@ -33,18 +30,10 @@ class UsersController {
       }
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          },
-          {
-            association: 'done_lessons'
-          },
-          {
-            association: 'done_routes'
-          }
+          User.associations.routes,
+          User.associations.companies,
+          User.associations.routes,
+          User.associations.done_lessons
         ]
       })
 
@@ -159,18 +148,10 @@ class UsersController {
       }
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          },
-          {
-            association: 'done_lessons'
-          },
-          {
-            association: 'done_routes'
-          }
+          User.associations.routes,
+          User.associations.companies,
+          User.associations.routes,
+          User.associations.done_lessons
         ]
       })
 
@@ -324,9 +305,7 @@ class UsersController {
 
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'companies'
-          }
+          User.associations.companies
         ]
       })
 
@@ -367,12 +346,8 @@ class UsersController {
 
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          }
+          User.associations.routes,
+          User.associations.companies
         ]
       })
 
@@ -414,12 +389,8 @@ class UsersController {
 
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          }
+          User.associations.routes,
+          User.associations.companies
         ]
       })
 
@@ -468,12 +439,8 @@ class UsersController {
 
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          }
+          User.associations.routes,
+          User.associations.companies
         ]
       })
 
@@ -514,12 +481,8 @@ class UsersController {
 
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          }
+          User.associations.routes,
+          User.associations.companies
         ]
       })
 
@@ -561,12 +524,8 @@ class UsersController {
 
       const _user = await User.findByPk(id, {
         include: [
-          {
-            association: 'routes'
-          },
-          {
-            association: 'companies'
-          }
+          User.associations.routes,
+          User.associations.companies
         ]
       })
 
@@ -616,10 +575,10 @@ class UsersController {
       const _user = await User.findByPk(id, {
         include: [
           {
-            association: 'routes'
+            model: Route
           },
           {
-            association: 'companies'
+            model: Company
           }
         ]
       })

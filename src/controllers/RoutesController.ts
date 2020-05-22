@@ -7,6 +7,7 @@ import { RouteRequirement } from '../models/RouteRequirement'
 import { Lesson } from '../models/Lesson'
 
 import { ErrorHandler } from '../helpers/ErrorHandler'
+import { User } from 'discord.js'
 
 class RoutesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -17,16 +18,17 @@ class RoutesController {
             association: 'lessons'
           },
           {
-            association: 'users'
+            association: Route.associations.users
           },
           {
-            association: 'channels'
+            association: Route.associations.route_requirements
           }
         ]
       })
 
-      res.json(_routes)
+      return res.json(_routes)
     } catch (err) {
+      return res.json(err)
       next(err)
     }
   }
@@ -46,10 +48,10 @@ class RoutesController {
               association: 'lessons'
             },
             {
-              association: 'users'
+              association: Route.associations.users
             },
             {
-              association: 'channels'
+              association: Route.associations.route_requirements
             }
           ]
         })

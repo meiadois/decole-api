@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { User } from '../models/User'
+import User from '../models/User'
 import { Payment } from '../models/Payment'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import * as moment from 'moment-timezone'
