@@ -1,19 +1,20 @@
 import { Router } from 'express'
 import CompaniesController from '../controllers/CompaniesController'
-import validationMiddleware from '../helpers/ValidationMiddleware'
+import ValidationMiddleware from '../helpers/ValidationMiddleware'
 import CompanyStoreDTO from '../validators/Companies/CompanyStoreDTO'
 import CompanyUpdateDTO from '../validators/Companies/CompanyUpdateDTO'
+import CompanySearchDTO from '../validators/Companies/CompanySearchDTO'
 
 const CompaniesRouter = Router()
 
 CompaniesRouter.route('/')
   .get(CompaniesController.list)
-  .post(validationMiddleware(CompanyStoreDTO), CompaniesController.store)
+  .post(ValidationMiddleware(CompanyStoreDTO), CompaniesController.store)
 
 CompaniesRouter.route('/:id')
   .get(CompaniesController.index)
-  .put(validationMiddleware(CompanyUpdateDTO), CompaniesController.update)
+  .put(ValidationMiddleware(CompanyUpdateDTO), CompaniesController.update)
   .delete(CompaniesController.delete)
 
-CompaniesRouter.get('/_/search')
+CompaniesRouter.get('/_/search', ValidationMiddleware(CompanySearchDTO), CompaniesController.search)
 export default CompaniesRouter

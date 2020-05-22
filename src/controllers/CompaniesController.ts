@@ -431,7 +431,7 @@ class CompaniesController {
 
   async search (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood } = req.query
+      let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood } = req.body
       limit = limit as number
       offset = offset as number
       const user_where = {}
