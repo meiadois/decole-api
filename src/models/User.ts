@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, HasManyRemoveAssociationMixin } from 'sequelize'
+import { Sequelize, Model, DataTypes, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, HasManyRemoveAssociationMixin } from 'sequelize'
 import { Route } from './Route'
 import { Company } from './Company'
 import { Account } from './Account'
@@ -15,7 +15,7 @@ export interface UserI {
   introduced: boolean;
   paid_access_expiration: Date;
 }
-export default class User extends Model implements UserI {
+export class User extends Model implements UserI {
   public id?: number | null;
   public name!: string;
   public email!: string;

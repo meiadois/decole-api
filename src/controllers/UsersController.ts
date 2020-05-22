@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { ErrorHandler } from '../helpers/ErrorHandler'
-import User from '../models/User'
+import { User } from '../models/User'
 import { Company } from '../models/Company'
 
 import LoginService from '../services/LoginService'

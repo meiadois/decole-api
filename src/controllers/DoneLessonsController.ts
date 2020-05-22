@@ -3,7 +3,7 @@ import { ErrorHandler } from '../helpers/ErrorHandler'
 import { Lesson } from '../models/Lesson'
 import { DoneLesson } from '../models/DoneLesson'
 
-import User from '../models/User'
+import { User } from '../models/User'
 import { DoneRoute } from '../models/DoneRoute'
 
 class DoneLessonsController {

@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import { Company } from '../models/Company'
-import User from '../models/User'
+import { User } from '../models/User'
 
-import { Op, Model, where } from 'sequelize'
-import { validate } from 'class-validator'
+import { Op } from 'sequelize'
 
 class CompaniesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

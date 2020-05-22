@@ -5,7 +5,7 @@ import { Route } from '../models/Route'
 
 import { DoneLesson } from '../models/DoneLesson'
 
-import User from '../models/User'
+import { User } from '../models/User'
 
 class DoneRoutesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

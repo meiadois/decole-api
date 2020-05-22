@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { Account } from '../models/Account'
-import User from '../models/User'
+import { User } from '../models/User'
 import { Channel } from '../models/Channel'
 
 import { ErrorHandler } from '../helpers/ErrorHandler'
