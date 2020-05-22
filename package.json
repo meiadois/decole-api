@@ -19,7 +19,7 @@
     "nodemailer": "^6.4.6",
     "sequelize": "^5.21.7",
     "sharp": "^0.25.2",
-    "uuidv4": "^6.0.8"
+    "uuidv4": "^6.0.9"
   },
   "scripts": {
     "start": "node src/server.js",
