@@ -30,7 +30,8 @@ export function init (sequelize: Sequelize): void {
       },
       status: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'pending'
       },
       sender_id: {
         type: DataTypes.INTEGER.UNSIGNED

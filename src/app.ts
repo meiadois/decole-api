@@ -6,6 +6,20 @@ import cors = require('cors')
 import moment = require('moment-timezone')
 moment.tz.setDefault('America/Sao_Paulo')
 
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'Decole API',
+      description: 'API escrita em Typescript.',
+      contact: {
+        name: 'Decole Dev'
+      },
+      servers: ['http://localhost:3000/']
+    }
+  },
+  apis: ['src/**/*.ts']
+}
+
 class App {
   public express: express.Application
 

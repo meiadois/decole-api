@@ -84,20 +84,15 @@ class LikesController {
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { sender_id, recipient_id } = req.body
-      if (!sender_id || !recipient_id) {
-        throw new ErrorHandler(400, '')
-      }
+      const like = req.body as Like
 
-      const nResults = await Like.count({ where: { sender_id, recipient_id } })
+      const nResults = await Like.count({ where: { sender_id: like.sender_id, recipient_id: like.recipient_id } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe um like entre as empresas [${sender_id}] e [${recipient_id}].`)
+        throw new ErrorHandler(400, `Já existe um like entre as empresas [${like.sender_id}] e [${like.recipient_id}].`)
       }
 
-      const _like = await Like.create({
-        sender_id, recipient_id
-      }).catch((err) => {
+      const _like = await Like.create(like).catch((err) => {
         console.log(err)
         return null
       })
@@ -215,6 +210,146 @@ class LikesController {
       ORs.push({
         recipient_id: user_id
       })
+
+      let where: JsonObject = {}
+      if (ORs.length > 0) {
+        where = {
+          [Op.and]: ANDs,
+          [Op.or]: ORs
+        }
+      } else {
+        where = {
+          [Op.and]: ANDs
+        }
+      }
+      const _likes = await Like.findAll({
+        where,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'sender_id', 'recipient_id']
+        },
+        include: [
+          {
+            association: 'sender_company',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'segment_id']
+            }
+            /*
+            ,include: {
+              association: 'segment',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              }
+            } */
+          },
+          {
+            association: 'recipient_company',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'segment_id']
+            }
+            /*
+            ,include: {
+              association: 'segment',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              }
+            } */
+          }
+        ]
+      })
+      res.json(_likes)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meSentList (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+
+      let { status } = req.query
+      status = status as string
+      const ANDs = []
+      const ORs = []
+
+      if (status !== undefined) {
+        if (status != null) {
+          if (!is_valid_status(status)) {
+            throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
+          }
+        }
+        ANDs.push({ status })
+      }
+      ANDs.push({ sender_id: user_id })
+
+      let where: JsonObject = {}
+      if (ORs.length > 0) {
+        where = {
+          [Op.and]: ANDs,
+          [Op.or]: ORs
+        }
+      } else {
+        where = {
+          [Op.and]: ANDs
+        }
+      }
+      const _likes = await Like.findAll({
+        where,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'sender_id', 'recipient_id']
+        },
+        include: [
+          {
+            association: 'sender_company',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'segment_id']
+            }
+            /*
+            ,include: {
+              association: 'segment',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              }
+            } */
+          },
+          {
+            association: 'recipient_company',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'segment_id']
+            }
+            /*
+            ,include: {
+              association: 'segment',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              }
+            } */
+          }
+        ]
+      })
+      res.json(_likes)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meReceivedList (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+
+      let { status } = req.query
+      status = status as string
+      const ANDs = []
+      const ORs = []
+
+      if (status !== undefined) {
+        if (status != null) {
+          if (!is_valid_status(status)) {
+            throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
+          }
+        }
+        ANDs.push({ status })
+      }
+      ANDs.push({ recipient_id: user_id })
 
       let where: JsonObject = {}
       if (ORs.length > 0) {

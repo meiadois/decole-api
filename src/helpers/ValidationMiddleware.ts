@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express'
 import express = require('express')
 
 export default function ValidationMiddleware<T> (type: any, skipMissingProperties = false): express.RequestHandler {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     validate(plainToClass(type, req.body), { skipMissingProperties })
       .then((errors: ValidationError[]) => {
         if (errors.length > 0) {

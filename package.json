@@ -43,8 +43,6 @@
         "sequelize": "^5.21.5",
         "sequelize-cli": "^5.5.1",
         "sequelize-cli-typescript": "^3.2.0-c",
-        "swagger-jsdoc": "^4.0.0",
-        "swagger-ui-express": "^4.1.4",
         "ts-node": "^8.10.1",
         "typescript": "^3.9.2"
     },
