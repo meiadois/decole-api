@@ -77,7 +77,7 @@ class AccountsController {
       }
 
       user.password = await LoginService.createHashedPassword(user.password)
-
+      user.paid_access_expiration = paid_exp_date.toDate()
       const _user = await User.create(user)
 
       if (!_user) {
