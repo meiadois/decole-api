@@ -190,7 +190,21 @@ class LikesController {
   async meList (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user_id = res.locals.user.id
+      const _company = await Company.findOne({
+        include: [
+          {
+            association: Company.associations.users,
+            attributes: [],
+            where: {
+              id: user_id
+            }
+          }
+        ]
+      })
 
+      if (_company === null) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+      }
       let { status } = req.query
       status = status as string
       const ANDs = []
@@ -202,13 +216,14 @@ class LikesController {
             throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
+        console.log('não é undefined')
         ANDs.push({ status })
       }
       ORs.push({
-        sender_id: user_id
+        sender_id: _company.id
       })
       ORs.push({
-        recipient_id: user_id
+        recipient_id: _company.id
       })
 
       let where: JsonObject = {}
@@ -222,41 +237,47 @@ class LikesController {
           [Op.and]: ANDs
         }
       }
+      console.log(where)
       const _likes = await Like.findAll({
         where,
+
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'sender_id', 'recipient_id']
         },
+
         include: [
           {
             association: 'sender_company',
+
             attributes: {
               exclude: ['createdAt', 'updatedAt', 'segment_id']
-            }
-            /*
-            ,include: {
-              association: 'segment',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
+            },
+            include: [
+              {
+                association: 'segment',
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                }
               }
-            } */
+            ]
           },
           {
             association: 'recipient_company',
             attributes: {
               exclude: ['createdAt', 'updatedAt', 'segment_id']
-            }
-            /*
-            ,include: {
-              association: 'segment',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
+            },
+            include: [
+              {
+                association: 'segment',
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                }
               }
-            } */
+            ]
           }
         ]
       })
-      res.json(_likes)
+      return res.json(_likes)
     } catch (err) {
       next(err)
     }
@@ -265,11 +286,24 @@ class LikesController {
   async meSentList (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user_id = res.locals.user.id
+      const _company = await Company.findOne({
+        include: [
+          {
+            association: Company.associations.users,
+            attributes: [],
+            where: {
+              id: user_id
+            }
+          }
+        ]
+      })
 
+      if (_company === null) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+      }
       let { status } = req.query
       status = status as string
       const ANDs = []
-      const ORs = []
 
       if (status !== undefined) {
         if (status != null) {
@@ -277,56 +311,40 @@ class LikesController {
             throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
+        console.log('não é undefined')
         ANDs.push({ status })
       }
-      ANDs.push({ sender_id: user_id })
+      ANDs.push({ sender_id: _company.id })
 
       let where: JsonObject = {}
-      if (ORs.length > 0) {
-        where = {
-          [Op.and]: ANDs,
-          [Op.or]: ORs
-        }
-      } else {
-        where = {
-          [Op.and]: ANDs
-        }
+      where = {
+        [Op.and]: ANDs
       }
+      console.log(where)
       const _likes = await Like.findAll({
         where,
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'sender_id', 'recipient_id']
         },
+
         include: [
-          {
-            association: 'sender_company',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'segment_id']
-            }
-            /*
-            ,include: {
-              association: 'segment',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
-              }
-            } */
-          },
           {
             association: 'recipient_company',
             attributes: {
               exclude: ['createdAt', 'updatedAt', 'segment_id']
-            }
-            /*
-            ,include: {
-              association: 'segment',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
+            },
+            include: [
+              {
+                association: 'segment',
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                }
               }
-            } */
+            ]
           }
         ]
       })
-      res.json(_likes)
+      return res.json(_likes)
     } catch (err) {
       next(err)
     }
@@ -335,11 +353,24 @@ class LikesController {
   async meReceivedList (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user_id = res.locals.user.id
+      const _company = await Company.findOne({
+        include: [
+          {
+            association: Company.associations.users,
+            attributes: [],
+            where: {
+              id: user_id
+            }
+          }
+        ]
+      })
 
+      if (_company === null) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+      }
       let { status } = req.query
       status = status as string
       const ANDs = []
-      const ORs = []
 
       if (status !== undefined) {
         if (status != null) {
@@ -347,56 +378,40 @@ class LikesController {
             throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
+        console.log('não é undefined')
         ANDs.push({ status })
       }
-      ANDs.push({ recipient_id: user_id })
+      ANDs.push({ recipient_id: _company.id })
 
       let where: JsonObject = {}
-      if (ORs.length > 0) {
-        where = {
-          [Op.and]: ANDs,
-          [Op.or]: ORs
-        }
-      } else {
-        where = {
-          [Op.and]: ANDs
-        }
+      where = {
+        [Op.and]: ANDs
       }
+      console.log(where)
       const _likes = await Like.findAll({
         where,
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'sender_id', 'recipient_id']
         },
+
         include: [
           {
             association: 'sender_company',
             attributes: {
               exclude: ['createdAt', 'updatedAt', 'segment_id']
-            }
-            /*
-            ,include: {
-              association: 'segment',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
+            },
+            include: [
+              {
+                association: 'segment',
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                }
               }
-            } */
-          },
-          {
-            association: 'recipient_company',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'segment_id']
-            }
-            /*
-            ,include: {
-              association: 'segment',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
-              }
-            } */
+            ]
           }
         ]
       })
-      res.json(_likes)
+      return res.json(_likes)
     } catch (err) {
       next(err)
     }

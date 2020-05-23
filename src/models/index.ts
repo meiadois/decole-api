@@ -2,9 +2,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { Sequelize } from 'sequelize'
 
-// const dbConfig = require('../config/database.js')
-import databaseConfig from '../config/database'
-
 export default class Database {
     private static instance: Database
     public sequelize: Sequelize
@@ -14,7 +11,7 @@ export default class Database {
         String(process.env.DB_SEQUELIZE_DATABASE),
         String(process.env.DB_SEQUELIZE_USERNAME),
         String(process.env.DB_SEQUELIZE_PASSWORD), {
-          logging: false,
+          logging: console.log,
           dialect: 'mysql',
           host: process.env.DB_SEQUELIZE_HOST,
           port: Number(process.env.DB_SEQUELIZE_PORT),
