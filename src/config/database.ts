@@ -4,7 +4,7 @@ interface JsonObject {
     [key: string]: any;
 }
 const databaseConfig: JsonObject = {
-  logging: false,
+  logging: true,
   dialect: process.env.DB_SEQUELIZE_DIALECT,
   host: process.env.DB_SEQUELIZE_HOST,
   username: process.env.DB_SEQUELIZE_USERNAME,
