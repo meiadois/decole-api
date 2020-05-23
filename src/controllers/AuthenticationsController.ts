@@ -96,7 +96,7 @@ class AccountsController {
       })
       Logger.info(`Usuário ${_user.email} cadastrado com sucesso com sucesso`)
       return res.status(200).json({
-        message: 'Login realizado com sucesso',
+        message: 'Cadastro realizado com sucesso',
         user: {
           email: _user.email,
           name: _user.name,
