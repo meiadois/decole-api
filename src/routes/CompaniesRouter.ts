@@ -16,5 +16,5 @@ CompaniesRouter.route('/:id')
   .put(ValidationMiddleware(CompanyUpdateDTO), CompaniesController.update)
   .delete(CompaniesController.delete)
 
-CompaniesRouter.get('/_/search', ValidationMiddleware(CompanySearchDTO), CompaniesController.search)
+CompaniesRouter.get('/_/search',  CompaniesController.search)
 export default CompaniesRouter
