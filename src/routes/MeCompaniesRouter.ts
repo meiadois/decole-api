@@ -15,4 +15,6 @@ MeCompaniesRouter.route('/')
 MeCompaniesRouter.route('/:id')
   .get(CompaniesController.meIndex)
 
+MeCompaniesRouter.get('/_/search', CompaniesController.meSearch)
+
 export default MeCompaniesRouter

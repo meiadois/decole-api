@@ -4,6 +4,7 @@ import { Company } from '../models/Company'
 import { User } from '../models/User'
 
 import { Op } from 'sequelize'
+import { Like } from '../models/Like'
 
 class CompaniesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -502,6 +503,21 @@ class CompaniesController {
           email
         })
       }
+
+      include.push(
+        {
+          association: 'segment',
+          attributes: ['name']
+        }
+      )
+      if (Object.keys(user_where).length !== 0) {
+        include.push({
+          association: 'users',
+          attributes: [],
+          where: user_where
+        })
+      }
+
       let where = {}
       if (ORs.length > 0) {
         where = {
@@ -512,6 +528,106 @@ class CompaniesController {
         where = {
           [Op.and]: ANDs
         }
+      }
+      const _company = await Company.findAll({
+        limit,
+        offset,
+        where,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',
+            'city', 'neighborhood', 'cep']
+        },
+        include
+      })
+      return res.json(_company)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meSearch (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+
+      const _user_company = await Company.findOne({
+
+        attributes: {
+          exclude: ['name', 'description', 'cnpj', 'cellphone', 'email', 'thumbnail', 'banner']
+        },
+        include: [
+          {
+            association: 'users',
+            attributes: [],
+            where: {
+              id: user_id
+            }
+          }
+        ]
+      })
+      if (!_user_company) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+      }
+      let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood } = req.query
+      limit = limit as number
+      offset = offset as number
+      const user_where = {}
+      const ANDs = []
+      const ORs = []
+      const include = []
+
+      ANDs.push({
+        visible: true
+      })
+
+      if (name !== undefined) {
+        name = `%${name}%`
+        ORs.push({
+          name: {
+            [Op.like]: name
+          }
+        })
+        ORs.push({
+          description: {
+            [Op.like]: name
+          }
+        })
+      }
+
+      if (segment_id !== undefined) {
+        ANDs.push({
+          segment_id
+        })
+      }
+      if (neighborhood !== undefined) {
+        ANDs.push({
+          neighborhood
+        })
+      }
+      if (city !== undefined) {
+        ANDs.push({
+          city
+        })
+      }
+      if (cellphone !== undefined) {
+        ANDs.push({
+          cellphone
+        })
+      }
+      if (cnpj !== undefined) {
+        ANDs.push({
+          cnpj
+        })
+      }
+      if (cep !== undefined) {
+        ANDs.push({
+          cep
+        })
+      }
+
+      if (email !== undefined) {
+        ANDs.push({
+          email
+        })
       }
 
       include.push(
@@ -528,6 +644,50 @@ class CompaniesController {
         })
       }
 
+      const _associated_companies = await Like.findAll({
+        attributes: {
+          include: ['id']
+        },
+        where: {
+          [Op.or]: [
+            {
+              sender_id: _user_company.id
+            },
+            {
+              recipient_id: _user_company.id
+            }
+
+          ]
+        }
+      })
+      let _associated_company_ids = _associated_companies.map((obj) => {
+        if (obj.sender_id === _user_company.id) {
+          return obj.recipient_id
+        }
+        return obj.sender_id
+      })
+      _associated_company_ids = _associated_company_ids.filter((value, index, self) => self.indexOf(value) === index) // get only unique values
+      let where = {}
+      if (ORs.length > 0) {
+        where = {
+          [Op.and]: ANDs,
+          [Op.or]: ORs,
+          [Op.not]: [
+            {
+              id: _associated_company_ids
+            }
+          ]
+        }
+      } else {
+        where = {
+          [Op.and]: ANDs,
+          [Op.not]: [
+            {
+              id: _associated_company_ids
+            }
+          ]
+        }
+      }
       const _company = await Company.findAll({
         limit,
         offset,
