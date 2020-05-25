@@ -12,5 +12,6 @@ AuthenticationsRouter.post('/login', validationMiddleware(UserLoginDTO), Authent
 AuthenticationsRouter.post('/register', validationMiddleware(UserRegisterDTO), AuthenticationsController.register)
 AuthenticationsRouter.post('/generate_reset_password', validationMiddleware(UserResetPasswordDTO), AuthenticationsController.generate_reset_password)
 AuthenticationsRouter.post('/forgot_password', validationMiddleware(UserForgotPasswordDTO), AuthenticationsController.forgot_password)
+AuthenticationsRouter.post('/verify_token', AuthenticationsController.verify_token)
 
 export default AuthenticationsRouter

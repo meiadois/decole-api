@@ -140,10 +140,18 @@ class AccountsController {
       }
       await NodeMailer.sendMail(user.email, 'Esqueci minha senha', `O seu token de recuperação é ${token}`)
       Logger.info(`Usuário ${user.email} recebeu o código de recuperação de senha com sucesso.`)
-      return res.json({ token })
+      return res.status(200).json({})
     } catch (err) {
       next(err)
     }
+  }
+
+  async verify_token (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    const { token } = req.body
+    const reset_password = await ResetPassword.findOne({ where: { token } })
+    const isValid = reset_password != null
+
+    return res.json({ isValid })
   }
 
   async forgot_password (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
