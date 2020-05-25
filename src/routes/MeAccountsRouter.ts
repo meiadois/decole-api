@@ -1,11 +1,13 @@
 import { Router } from 'express'
 import AccountsController from '../controllers/AccountsController'
+import { AccountMeStoreDTO } from '../validators/Accounts/AccountMeStoreDTO'
+import ValidationMiddleware from '../helpers/ValidationMiddleware'
 
 const MeAccountsRouter = Router()
 
 MeAccountsRouter.route('/')
   .get(AccountsController.meList)
-  .post(AccountsController.meStore)
+  .post(ValidationMiddleware(AccountMeStoreDTO), AccountsController.meStore)
 
 MeAccountsRouter.route('/:channel_name')
   .get(AccountsController.meIndex)

@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import { Segment } from '../models/Segment'
-
+import { Company } from '../models/Company'
+import { Op } from 'sequelize'
+interface JsonObject {
+  [key: string]: any;
+}
 class SegmentsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -129,6 +133,31 @@ class SegmentsController {
         throw new ErrorHandler(500, '')
       }
       return res.status(204).json({})
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async listHasCompanies (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const _companies = await Company.aggregate('segment_id', 'DISTINCT', { plain: false }) as JsonObject[]
+      const _segment_ids = _companies.map((obj: JsonObject) => obj.DISTINCT)
+
+      const _segments = await Segment.findAll({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+          id: {
+            [Op.in]: _segment_ids
+          }
+        }
+      }).then((result) => result)
+        .catch((err) => {
+          console.log(err)
+          return []
+        })
+      return res.json(_segments)
     } catch (err) {
       next(err)
     }

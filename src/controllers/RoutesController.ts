@@ -8,6 +8,7 @@ import { Lesson } from '../models/Lesson'
 
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import { User } from 'discord.js'
+import { Account } from '../models/Account'
 
 class RoutesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -222,9 +223,22 @@ class RoutesController {
       const _route = await Route.findByPk(id, {
         include: [
           Route.associations.route_requirements,
-          Route.associations.lessons
+          Route.associations.lessons,
+          Route.associations.channels
         ]
       })
+
+      const _channels = []
+
+      for (let i = 0; i < _route.channels.length; i++) {
+        const n_accounts = await Account.count({ where: { user_id, channel_id: _route.channels[i].id } })
+        _channels.push({
+          id: _route.channels[i].id,
+          name: _route.channels[i].name,
+          category: _route.channels[i].category,
+          registered: n_accounts > 0
+        })
+      }
       if (_route === null) {
         throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
       }
@@ -252,6 +266,7 @@ class RoutesController {
         title: _route.title,
         description: _route.description,
         lessons: lessons,
+        _channels,
         locked,
         progress: {
           done: n_done_lessons,

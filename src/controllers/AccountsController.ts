@@ -262,8 +262,8 @@ class AccountsController {
         throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
       }
 
-      const _account = await Account.findOrCreate({
-        where: { user_id, username, channel_id: _channel.id as number }
+      const _account = await Account.create({
+        user_id, username, channel_id: _channel.id as number
       }).catch((err) => {
         console.log(err)
         return null
@@ -302,9 +302,6 @@ class AccountsController {
           channel_id: _channel.id as number
         },
         include: [
-          {
-            association: 'user'
-          },
           {
             association: 'channel'
           }
@@ -358,10 +355,7 @@ class AccountsController {
         where: {
           user_id,
           channel_id: _channel.id as number
-        },
-        include: [
-          Account.associations.lessons
-        ]
+        }
       })
       if (!_account) {
         throw new ErrorHandler(404, `Conta do usuário ${user_id} no ${channel_name} não encontrada.`)
