@@ -146,6 +146,14 @@ class AccountsController {
     }
   }
 
+  async verify_token (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    const { token } = req.body
+    const reset_password = await ResetPassword.findOne({ where: { token } })
+    const isValid = reset_password != null
+
+    return res.json({ isValid })
+  }
+
   async forgot_password (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user_forgot_password = req.body as UserForgotPasswordDTOI
