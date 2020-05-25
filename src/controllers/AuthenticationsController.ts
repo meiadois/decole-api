@@ -140,7 +140,7 @@ class AccountsController {
       }
       await NodeMailer.sendMail(user.email, 'Esqueci minha senha', `O seu token de recuperação é ${token}`)
       Logger.info(`Usuário ${user.email} recebeu o código de recuperação de senha com sucesso.`)
-      return res.json({ token })
+      return res.status(200).json({})
     } catch (err) {
       next(err)
     }
