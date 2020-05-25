@@ -855,10 +855,10 @@
   resolved "https://registry.yarnpkg.com/@types/bcrypt/-/bcrypt-3.0.0.tgz#851489a9065a067cb7f3c9cbe4ce9bed8bba0876"
   integrity sha512-nohgNyv+1ViVcubKBh0+XiNJ3dO8nYu///9aJ4cgSqv70gBL+94SNy/iC2NLzKPT2Zt/QavrOkBVbZRLZmw6NQ==
 
-"@types/bluebird@*", "@types/bluebird@^3.5.30":
-  version "3.5.31"
-  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.31.tgz#d17fa0ec242b51c3db302481c557ce3813bf45cb"
-  integrity sha512-0PKlnDIxOh3xJHwJpVONR2PP11LhdM+QYiLJGLIbzMqRwLAPxN6lQar2RpdRhfIEh/HjVMgMdhHWJA0CgC5X6w==
+"@types/bluebird@*", "@types/bluebird@^3.5.32":
+  version "3.5.32"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.32.tgz#381e7b59e39f010d20bbf7e044e48f5caf1ab620"
+  integrity sha512-dIOxFfI0C+jz89g6lQ+TqhGgPQ0MxSnh/E4xuC0blhFtyW269+mPG5QeLgbdwst/LvdP8o1y0o/Gz5EHXLec/g==
 
 "@types/body-parser@*":
   version "1.19.0"
