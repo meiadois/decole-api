@@ -31,10 +31,19 @@ class CompaniesController {
       let _company = null
       try {
         _company = await Company.findByPk(id, {
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'segment_id']
+          },
           include: [
             Company.associations.sent_likes,
             Company.associations.received_likes,
-            Company.associations.users
+            Company.associations.users,
+            {
+              association: Company.associations.segment,
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              }
+            }
           ]
         })
       } catch (err) {

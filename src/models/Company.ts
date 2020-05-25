@@ -2,6 +2,7 @@ import { Sequelize, Model, DataTypes, HasManyGetAssociationsMixin, HasManyAddAss
 
 import { User } from './User'
 import { Like } from './Like'
+import { Segment } from './Segment';
 
 export interface CompanyI {
   id?: number | null;
@@ -63,6 +64,7 @@ export class Company extends Model implements CompanyI {
     users: Association<Company, User>;
     sent_likes: Association<Company, Like>;
     received_likes: Association<Company, Like>;
+    segment: Association<Company, Segment>;
   };
 }
 export function init (sequelize: Sequelize): void {

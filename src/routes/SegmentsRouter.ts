@@ -15,4 +15,6 @@ SegmentsRouter.route('/:id')
   .put(ValidationMiddleware(SegmentUpdateDTO), SegmentsController.update)
   .delete(SegmentsController.delete)
 
+SegmentsRouter.get('/_/has-companies', SegmentsController.listHasCompanies)
+
 export default SegmentsRouter
