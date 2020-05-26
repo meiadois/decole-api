@@ -667,6 +667,7 @@ class CompaniesController {
         return obj.sender_id
       })
       _associated_company_ids = _associated_company_ids.filter((value, index, self) => self.indexOf(value) === index) // get only unique values
+      _associated_company_ids.push(_user_company.id) // Dont search the user company
       let where = {}
       if (ORs.length > 0) {
         where = {
