@@ -140,9 +140,71 @@ class SegmentsController {
 
   async listHasCompanies (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const _companies = await Company.aggregate('segment_id', 'DISTINCT', { plain: false }) as JsonObject[]
+      const _companies = await Company.aggregate('segment_id', 'DISTINCT',
+        {
+          plain: false,
+          where: {
+            visible: true
+          }
+        }) as JsonObject[]
       const _segment_ids = _companies.map((obj: JsonObject) => obj.DISTINCT)
 
+      const _segments = await Segment.findAll({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+          id: {
+            [Op.in]: _segment_ids
+          }
+        }
+      }).then((result) => result)
+        .catch((err) => {
+          console.log(err)
+          return []
+        })
+      return res.json(_segments)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meListHasCompanies (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+
+      const _user_company = await Company.findOne({
+
+        attributes: {
+          exclude: ['name', 'description', 'cnpj', 'cellphone', 'email', 'thumbnail', 'banner']
+        },
+        include: [
+          {
+            association: 'users',
+            attributes: [],
+            where: {
+              id: user_id
+            }
+          }
+        ]
+      })
+      if (!_user_company) {
+        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+      }
+
+      const _companies = await Company.aggregate('segment_id', 'DISTINCT',
+        {
+          plain: false,
+          where: {
+            [Op.not]: [
+              {
+                id: _user_company.id
+              }
+            ],
+            visible: true
+          }
+        }) as JsonObject[]
+      const _segment_ids = _companies.map((obj: JsonObject) => obj.DISTINCT)
       const _segments = await Segment.findAll({
         attributes: {
           exclude: ['createdAt', 'updatedAt']

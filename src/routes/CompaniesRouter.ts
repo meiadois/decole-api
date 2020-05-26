@@ -3,7 +3,6 @@ import CompaniesController from '../controllers/CompaniesController'
 import ValidationMiddleware from '../helpers/ValidationMiddleware'
 import CompanyStoreDTO from '../validators/Companies/CompanyStoreDTO'
 import CompanyUpdateDTO from '../validators/Companies/CompanyUpdateDTO'
-import CompanySearchDTO from '../validators/Companies/CompanySearchDTO'
 
 const CompaniesRouter = Router()
 

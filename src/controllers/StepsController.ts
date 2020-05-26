@@ -18,12 +18,8 @@ class StepsController {
       const { lesson_id } = req.params
       const _lesson = await Lesson.findByPk(lesson_id, {
         include: [
-          {
-            association: 'steps'
-          },
-          {
-            association: 'requirements'
-          }
+          Lesson.associations.steps,
+          Lesson.associations.requirements
         ]
       })
 

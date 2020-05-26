@@ -31,6 +31,10 @@ export function init (sequelize: Sequelize): void {
       lesson_id: {
         type: DataTypes.INTEGER.UNSIGNED
       },
+      message: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       order: {
         type: DataTypes.INTEGER,
         allowNull: false
