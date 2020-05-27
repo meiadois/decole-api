@@ -1,15 +1,15 @@
-import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
+import { Sequelize, Model, DataTypes } from 'sequelize'
 
 export interface AccountI {
   id?: number | null;
   username: string;
-  user_id: string;
+  user_id: number;
   channel_id: number;
 }
 export class Account extends Model implements AccountI {
   public id?: number;
   public username!: string;
-  public user_id!: string;
+  public user_id!: number;
   public channel_id!: number;
 
   // Colocar usuário
@@ -19,7 +19,7 @@ export class Account extends Model implements AccountI {
   public readonly updatedAt!: Date;
   /*
   public static associations: {
-    projects: Association<User, Project>;
+    channel: Association<Account, Channel>;
   }; */
 }
 export function init (sequelize: Sequelize): void {
@@ -35,12 +35,10 @@ export function init (sequelize: Sequelize): void {
         allowNull: false
       },
       user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER.UNSIGNED
       },
       channel_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER.UNSIGNED
       }
       // Colocar usuário
     },

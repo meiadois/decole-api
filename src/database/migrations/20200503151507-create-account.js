@@ -3,20 +3,20 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('accounts', {
       id: {
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        primaryKey: true,
         autoIncrement: true,
-        type: Sequelize.INTEGER
+        primaryKey: true
       },
       user_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       channel_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: { model: 'channels', key: 'id' },
         onUpdate: 'CASCADE',
