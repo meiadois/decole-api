@@ -2,7 +2,9 @@ import * as nodemailer from 'nodemailer'
 require('dotenv/config')
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  host: 'mail.decole.app',
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.DECOLE_EMAIL_USER, // Basta dizer qual o nosso usuário
     pass: process.env.DECOLE_EMAIL_PASSWORD // e a senha da nossa conta
