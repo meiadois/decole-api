@@ -1,5 +1,4 @@
-import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCreateAssociationMixin, BelongsToManyCountAssociationsMixin } from 'sequelize'
-import { Route } from './Route'
+import { Sequelize, Model, DataTypes, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, BelongsToManyCreateAssociationMixin, BelongsToManyCountAssociationsMixin } from 'sequelize'
 import { Channel } from './Channel'
 import { Step } from './Step'
 import { LessonRequirement } from './LessonRequirement'

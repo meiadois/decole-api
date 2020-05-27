@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes, BuildOptions, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, Association, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
+import { Sequelize, Model, DataTypes, BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, BelongsToManyHasAssociationMixin, Association, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
 import { Lesson } from './Lesson'
 import { Route } from './Route'
 import { Account } from './Account'
@@ -73,5 +73,5 @@ export function init (sequelize: Sequelize): void {
 export function associate (sequelize: Sequelize): void {
   Channel.belongsToMany(sequelize.models.Lesson, { foreignKey: 'channel_id', through: 'channel_lessons', as: 'lessons' })
   Channel.belongsToMany(sequelize.models.Route, { foreignKey: 'channel_id', through: 'channel_routes', as: 'routes' })
-  Channel.hasMany(Account, { foreignKey: 'channel_id', as: 'accounts' })
+  Channel.hasMany(sequelize.models.Account, { foreignKey: 'channel_id', as: 'accounts' })
 }
