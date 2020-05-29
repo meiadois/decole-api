@@ -27,13 +27,24 @@ class AutoDeployService {
 
     // sh /home/decole/repositories/decole-api/deploy.sh
     const myShellScript = exec('sh /home/decole/repositories/decole-api/deploy.sh')
+    const response = exec('sh /home/decole/repositories/decole-api/deploy.sh', (err, stdout, stderr) => {
+      if (err) {
+        // node couldn't execute the command
+        return response
+      }
+      return stdout
+      // the *entire* stdout and stderr (buffered)
+      // console.log(`stdout: ${stdout}`)
+      // console.log(`stderr: ${stderr}`)
+    })
+    /*
     myShellScript.stdout.on('data', async (data) => {
       await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Sucess', 'Deploy realizado com sucesso')
     })
     myShellScript.stderr.on('data', async (data) => {
       await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Sucess', `Deploy não realizado com sucesso\nErro:${data}`)
-    })
-    return res.status(200).json({})
+    }) */
+    return res.status(200).json({ response })
   }
 }
 export default new AutoDeployService()
