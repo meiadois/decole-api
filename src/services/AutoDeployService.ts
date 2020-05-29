@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import NodeMailer from './NodeMailer'
 import * as crypto from 'crypto'
-// import { exec } from 'child_process'
+import { exec } from 'child_process'
 require('dotenv/config')
 class AutoDeployService {
   async deploy (req: Request, res: Response): Promise<Response | void> {
@@ -25,7 +25,14 @@ class AutoDeployService {
       return res.status(400).json({})
     } */
 
-    await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Sucess', 'Assinatura válidada')
+    // sh /home/decole/repositories/decole-api/deploy.sh
+    const myShellScript = exec('sh /home/decole/repositories/decole-api/deploy.sh')
+    myShellScript.stdout.on('data', async (data) => {
+      await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Sucess', 'Deploy realizado com sucesso')
+    })
+    myShellScript.stderr.on('data', async (data) => {
+      await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Sucess', `Deploy não realizado com sucesso\nErro:${data}`)
+    })
     return res.status(200).json({})
   }
 }
