@@ -7,7 +7,7 @@ class AutoDeployService {
   async deploy (req: Request, res: Response): Promise<Response | void> {
     const payload = JSON.stringify(req.body)
     if (!payload) {
-      return res.status(400).json({})
+      return res.status(400).json({ message: 'Dont have a payload' })
     }
 
     const sig = req.get('X-Hub-Signature') || ''
@@ -17,7 +17,7 @@ class AutoDeployService {
     if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
       const message = `Request body digest (${digest}) did not match ${'X-Hub-Signature'} (${checksum})`
       await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Error', message)
-      return res.status(400).json({})
+      return res.status(400).json({ message })
     }
     /*
     if (signature !== String(process.env.GITHUB_X_HUB_SIGNATURE)) {
@@ -26,7 +26,6 @@ class AutoDeployService {
     } */
 
     // sh /home/decole/repositories/decole-api/deploy.sh
-    const myShellScript = exec('sh /home/decole/repositories/decole-api/deploy.sh')
     const response = exec('sh /home/decole/repositories/decole-api/deploy.sh', (err, stdout, stderr) => {
       if (err) {
         // node couldn't execute the command
@@ -37,13 +36,6 @@ class AutoDeployService {
       // console.log(`stdout: ${stdout}`)
       // console.log(`stderr: ${stderr}`)
     })
-    /*
-    myShellScript.stdout.on('data', async (data) => {
-      await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Sucess', 'Deploy realizado com sucesso')
-    })
-    myShellScript.stderr.on('data', async (data) => {
-      await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Sucess', `Deploy não realizado com sucesso\nErro:${data}`)
-    }) */
     return res.status(200).json({ response })
   }
 }
