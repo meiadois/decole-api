@@ -29,7 +29,10 @@ class AutoDeployService {
     const response = exec('sh /home/decole/repositories/decole-api/deploy.sh', (err, stdout, stderr) => {
       if (err) {
         // node couldn't execute the command
-        return response
+        return err
+      }
+      if (stderr) {
+        return stderr
       }
       return stdout
       // the *entire* stdout and stderr (buffered)
