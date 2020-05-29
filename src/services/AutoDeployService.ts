@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import NodeMailer from './NodeMailer'
-import crypto from 'crypto'
-import { exec } from 'child_process'
+import * as crypto from 'crypto'
+// import { exec } from 'child_process'
 require('dotenv/config')
 class AutoDeployService {
-  async deploy (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  async deploy (req: Request, res: Response): Promise<Response | void> {
     const payload = JSON.stringify(req.body)
     if (!payload) {
-      return next('Request body empty')
+      return res.status(400).json({})
     }
 
     const sig = req.get('X-Hub-Signature') || ''
@@ -17,7 +17,7 @@ class AutoDeployService {
     if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
       const message = `Request body digest (${digest}) did not match ${'X-Hub-Signature'} (${checksum})`
       await NodeMailer.sendMail('guiscunha@gmail.com', 'Deploy Error', message)
-      return next()
+      return res.status(400).json({})
     }
     /*
     if (signature !== String(process.env.GITHUB_X_HUB_SIGNATURE)) {
