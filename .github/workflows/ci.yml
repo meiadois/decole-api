@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Push to server
+      - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_IP }}
@@ -20,4 +20,5 @@ jobs:
             echo "Logged on VPS"
             cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull
+            yarn build
             echo "# Done"
