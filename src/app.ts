@@ -1,9 +1,10 @@
 import Database from './models/index'
 import routes from './routes'
 import { HandleErrorMiddleware, NotFoundRoute } from './helpers/ErrorHandler'
-import express = require('express')
-import cors = require('cors')
-import moment = require('moment-timezone')
+import * as express from 'express'
+import * as cors from 'cors'
+import * as moment from 'moment-timezone'
+import AutoDeployService from './services/AutoDeployService'
 moment.tz.setDefault('America/Sao_Paulo')
 
 class App {
@@ -42,6 +43,11 @@ class App {
   }
 
   private routes (): void {
+    this.express.post('/deploy', AutoDeployService.deploy)
+    this.express.get('/', function (req, res) {
+      return res.json({ message: 'V1' })
+    })
+
     this.express.use('/v1', routes)
     this.express.get('*', NotFoundRoute)
   }
