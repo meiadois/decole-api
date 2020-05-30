@@ -45,10 +45,10 @@ class App {
   private routes (): void {
     this.express.post('/deploy', AutoDeployService.deploy)
     this.express.get('/', function (req, res) {
-      return res.json({ message: 'V1' })
+      return res.json({ message: 'Okay' })
     })
 
-    this.express.use('/v22', routes)
+    this.express.use('/v1', routes)
     this.express.get('*', NotFoundRoute)
   }
 
