@@ -20,5 +20,6 @@ jobs:
             echo "Logged on VPS"
             cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull
+            echo "Up to Date with Master"
             pm2 restart ${{ secrets.APP_NAME }}
-            echo "# Done"
+            echo "Deploy Done"
