@@ -1,9 +1,9 @@
-name: CI
+name: Deploy Homologação
 
 on:
   push:
     branches:
-      - master
+      - TS
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -18,8 +18,9 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             echo "Logged on VPS"
-            cd ${{ secrets.VPS_PROJECT_PATH }}
+            cd ${{ secrets.VPS_HOMOLOG_PROJECT_PATH }}
             git pull
-            echo "Up to Date with Master"
-            pm2 restart ${{ secrets.APP_NAME }}
+            echo "Up to Date with TS"
+            pm2 restart ${{ secrets.VPS_PM2_HOMOLOG_APP_NAME }}
+            echo "PM2 restarted"
             echo "Deploy Done"
