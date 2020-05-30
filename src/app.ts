@@ -48,7 +48,7 @@ class App {
       return res.json({ message: 'V1' })
     })
 
-    this.express.use('/v1', routes)
+    this.express.use('/v22', routes)
     this.express.get('*', NotFoundRoute)
   }
 
