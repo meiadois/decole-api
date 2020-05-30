@@ -1,0 +1,26 @@
+name: Deploy Produção
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            echo "Logged on VPS"
+            cd ${{ secrets.VPS_PROD_PROJECT_PATH }}
+            git pull
+            echo "Up to Date with Master"
+            pm2 restart ${{ secrets.VPS_PM2_PROD_APP_NAME }}
+            echo "PM2 restarted"
+            echo "Deploy Done"
