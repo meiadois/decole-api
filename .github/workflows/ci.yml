@@ -20,5 +20,5 @@ jobs:
             echo "Logged on VPS"
             cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull
-            yarn build
+            pm2 restart ${{ secrets.APP_NAME }}
             echo "# Done"
