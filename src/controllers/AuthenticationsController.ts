@@ -116,7 +116,7 @@ class AccountsController {
 
   async generate_reset_password (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      var user = req.body as UserResetPasswordDTO
+      const user = req.body as UserResetPasswordDTO
       const _user = await User.findOne({ where: { email: user.email } })
       const user_id = _user.id
 
@@ -142,15 +142,15 @@ class AccountsController {
       }
       const replacements: ResetPasswordTemplate = {
         username: _user.name,
-        token : token 
+        token: token
       }
-      //await EmailService.sendMail(EmailService.Transporters.NoReply, user.email, 'Esqueci minha senha', `O seu token de recuperação é ${token}`)
-      await EmailService.sendMailTemplate(EmailService.Transporters.NoReply, 
-        user.email, 
+      // await EmailService.sendMail(EmailService.Transporters.NoReply, user.email, 'Esqueci minha senha', `O seu token de recuperação é ${token}`)
+      await EmailService.sendMailTemplate(EmailService.Transporters.NoReply,
+        user.email,
         'Esqueci minha senha',
-        EmailService.Templates.ResetPassword, 
+        EmailService.Templates.ResetPassword,
         replacements
-        )
+      )
       Logger.info(`Usuário ${user.email} recebeu o código de recuperação de senha com sucesso.`)
       return res.status(200).json({})
     } catch (err) {

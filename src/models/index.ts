@@ -11,7 +11,7 @@ export default class Database {
         String(process.env.DB_SEQUELIZE_DATABASE),
         String(process.env.DB_SEQUELIZE_USERNAME),
         String(process.env.DB_SEQUELIZE_PASSWORD), {
-          logging: console.log,
+          logging: false,
           dialect: 'mysql',
           host: process.env.DB_SEQUELIZE_HOST,
           port: Number(process.env.DB_SEQUELIZE_PORT),
