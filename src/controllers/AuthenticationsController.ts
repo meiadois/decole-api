@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 import { User } from '../models/User'
-import NodeMailer from '../services/NodeMailer'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import Logger from '../services/Logger'
 import LoginService from '../services/LoginService'
 import AuthService from '../services/AuthService'
+import EmailService, { ResetPasswordTemplate } from '../services/EmailService'
+
 import { ResetPassword } from '../models/ResetPassword'
 import * as crypto from 'crypto'
 import * as moment from 'moment-timezone'
@@ -116,7 +117,8 @@ class AccountsController {
   async generate_reset_password (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user = req.body as UserResetPasswordDTO
-      const user_id = await User.findOne({ where: { email: user.email } }).then((user) => user?.id)
+      const _user = await User.findOne({ where: { email: user.email } })
+      const user_id = _user.id
 
       if (user_id == null) {
         console.log('b')
@@ -138,7 +140,17 @@ class AccountsController {
       if (!reset_password) {
         throw new ErrorHandler(500, '')
       }
-      await NodeMailer.sendMail(user.email, 'Esqueci minha senha', `O seu token de recuperação é ${token}`)
+      const replacements: ResetPasswordTemplate = {
+        username: _user.name,
+        token: token
+      }
+      // await EmailService.sendMail(EmailService.Transporters.NoReply, user.email, 'Esqueci minha senha', `O seu token de recuperação é ${token}`)
+      await EmailService.sendMailTemplate(EmailService.Transporters.NoReply,
+        user.email,
+        'Esqueci minha senha',
+        EmailService.Templates.ResetPassword,
+        replacements
+      )
       Logger.info(`Usuário ${user.email} recebeu o código de recuperação de senha com sucesso.`)
       return res.status(200).json({})
     } catch (err) {

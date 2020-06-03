@@ -100,4 +100,4 @@ tests/cases/user/prettier/prettier
 .eslintcache
 .env
 .env*
-
+src/public

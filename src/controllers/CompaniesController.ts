@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from 'express'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import { Company } from '../models/Company'
 import { User } from '../models/User'
-
 import { Op } from 'sequelize'
 import { Like } from '../models/Like'
+import UploadHelper, { Files, File } from '../helpers/UploadHelper'
+import * as path from 'path'
 
 class CompaniesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -175,7 +176,7 @@ class CompaniesController {
           },
           {
             association: 'segment',
-            attributes: ['name']
+            attributes: ['id', 'name']
           }
         ]
       })
@@ -252,6 +253,7 @@ class CompaniesController {
 
   async meStore (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
+      const files = await UploadHelper.processCompaniesImages(req.files)
       const user_id = res.locals.user.id
 
       const company_ = await Company.findOne(
@@ -272,6 +274,8 @@ class CompaniesController {
       }
 
       const company = req.body as Company
+      company.banner = files.banner
+      company.thumbnail = files.thumbnail
 
       if (company.cnpj !== null) {
         const nResults = await Company.count({ where: { cnpj: company.cnpj } })
@@ -703,6 +707,18 @@ class CompaniesController {
     } catch (err) {
       next(err)
     }
+  }
+
+  async upload (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    // const files = req.files as { [fieldname: string]: File[] }
+    const files = await UploadHelper.processCompaniesImages(req.files)
+    // const banner = files.banner[0] as unknown as File
+    // const thumbnail = files.thumbnail[0] as unknown as File
+    // console.log(UploadHelper.parsePathToUnix(banner.path))
+    // const publicFolder = path.resolve(__dirname, '..', 'public')
+    // const relativePath = path.relative(banner.path, UploadHelper.publicFolder)
+
+    return res.json(req.body)
   }
 }
 export default new CompaniesController()
