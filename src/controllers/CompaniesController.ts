@@ -707,17 +707,5 @@ class CompaniesController {
       next(err)
     }
   }
-
-  async upload (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-    // const files = req.files as { [fieldname: string]: File[] }
-    const files = await UploadHelper.processCompaniesImages(req.files)
-    // const banner = files.banner[0] as unknown as File
-    // const thumbnail = files.thumbnail[0] as unknown as File
-    // console.log(UploadHelper.parsePathToUnix(banner.path))
-    // const publicFolder = path.resolve(__dirname, '..', 'public')
-    // const relativePath = path.relative(banner.path, UploadHelper.publicFolder)
-
-    return res.json(req.body)
-  }
 }
 export default new CompaniesController()
