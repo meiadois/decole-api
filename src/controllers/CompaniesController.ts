@@ -4,8 +4,7 @@ import { Company } from '../models/Company'
 import { User } from '../models/User'
 import { Op } from 'sequelize'
 import { Like } from '../models/Like'
-import UploadHelper, { Files, File } from '../helpers/UploadHelper'
-import * as path from 'path'
+import UploadHelper from '../helpers/UploadHelper'
 
 class CompaniesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
