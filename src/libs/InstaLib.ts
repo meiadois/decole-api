@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { HandleError, ErrorHandler } from '../helpers/ErrorHandler'
+import { ErrorHandler } from '../helpers/ErrorHandler'
 
 const InstagramApi = axios.create({
   baseURL: 'https://www.instagram.com'
