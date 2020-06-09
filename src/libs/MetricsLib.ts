@@ -1,4 +1,5 @@
 import InstaLib, { UserInstagramProfile, InstalibError } from './InstaLib'
+import { ErrorHandler } from '../helpers/ErrorHandler'
 export interface CountHashtagsAndMentions{
     hashtags: number;
     mentions: number;
@@ -36,8 +37,13 @@ function occurrences (string: string, subString: string, allowOverlapping: boole
 }
 export enum PossibleMetrics{
   FollowersPerFollowing = 'followers_per_following',
+  Followers = 'followers',
+  Following = 'following',
+  Publications = 'publications',
   MeanOfHashtags = 'mean_of_hashtags',
   MeanOfMentions = 'mean_of_mentions',
+  MeanOfComments = 'mean_of_comments',
+  MeanOfLikes = 'mean_of_likes',
   PostsWithHashtags = 'posts_with_hashtags'
 }
 export default class MetricsLib {
@@ -80,6 +86,44 @@ export default class MetricsLib {
           }
           return await this.geInstagramPostsWithHashtags()
         }
+        if (metric_name === PossibleMetrics.MeanOfComments) {
+          console.log(`Getting ${PossibleMetrics.MeanOfComments}`)
+          if (this.InstagramProfile === null) {
+            await this.getInstagramProfile(username)
+          }
+          return await this.geInstagramMeanOfComments()
+        }
+        if (metric_name === PossibleMetrics.MeanOfLikes) {
+          console.log(`Getting ${PossibleMetrics.MeanOfLikes}`)
+          if (this.InstagramProfile === null) {
+            await this.getInstagramProfile(username)
+          }
+          return await this.geInstagramMeanOfLikes()
+        }
+        if (metric_name === PossibleMetrics.Followers) {
+          console.log(`Getting ${PossibleMetrics.Followers}`)
+          if (this.InstagramProfile === null) {
+            await this.getInstagramProfile(username)
+          }
+          return await this.geInstagramFollowers()
+        }
+        if (metric_name === PossibleMetrics.Following) {
+          console.log(`Getting ${PossibleMetrics.Following}`)
+          if (this.InstagramProfile === null) {
+            await this.getInstagramProfile(username)
+          }
+          return await this.geInstagramFollowing()
+        }
+
+        if (metric_name === PossibleMetrics.Publications) {
+          console.log(`Getting ${PossibleMetrics.Publications}`)
+          if (this.InstagramProfile === null) {
+            await this.getInstagramProfile(username)
+          }
+          return await this.geInstagramPublications()
+        }
+
+        throw new ErrorHandler(500, `Métrica ${metric_name} não implementada.`)
       } catch (err) {
         if (err instanceof InstalibError) {
           return {
@@ -158,6 +202,63 @@ export default class MetricsLib {
         success: true,
         error_message: '',
         value: postsWithHashtags / nPosts
+      }
+    }
+
+    async geInstagramMeanOfComments (): Promise<MetricResult> {
+      const posts = this.InstagramProfile.graphql.user.edge_owner_to_timeline_media.edges
+      const nPosts = posts.length
+      let sumOfCommments = 0
+
+      for (const post of posts) {
+        sumOfCommments += post.node.edge_media_to_comment.count
+      }
+      return {
+        success: true,
+        error_message: '',
+        value: sumOfCommments / nPosts
+      }
+    }
+
+    async geInstagramFollowers (): Promise<MetricResult> {
+      const followers = this.InstagramProfile.graphql.user.edge_followed_by.count
+      return {
+        success: true,
+        error_message: '',
+        value: followers
+      }
+    }
+
+    async geInstagramFollowing (): Promise<MetricResult> {
+      const following = this.InstagramProfile.graphql.user.edge_follow.count
+      return {
+        success: true,
+        error_message: '',
+        value: following
+      }
+    }
+
+    async geInstagramPublications (): Promise<MetricResult> {
+      const publications = this.InstagramProfile.graphql.user.edge_owner_to_timeline_media.count
+      return {
+        success: true,
+        error_message: '',
+        value: publications
+      }
+    }
+
+    async geInstagramMeanOfLikes (): Promise<MetricResult> {
+      const posts = this.InstagramProfile.graphql.user.edge_owner_to_timeline_media.edges
+      const nPosts = posts.length
+      let sumOfLikes = 0
+
+      for (const post of posts) {
+        sumOfLikes += post.node.edge_liked_by.count
+      }
+      return {
+        success: true,
+        error_message: '',
+        value: sumOfLikes / nPosts
       }
     }
 }
