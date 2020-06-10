@@ -208,16 +208,21 @@ class UsersController {
   async meChangePassword (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { id } = res.locals.user
-      const { password } = req.body
+      const { old_password, password } = req.body
       if (!password) {
         throw new ErrorHandler(400, '')
       }
+
       const _user = await User.findByPk(id)
 
       if (!_user) {
         throw new ErrorHandler(404, `Usuario ${id} não encontrado.`)
       }
-
+      console.log(old_password)
+      const success = await LoginService.login(_user.password, old_password)
+      if (!success) {
+        throw new ErrorHandler(404, 'Senha antiga incorreta.')
+      }
       _user.password = await LoginService.createHashedPassword(password)
 
       const _success = await _user.save().then(() => {
