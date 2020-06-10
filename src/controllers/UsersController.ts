@@ -218,7 +218,6 @@ class UsersController {
       if (!_user) {
         throw new ErrorHandler(404, `Usuario ${id} não encontrado.`)
       }
-      console.log(old_password)
       const success = await LoginService.login(_user.password, old_password)
       if (!success) {
         throw new ErrorHandler(404, 'Senha antiga incorreta.')
