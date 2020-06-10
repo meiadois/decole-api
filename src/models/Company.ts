@@ -2,7 +2,7 @@ import { Sequelize, Model, DataTypes, HasManyGetAssociationsMixin, HasManyAddAss
 
 import { User } from './User'
 import { Like } from './Like'
-import { Segment } from './Segment';
+import { Segment } from './Segment'
 
 export interface CompanyI {
   id?: number | null;

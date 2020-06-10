@@ -8,6 +8,7 @@ import MeRoutesRouter from './MeRoutesRouter'
 import MePaymentsRouter from './MePaymentsRouter'
 import MeLikesRouter from './MeLikesRouter'
 import MeSegmentsRouter from './MeSegmentsRouter'
+import MeMetricsRouter from './MeMetricsRouter'
 
 const MeRouter = Router()
 
@@ -20,5 +21,6 @@ MeRouter.use('/routes', MeRoutesRouter)
 MeRouter.use('/payments', MePaymentsRouter)
 MeRouter.use('/likes', MeLikesRouter)
 MeRouter.use('/segments', MeSegmentsRouter)
+MeRouter.use('/metrics', MeMetricsRouter)
 
 export default MeRouter

@@ -18,6 +18,8 @@ import RoutesRouter from './routes/RoutesRouter'
 import SegmentsRouter from './routes/SegmentsRouter'
 import StepsRouter from './routes/StepsRouter'
 import UsersRouter from './routes/UsersRouter'
+import MetricsRouter from './routes/MetricsRouter'
+
 import MeRouter from './routes/MeRouter'
 import AuthService from './services/AuthService'
 
@@ -46,6 +48,8 @@ routes.use('/routes', RoutesRouter)
 routes.use('/segments', SegmentsRouter)
 routes.use('/steps', StepsRouter)
 routes.use('/users', UsersRouter)
+routes.use('/metrics', MetricsRouter)
+
 routes.use('/me', AuthService.authorize, MeRouter)
 
 export default routes
