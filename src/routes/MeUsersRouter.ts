@@ -8,7 +8,7 @@ MeUsersRouter.route('/')
   .put(UsersController.meUpdate)
   .delete(UsersController.meDelete)
 
-MeUsersRouter.post('/change_password', UsersController.meChangePassword)
+MeUsersRouter.put('/change_password', UsersController.meChangePassword)
 
 MeUsersRouter.post('/introduce', UsersController.meIntroduce)
 
