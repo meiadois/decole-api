@@ -136,6 +136,16 @@ class UploadHelper {
       return url
     }
 
+    async processCompanyBanner (banner: any): Promise<string> {
+      const banner_url = this.getFileUrl(await this.processImage(banner, 400, 400, 80))
+      return banner_url
+    }
+
+    async processCompanyThumbnail (thumbnail: any): Promise<string> {
+      const thumbnail_url = this.getFileUrl(await this.processImage(thumbnail, 100, 100, 80))
+      return thumbnail_url
+    }
+
     async processCompaniesImages (files: any): Promise<CompanyFiles> {
       const banner = files.banner[0]
       const banner_path = this.getFileUrl(await this.processImage(banner, 100, 100, 80))

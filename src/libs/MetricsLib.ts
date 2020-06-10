@@ -1,5 +1,4 @@
 import InstaLib, { UserInstagramProfile, InstalibError } from './InstaLib'
-import { ErrorHandler } from '../helpers/ErrorHandler'
 export interface CountHashtagsAndMentions{
     hashtags: number;
     mentions: number;
@@ -16,6 +15,9 @@ export interface MetricResult {
   success: boolean;
   error_message: string;
   value: number | string;
+}
+export interface MetricList {
+  [key: string]: MetricResult;
 }
 function occurrences (string: string, subString: string, allowOverlapping: boolean): number {
   string += ''
@@ -46,94 +48,67 @@ export enum PossibleMetrics{
   MeanOfLikes = 'mean_of_likes',
   PostsWithHashtags = 'posts_with_hashtags'
 }
+
 export default class MetricsLib {
-    private username: string
     private InstagramProfile: UserInstagramProfile = null
-    constructor (username: string) {
-      this.username = username
+
+    async exceptionHandler (err: any): Promise<MetricResult> {
+      if (err instanceof InstalibError) {
+        return {
+          success: false,
+          error_message: err.message,
+          value: 0
+        }
+      }
+      console.log(err)
+      throw err
     }
 
-    async metricFactory (username: string, metric_name: string): Promise<MetricResult> {
+    async instagramFactory (username: string): Promise<MetricList> {
       try {
-        if (metric_name === PossibleMetrics.FollowersPerFollowing) {
-          console.log(`Getting ${PossibleMetrics.FollowersPerFollowing}`)
+        const results: MetricList = {}
 
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-
-          return await this.getInstagramFollowersPerFollowing()
+        if (this.InstagramProfile === null) {
+          await this.getInstagramProfile(username)
         }
 
-        if (metric_name === PossibleMetrics.MeanOfHashtags) {
-          console.log(`Getting ${PossibleMetrics.MeanOfHashtags}`)
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramtMeanOfHashtags()
-        }
+        results[PossibleMetrics.FollowersPerFollowing] = await this.getInstagramFollowersPerFollowing()
+          .catch((err) => this.exceptionHandler(err))
 
-        if (metric_name === PossibleMetrics.MeanOfMentions) {
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramtMeanOfMentions()
-        }
+        results[PossibleMetrics.MeanOfHashtags] = await this.geInstagramtMeanOfHashtags()
+          .catch((err) => this.exceptionHandler(err))
 
-        if (metric_name === PossibleMetrics.PostsWithHashtags) {
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramPostsWithHashtags()
-        }
-        if (metric_name === PossibleMetrics.MeanOfComments) {
-          console.log(`Getting ${PossibleMetrics.MeanOfComments}`)
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramMeanOfComments()
-        }
-        if (metric_name === PossibleMetrics.MeanOfLikes) {
-          console.log(`Getting ${PossibleMetrics.MeanOfLikes}`)
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramMeanOfLikes()
-        }
-        if (metric_name === PossibleMetrics.Followers) {
-          console.log(`Getting ${PossibleMetrics.Followers}`)
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramFollowers()
-        }
-        if (metric_name === PossibleMetrics.Following) {
-          console.log(`Getting ${PossibleMetrics.Following}`)
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramFollowing()
-        }
+        results[PossibleMetrics.MeanOfMentions] = await this.geInstagramtMeanOfMentions()
+          .catch((err) => this.exceptionHandler(err))
 
-        if (metric_name === PossibleMetrics.Publications) {
-          console.log(`Getting ${PossibleMetrics.Publications}`)
-          if (this.InstagramProfile === null) {
-            await this.getInstagramProfile(username)
-          }
-          return await this.geInstagramPublications()
-        }
+        results[PossibleMetrics.PostsWithHashtags] = await this.geInstagramPostsWithHashtags()
+          .catch((err) => this.exceptionHandler(err))
 
-        throw new ErrorHandler(500, `Métrica ${metric_name} não implementada.`)
+        results[PossibleMetrics.MeanOfComments] = await this.geInstagramMeanOfComments()
+          .catch((err) => this.exceptionHandler(err))
+
+        results[PossibleMetrics.MeanOfLikes] = await this.geInstagramMeanOfLikes()
+          .catch((err) => this.exceptionHandler(err))
+
+        results[PossibleMetrics.Followers] = await this.geInstagramFollowers()
+          .catch((err) => this.exceptionHandler(err))
+
+        results[PossibleMetrics.Following] = await this.geInstagramFollowing()
+          .catch((err) => this.exceptionHandler(err))
+
+        results[PossibleMetrics.Publications] = await this.geInstagramPublications()
+          .catch((err) => this.exceptionHandler(err))
+        return results
       } catch (err) {
-        if (err instanceof InstalibError) {
-          return {
-            success: false,
-            error_message: err.message,
-            value: 0
-          }
-        }
-        console.log(err)
-        throw err
+        // if (err instanceof InstalibError) {
+        //   return {
+        //     success: false,
+        //     error_message: err.message,
+        //     value: 0
+        //   }
+        // }
+        // console.log(err)
+        // throw err
       }
     }
 

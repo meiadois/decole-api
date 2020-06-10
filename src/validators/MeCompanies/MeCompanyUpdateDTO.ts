@@ -1,6 +1,6 @@
-import { IsString, IsInt, IsOptional, IsBoolean, IsNumber } from 'class-validator'
+import { IsString, IsOptional, IsNumber } from 'class-validator'
 
-export interface MeCompanyStoreDTOI {
+export interface MeCompanyUpdateDTOI {
     id?: number | null;
     name: string;
     description: string;
@@ -13,7 +13,7 @@ export interface MeCompanyStoreDTOI {
     neighborhood: string;
     visible?: boolean;
   }
-export default class MeCompanyStoreDTO implements MeCompanyStoreDTOI {
+export default class MeCompanyUpdateDTO implements MeCompanyUpdateDTOI {
     @IsNumber()
     @IsOptional()
     public id?: number;
@@ -45,7 +45,7 @@ export default class MeCompanyStoreDTO implements MeCompanyStoreDTOI {
     @IsString()
     public neighborhood!: string;
 
-  @IsString()
-  @IsOptional()
-  public visible?: boolean;
+    @IsString()
+    @IsOptional()
+    public visible?: boolean;
 }

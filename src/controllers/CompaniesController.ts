@@ -6,6 +6,9 @@ import { Op } from 'sequelize'
 import { Like } from '../models/Like'
 import UploadHelper from '../helpers/UploadHelper'
 
+interface ExpressFiles {
+  [fieldname: string]: Express.Multer.File[];
+}
 class CompaniesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -252,7 +255,7 @@ class CompaniesController {
 
   async meStore (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const files = await UploadHelper.processCompaniesImages(req.files)
+      // const files = await UploadHelper.processCompaniesImages(req.files)
       const user_id = res.locals.user.id
 
       const company_ = await Company.findOne(
@@ -273,8 +276,36 @@ class CompaniesController {
       }
 
       const company = req.body as Company
-      company.banner = files.banner
-      company.thumbnail = files.thumbnail
+      // company.banner = files.banner
+      // company.thumbnail = files.thumbnail
+
+      if (Object.keys(req.files).length !== 0) {
+        const files = req.files as ExpressFiles
+        try {
+          if (Object.keys(req.files).indexOf('banner') >= 0) {
+            const banner = files.banner[0]
+            const banner_url = await UploadHelper.processCompanyBanner(banner)
+            company.banner = banner_url
+            console.log(`Banner Antigo: ${company.banner}`)
+            console.log(`Banner: ${banner_url}`)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+        try {
+          if (Object.keys(req.files).indexOf('thumbnail') >= 0) {
+            const thumbnail = files.thumbnail[0]
+            const thumbnail_url = await UploadHelper.processCompanyThumbnail(thumbnail)
+            company.thumbnail = thumbnail_url
+            console.log(`Thumbnail Antigo: ${company.thumbnail}`)
+            console.log(`Thumbnail: ${thumbnail_url}`)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        console.log('Não há arquivos de imagem')
+      }
 
       if (company.cnpj !== null) {
         const nResults = await Company.count({ where: { cnpj: company.cnpj } })
@@ -318,6 +349,7 @@ class CompaniesController {
   async meUpdate (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const user_id = res.locals.user.id
+
       const company = req.body as Company
 
       if (!user_id) {
@@ -359,7 +391,33 @@ class CompaniesController {
           throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
         }
       }
-
+      if (Object.keys(req.files).length !== 0) {
+        const files = req.files as ExpressFiles
+        try {
+          if (Object.keys(req.files).indexOf('banner') >= 0) {
+            const banner = files.banner[0]
+            const banner_url = await UploadHelper.processCompanyBanner(banner)
+            _company.banner = banner_url
+            console.log(`Banner Antigo: ${_company.banner}`)
+            console.log(`Banner: ${banner_url}`)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+        try {
+          if (Object.keys(req.files).indexOf('thumbnail') >= 0) {
+            const thumbnail = files.thumbnail[0]
+            const thumbnail_url = await UploadHelper.processCompanyThumbnail(thumbnail)
+            _company.thumbnail = thumbnail_url
+            console.log(`Thumbnail Antigo: ${_company.thumbnail}`)
+            console.log(`Thumbnail: ${thumbnail_url}`)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        console.log('Não há arquivos de imagem')
+      }
       _company.name = company.name
       _company.cep = company.cep
       _company.segment_id = company.segment_id
