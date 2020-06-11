@@ -100,11 +100,11 @@ export function init (sequelize: Sequelize): void {
       },
       thumbnail: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       banner: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       cep: {
         type: DataTypes.STRING,
