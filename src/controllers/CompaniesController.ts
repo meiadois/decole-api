@@ -428,8 +428,6 @@ class CompaniesController {
       _company.city = company.city
       _company.neighborhood = company.neighborhood
 
-      if (company.thumbnail !== null) _company.thumbnail = company.thumbnail
-      if (company.banner !== null) _company.banner = company.banner
       if (company.cnpj !== null) _company.cnpj = company.cnpj
 
       const _success = await _company.save().then(() => {
