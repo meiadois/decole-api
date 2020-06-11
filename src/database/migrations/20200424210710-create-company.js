@@ -27,6 +27,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       thumbnail: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       cnpj: {
