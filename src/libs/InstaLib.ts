@@ -218,7 +218,11 @@ class InstaLib {
       __a: '1'
     })
     console.log(`[GET] to https://www.instagram.com/${nickname}${query}`)
-    const data = await InstagramApi.get(`/${nickname}${query}`, {})
+    const data = await InstagramApi.get(`/${nickname}${query}`, {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    })
       .then((result) => {
         return result.data
       }).catch((err) => {
