@@ -100,6 +100,8 @@ export default class MetricsLib {
           .catch((err) => this.exceptionHandler(err))
         return results
       } catch (err) {
+        console.log(err)
+        throw err
         // if (err instanceof InstalibError) {
         //   return {
         //     success: false,
