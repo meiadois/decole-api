@@ -217,7 +217,7 @@ class InstaLib {
     const query = this.convertObjectToQueryString({
       __a: '1'
     })
-
+    console.log(`[GET] to https://www.instagram.com/${nickname}${query}`)
     const data = await InstagramApi.get(`/${nickname}${query}`, {})
       .then((result) => {
         return result.data
