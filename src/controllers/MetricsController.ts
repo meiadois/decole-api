@@ -14,6 +14,7 @@ interface Metrics {
 class MetricsController {
   async getMetrics (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const { username } = req.params
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
     return res.json(await InstaLib.getUserProfileByNickname(username))
     const { channel_name } = req.query
 
