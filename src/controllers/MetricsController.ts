@@ -48,11 +48,14 @@ class MetricsController {
         where: {
           channel_id,
           user_id
-        },
-        attributes: {
-          include: ['username']
         }
-      }).then((account) => account.username)
+        // attributes: {
+        //   include: ['username']
+        // }
+      }).then((account) => {
+        console.log(account)
+        return account.username
+      })
         .catch((err) => {
           console.log(err)
           return null
@@ -65,17 +68,6 @@ class MetricsController {
 
       if (channel_name === 'Instagram') { return res.json(await metricsLib.instagramFactory(username)) };
       throw new ErrorHandler(404, `Não há métricas implementadas para o canal ${channel_name}.`)
-      // return res.json({
-      //   mean_of_hashtags: await metricsLib.metricFactory(username, PossibleMetrics.MeanOfHashtags),
-      //   mean_of_mentions: await metricsLib.metricFactory(username, PossibleMetrics.MeanOfMentions),
-      //   mean_of_comments: await metricsLib.metricFactory(username, PossibleMetrics.MeanOfComments),
-      //   mean_of_likes: await metricsLib.metricFactory(username, PossibleMetrics.MeanOfLikes),
-      //   posts_with_hashtags: await metricsLib.metricFactory(username, PossibleMetrics.PostsWithHashtags),
-      //   followers_per_following: await metricsLib.metricFactory(username, PossibleMetrics.FollowersPerFollowing),
-      //   followers: await metricsLib.metricFactory(username, PossibleMetrics.Followers),
-      //   following: await metricsLib.metricFactory(username, PossibleMetrics.Following),
-      //   publications: await metricsLib.metricFactory(username, PossibleMetrics.Publications)
-      // })
     } catch (err) {
       next(err)
     }

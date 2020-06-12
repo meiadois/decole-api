@@ -286,8 +286,6 @@ class CompaniesController {
             const banner = files.banner[0]
             const banner_url = await UploadHelper.processCompanyBanner(banner)
             company.banner = banner_url
-            console.log(`Banner Antigo: ${company.banner}`)
-            console.log(`Banner: ${banner_url}`)
           }
         } catch (err) {
           console.log(err)
@@ -297,8 +295,6 @@ class CompaniesController {
             const thumbnail = files.thumbnail[0]
             const thumbnail_url = await UploadHelper.processCompanyThumbnail(thumbnail)
             company.thumbnail = thumbnail_url
-            console.log(`Thumbnail Antigo: ${company.thumbnail}`)
-            console.log(`Thumbnail: ${thumbnail_url}`)
           }
         } catch (err) {
           console.log(err)
@@ -398,8 +394,6 @@ class CompaniesController {
             const banner = files.banner[0]
             const banner_url = await UploadHelper.processCompanyBanner(banner)
             _company.banner = banner_url
-            console.log(`Banner Antigo: ${_company.banner}`)
-            console.log(`Banner: ${banner_url}`)
           }
         } catch (err) {
           console.log(err)
@@ -409,8 +403,6 @@ class CompaniesController {
             const thumbnail = files.thumbnail[0]
             const thumbnail_url = await UploadHelper.processCompanyThumbnail(thumbnail)
             _company.thumbnail = thumbnail_url
-            console.log(`Thumbnail Antigo: ${_company.thumbnail}`)
-            console.log(`Thumbnail: ${thumbnail_url}`)
           }
         } catch (err) {
           console.log(err)

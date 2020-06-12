@@ -8,6 +8,10 @@ import * as path from 'path'
 import * as fs from 'fs'
 import * as bodyParser from 'body-parser'
 import AutoDeployService from './services/AutoDeployService'
+import swaggerOptions from './swaggerOptions'
+import * as swaggerUi from 'swagger-ui-express'
+// import * as swaggerConfig from './swagger/swagger.json'
+
 moment.tz.setDefault('America/Sao_Paulo')
 
 class App {
@@ -20,6 +24,7 @@ class App {
     this.createPublicFolders()
     this.middlewares()
     this.database()
+    this.swagger()
     this.routes()
     this.errorHandler()
   }
@@ -50,6 +55,10 @@ class App {
     this.express.use(bodyParser.urlencoded({ extended: true }))
     this.express.use(express.json())
     this.express.use(cors())
+  }
+
+  private swagger (): void {
+    this.express.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions))
   }
 
   private database (): void {
