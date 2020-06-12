@@ -4,6 +4,7 @@ import MetricsLib, { MetricResult } from '../libs/MetricsLib'
 import { Channel } from '../models/Channel'
 import { Account } from '../models/Account'
 import { ErrorHandler } from '../helpers/ErrorHandler'
+import InstaLib from '../libs/InstaLib'
 interface Metrics {
   followers_per_following?: MetricResult;
   mean_of_hashtags?: MetricResult;
@@ -13,6 +14,7 @@ interface Metrics {
 class MetricsController {
   async getMetrics (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const { username } = req.params
+    return res.json(await InstaLib.getUserProfileByNickname(username))
     const { channel_name } = req.query
 
     try {
