@@ -220,6 +220,7 @@ class InstaLib {
     console.log(`[GET] to https://www.instagram.com/${nickname}${query}`)
     const data = await InstagramApi.get(`/${nickname}${query}`, {
       // headers: {
+      //   Accept: 'application/json',
       //   'User-Agent': 'Mozilla/5.0'
       //   // 'Content-Type': 'application/json;charset=UTF-8'
       // }
