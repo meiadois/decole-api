@@ -115,7 +115,9 @@ export default class MetricsLib {
     }
 
     async getInstagramProfile (username: string): Promise<void> {
+      console.log(`Getting Instagram profile of ${username}`)
       this.InstagramProfile = await InstaLib.getUserProfileByNickname(username)
+      console.log(`Result: ${this.InstagramProfile.graphql.user}`)
     }
 
     async getInstagramFollowersPerFollowing (): Promise<MetricResult> {
