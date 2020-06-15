@@ -239,7 +239,7 @@ class CompaniesController {
           },
           {
             association: 'segment',
-            attributes: ['name']
+            attributes: ['id', 'name']
           }
         ]
       })
@@ -313,10 +313,17 @@ class CompaniesController {
 
       const _user = await User.findByPk(user_id)
       if (!_user) {
-        throw new ErrorHandler(404, 'Usuário não encontrada')
+        throw new ErrorHandler(404, 'Usuário não encontrado')
       }
 
-      const _company = await Company.create(company).catch((err) => {
+      const _company = await Company.create(company, {
+        include: [
+          {
+            association: 'segment',
+            attributes: ['id', 'name']
+          }
+        ]
+      }).catch((err) => {
         console.log(err)
         return null
       })

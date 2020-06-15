@@ -5,12 +5,14 @@ export interface LikeI {
   status: string;
   sender_id: number;
   recipient_id: number;
+  accepted_at?: Date;
 }
 export class Like extends Model implements LikeI {
   public id?: number;
   public status!: string;
   public sender_id!: number;
   public recipient_id!: number;
+  public accepted_at?: Date;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -38,6 +40,9 @@ export function init (sequelize: Sequelize): void {
       },
       recipient_id: {
         type: DataTypes.INTEGER.UNSIGNED
+      },
+      accepted_at: {
+        type: DataTypes.DATE
       }
     },
     {

@@ -219,11 +219,11 @@ class InstaLib {
     })
     console.log(`[GET] to https://www.instagram.com/${nickname}${query}`)
     const data = await InstagramApi.get(`/${nickname}${query}`, {
-      headers: {
-        // Accept: 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36 Edg/83.0.478.45'
-        // 'Content-Type': 'application/json;charset=UTF-8'
-      }
+      // headers: {
+      //   // Accept: 'application/json',
+      //   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36 Edg/83.0.478.45'
+      //   // 'Content-Type': 'application/json;charset=UTF-8'
+      // }
     })
       .then((result) => {
         return result.data

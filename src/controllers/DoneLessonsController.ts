@@ -189,10 +189,11 @@ class DoneLessonsController {
         throw new ErrorHandler(400, '')
       }
 
-      const nResults = await DoneLesson.count({ where: { user_id, lesson_id } })
+      const __done_lesson = await DoneLesson.findOne({ where: { user_id, lesson_id } })
 
-      if (nResults !== 0) {
-        throw new ErrorHandler(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${user_id}].`)
+      if (__done_lesson !== null) {
+        return res.json(__done_lesson)
+        // throw new ErrorHandler(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${user_id}].`)
       }
 
       const _lesson = await Lesson.findByPk(lesson_id)
