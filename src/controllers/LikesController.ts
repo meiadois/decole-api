@@ -139,6 +139,9 @@ class LikesController {
       _like.sender_id = sender_id
       _like.recipient_id = recipient_id
       if (status !== null) {
+        if (_like.status !== 'accepted' && status === 'accepted') {
+          _like.accepted_at = new Date()
+        }
         _like.status = status
       }
 
