@@ -132,6 +132,7 @@
 ### Subir migrations
 `sequelize-cli db:migrate`
 
+
 ### Remover migration especifica
 `npx sequelize-cli db:migrate:undo --name 20200424210933-create-like.js`
 
@@ -144,6 +145,9 @@
 
 ## Subir Seeds
 `sequelize-cli db:seed:all`
+
+## Subir um
+`npx sequelize-cli db:seed --seed 20191011121208-update-feature.js`
 
 ## Remover Seed especifico
 `sequelize-cli db:seed:undo --seed name-of-seed-as-in-data`

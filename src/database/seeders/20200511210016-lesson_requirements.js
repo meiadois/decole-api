@@ -2,107 +2,108 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('lessons', [
-      // routes 1 instagram
+    return queryInterface.bulkInsert('lesson_requirements', [
       {
         id: 1,
-        title: 'Como funciona o Instagram?',
-        route_id: 1,
+        lesson_id: 2,
+        required_lesson_id: 1,
+        required_step_id: 11,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 2,
-        route_id: 1,
-        title: 'Crie uma conta no Instagram pelo aplicativo',
+        lesson_id: 3,
+        required_lesson_id: 2,
+        required_step_id: 17,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 3,
-        route_id: 1,
-        title: 'Crie uma conta no Instagram usando um computador',
+        lesson_id: 4,
+        required_lesson_id: 3,
+        required_step_id: 24,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 4,
-        route_id: 1,
-        title: 'Alterar o perfil para conta comercial',
+        lesson_id: 5,
+        required_lesson_id: 4,
+        required_step_id: 31,
         createdAt: new Date(),
         updatedAt: new Date()
       },
-
-      // rota 2
       {
         id: 5,
-        route_id: 2,
-        title: 'Estruturação da Bio',
+        lesson_id: 6,
+        required_lesson_id: 5,
+        required_step_id: 39,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 6,
-        route_id: 2,
-        title: 'Instagram Stories',
+        lesson_id: 7,
+        required_lesson_id: 6,
+        required_step_id: 47,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 7,
-        route_id: 2,
-        title: 'Instagram Stories: stickers',
+        lesson_id: 8,
+        required_lesson_id: 7,
+        required_step_id: 55,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 8,
-        route_id: 2,
-        title: 'Instagram Stories: música',
+        lesson_id: 9,
+        required_lesson_id: 8,
+        required_step_id: 60,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 9,
-        route_id: 2,
-        title: 'Instagram Stories: links',
+        lesson_id: 10,
+        required_lesson_id: 9,
+        required_step_id: 66,
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      // route 3
       {
         id: 10,
-        route_id: 3,
-        title: 'Como criar #umahashtagperfeita',
+        lesson_id: 11,
+        required_lesson_id: 10,
+        required_step_id: 72,
         createdAt: new Date(),
         updatedAt: new Date()
       },
-
       {
         id: 11,
-        route_id: 3,
-        title: 'Planejar as suas publicações',
+        lesson_id: 12,
+        required_lesson_id: 11,
+        required_step_id: 77,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 12,
-        route_id: 3,
-        title: 'Tamanhos ideais para o Instagram',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 13,
-        route_id: 3,
-        title: 'Dicas de conteúdo',
+        lesson_id: 13,
+        required_lesson_id: 12,
+        required_step_id: 85,
         createdAt: new Date(),
         updatedAt: new Date()
       }
 
     ], {})
   },
+
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('lessons', null, {})
+    return queryInterface.bulkDelete('lesson_requirements', null, {})
   }
 }

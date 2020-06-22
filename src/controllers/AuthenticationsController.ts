@@ -118,12 +118,13 @@ class AccountsController {
     try {
       const user = req.body as UserResetPasswordDTO
       const _user = await User.findOne({ where: { email: user.email } })
-      const user_id = _user.id
 
-      if (user_id == null) {
-        console.log('b')
+      if (_user === null) {
         throw new ErrorHandler(404, `Não há usuários com o email ${user.email}.`)
       }
+
+      const user_id = _user.id
+
       await ResetPassword.destroy({ where: { user_id } })
 
       const token = crypto.randomBytes(4).toString('hex')
