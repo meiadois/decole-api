@@ -9,6 +9,7 @@ import MePaymentsRouter from './MePaymentsRouter'
 import MeLikesRouter from './MeLikesRouter'
 import MeSegmentsRouter from './MeSegmentsRouter'
 import MeMetricsRouter from './MeMetricsRouter'
+import MeLessonsRouter from './MeLessonsRouter'
 
 const MeRouter = Router()
 
@@ -18,6 +19,8 @@ MeRouter.use('/done_routes', MeDoneRoutesRouter)
 MeRouter.use('/done_lessons', MeDoneLessonsRouter)
 MeRouter.use('/accounts', MeAccountsRouter)
 MeRouter.use('/routes', MeRoutesRouter)
+MeRouter.use('/lessons', MeLessonsRouter)
+
 MeRouter.use('/payments', MePaymentsRouter)
 MeRouter.use('/likes', MeLikesRouter)
 MeRouter.use('/segments', MeSegmentsRouter)

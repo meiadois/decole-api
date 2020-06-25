@@ -9,7 +9,18 @@ import { Lesson } from '../models/Lesson'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 import { User } from 'discord.js'
 import { Account } from '../models/Account'
+import LessonsUtils from '../utils/LessonsUtils'
 
+export interface LessonsWithLock {
+  id?: number | null;
+  title: string;
+  description: string;
+  order: number;
+  route_id: number;
+  done: boolean;
+  route?: Route;
+  locked: boolean;
+}
 class RoutesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -182,6 +193,7 @@ class RoutesController {
 
           lessons[i].done = n !== 0 // is true if is done
           if (lessons[i].done === true) n_done_lessons++
+          lessons[i].locked = await LessonsUtils.isLocked(lessons[i] as Lesson, user_id)
         }
         let locked = false
         for (let i = 0; i < required_routes.length; i++) {
@@ -223,7 +235,15 @@ class RoutesController {
       const _route = await Route.findByPk(id, {
         include: [
           Route.associations.route_requirements,
-          Route.associations.lessons,
+          // Route.associations.lessons,
+          {
+            association: 'lessons',
+            include: [
+              {
+                association: 'requirements'
+              }
+            ]
+          },
           Route.associations.channels
         ]
       })
@@ -250,6 +270,7 @@ class RoutesController {
         const n = await DoneLesson.count({ where: { user_id, lesson_id: lessons[i].id as number } })
         lessons[i].done = n !== 0 // is true if is done
         if (n !== 0) n_done_lessons++
+        lessons[i].locked = await LessonsUtils.isLocked(lessons[i], user_id)
       }
       let locked = false
       for (let i = 0; i < required_routes.length; i++) {

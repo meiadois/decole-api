@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes, BuildOptions, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, Association, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin } from 'sequelize'
+import { Sequelize, Model, DataTypes } from 'sequelize'
 
 export interface LessonRequirementI {
   id?: number | null;

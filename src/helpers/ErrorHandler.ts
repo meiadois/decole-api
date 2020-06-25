@@ -55,6 +55,7 @@ export const HandleErrorMiddleware = function (err: unknown, res: Response): voi
 
 export function HandleError (err: any, req: Request, res: Response) {
   console.log('Handling error')
+  console.log(err)
   if (err instanceof ErrorHandler) {
     let { statusCode, message } = err
     if (message === '') {

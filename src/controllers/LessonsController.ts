@@ -2,8 +2,10 @@
 import { Request, Response, NextFunction } from 'express'
 import { Lesson } from '../models/Lesson'
 import { Route } from '../models/Route'
-
 import { ErrorHandler } from '../helpers/ErrorHandler'
+import { LessonRequirement } from '../models/LessonRequirement'
+
+import { DoneLesson } from '../models/DoneLesson'
 
 class LessonsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -152,6 +154,56 @@ class LessonsController {
         throw new ErrorHandler(500, '')
       }
       return res.status(204).json({})
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async meListWithLocked (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const user_id = res.locals.user.id
+
+      const _lessons = await Lesson.findAll({
+        include: [
+          {
+            association: 'steps'
+          },
+          {
+            association: 'requirements'
+          },
+          {
+            association: 'route'
+          }
+        ]
+      })
+
+      // return res.json(_lessons)
+
+      const infos = []
+      for (let y = 0; y < _lessons.length; y++) {
+        const required_lessons = _lessons[y].requirements as LessonRequirement[]
+
+        const n_done_lessons = 0
+        let locked = false
+
+        for (let i = 0; i < required_lessons.length; i++) {
+          const n = await DoneLesson.count({ where: { user_id, lesson_id: required_lessons[i].id as number } })
+          if (n <= 0) {
+            locked = true
+            break
+          }
+        }
+        infos.push({
+          id: _lessons[y].id,
+          title: _lessons[y].title,
+          description: _lessons[y].description,
+          route: _lessons[y].route,
+          order: _lessons[y].order,
+          route_id: _lessons[y].route_id,
+          locked
+        })
+      }
+      return res.json(infos)
     } catch (err) {
       next(err)
     }
