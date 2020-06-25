@@ -3,6 +3,7 @@ import { Channel } from './Channel'
 import { Step } from './Step'
 import { LessonRequirement } from './LessonRequirement'
 import { DoneLesson } from './DoneLesson'
+import { Route } from './Route'
 
 export interface LessonI {
   id?: number | null;
@@ -11,7 +12,7 @@ export interface LessonI {
   order: number;
   route_id: number;
   done: boolean;
-
+  locked?: boolean;
 }
 export class Lesson extends Model implements LessonI {
   public id?: number;
@@ -20,6 +21,8 @@ export class Lesson extends Model implements LessonI {
   public order!: number;
   public route_id!: number;
   public done!: boolean;
+  public locked?: boolean;
+  public readonly route?: Route;
 
   // Removendo N x N
   /*
@@ -103,6 +106,9 @@ export function init (sequelize: Sequelize): void {
         allowNull: false
       },
       done: {
+        type: DataTypes.VIRTUAL
+      },
+      locked: {
         type: DataTypes.VIRTUAL
       }
     },
