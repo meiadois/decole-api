@@ -174,7 +174,14 @@ class RoutesController {
       const _routes = await Route.findAll({
         include: [
           Route.associations.route_requirements,
-          Route.associations.lessons
+          {
+            association: 'lessons',
+            include: [
+              {
+                association: 'requirements'
+              }
+            ]
+          }
         ],
         order: [
           ['id', 'ASC']
