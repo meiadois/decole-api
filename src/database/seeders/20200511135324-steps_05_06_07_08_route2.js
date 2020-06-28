@@ -13,7 +13,7 @@ module.exports = {
       },
       {
         id: 35,
-        message: 'Depois de instalar o aplicativo, toque em []  para abri-lo.',
+        message: 'Depois de instalar o aplicativo, toque em abrir para abri-lo.',
         order: 2,
         lesson_id: 5,
         createdAt: new Date(),
@@ -21,7 +21,7 @@ module.exports = {
       },
       {
         id: 36,
-        message: 'Toque em Cadastrar-se com email ',
+        message: 'Toque em Cadastrar-se com email.',
         order: 3,
         lesson_id: 5,
         createdAt: new Date(),
@@ -29,7 +29,7 @@ module.exports = {
       },
       {
         id: 37,
-        message: 'Insira seus dados',
+        message: 'Insira seus dados.',
         order: 4,
         lesson_id: 5,
         createdAt: new Date(),
@@ -47,7 +47,7 @@ module.exports = {
       ////////////////////////////
       {
         id: 39,
-        message: 'Logue no seu Facebook pessoal',
+        message: 'Logue no seu Facebook pessoal.',
         order: 1,
         lesson_id: 6,
         createdAt: new Date(),
@@ -87,7 +87,7 @@ module.exports = {
       },
       {
         id: 44,
-        message: 'Digite o nome de seu negócio..',
+        message: 'Digite o nome de seu negócio.',
         order: 6,
         lesson_id: 6,
         createdAt: new Date(),

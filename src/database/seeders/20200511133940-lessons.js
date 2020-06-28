@@ -14,7 +14,7 @@ module.exports = {
       {
         id: 2,
         route_id: 1,
-        title: 'Crie uma conta no Instagram pelo aplicativo',
+        title: 'Como criar uma conta no Instagram pelo aplicativo',
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -37,7 +37,7 @@ module.exports = {
       // routes 2 
       {
         id: 5,
-        title: 'Como crie uma conta no Facebook pelo aplicativo.',
+        title: 'Como criar uma conta no Facebook pelo aplicativo.',
         route_id: 2,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -52,7 +52,7 @@ module.exports = {
       {
         id: 7,
         route_id: 2,
-        title: 'Como muda a foto do seu página',
+        title: 'Como mudar a foto do seu página',
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -75,28 +75,28 @@ module.exports = {
       {
         id: 10,
         route_id: 3,
-        title: 'Instagram Stories',
+        title: 'Como usar Instagram Stories',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 11,
         route_id: 3,
-        title: 'Instagram Stories: stickers',
+        title: 'Como colocar stickers no Stories',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 12,
         route_id: 3,
-        title: 'Instagram Stories: música',
+        title: 'Como colocar música no Stories',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 13,
         route_id: 3,
-        title: 'Instagram Stories: links',
+        title: 'Como colocar links no Stories',
         createdAt: new Date(),
         updatedAt: new Date()
       },

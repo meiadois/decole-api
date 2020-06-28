@@ -45,7 +45,7 @@ module.exports = {
       },
       {
         id: 23,
-        message: 'Pronto!',
+        message: 'Pronto!.',
         order: 6,
         lesson_id: 3,
         createdAt: new Date(),

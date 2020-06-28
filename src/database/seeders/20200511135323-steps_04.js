@@ -15,7 +15,7 @@ module.exports = {
       },
       {
         id: 24,
-        message: 'BIO é o espaço onde sua empresa terá para descrever de forma breve o que é ou do que se trata o perfil.',
+        message: 'Clique em editar perfil',
         order: 2,
         lesson_id: 4,
         createdAt: new Date(),
@@ -23,7 +23,7 @@ module.exports = {
       },
       {
         id: 25,
-        message: 'Esse espaço possui apenas 150 caracteres.',
+        message: 'BIO é o espaço onde sua empresa terá para descrever de forma breve o que é ou do que se trata o perfil.',
         order: 3,
         lesson_id: 4,
         createdAt: new Date(),
@@ -31,7 +31,7 @@ module.exports = {
       },
       {
         id: 26,
-        message: 'Exponha claramente o objetivo do perfil.',
+        message: 'Esse espaço possui apenas 150 caracteres.',
         order: 4,
         lesson_id: 4,
         createdAt: new Date(),
@@ -79,7 +79,7 @@ module.exports = {
       },
       {
         id: 32,
-        message: 'Direcione através de um link clicável..',
+        message: 'Direcione através de um link clicável.',
         order: 10,
         lesson_id: 4,
         createdAt: new Date(),

@@ -13,7 +13,7 @@ module.exports = {
       },
       {
         id: 13,
-        message: 'Depois de instalar o aplicativo, toque em []  para abri-lo.',
+        message: 'Depois de instalar o aplicativo, toque em abrir para abri-lo.',
         order: 2,
         lesson_id: 2,
         createdAt: new Date(),
