@@ -50,7 +50,7 @@ module.exports = {
         lesson_id: 3,
         createdAt: new Date(),
         updatedAt: new Date()
-      },
+      }
 
     ], {})
   },

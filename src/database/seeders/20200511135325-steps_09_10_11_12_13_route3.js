@@ -39,7 +39,7 @@ module.exports = {
       },
       {
         id: 63,
-        message: 'O instagram recomenda conectar sua conta comercial à Página  do Facebook da sua empresa',
+        message: 'O Instagram recomenda conectar sua conta comercial à Página  do Facebook da sua empresa',
         order: 5,
         lesson_id: 9,
         createdAt: new Date(),
@@ -79,7 +79,7 @@ module.exports = {
       },
       //
 
-      //LESSONS 10
+      // LESSONS 10
       {
         id: 68,
         message: 'Abra o Instagram.',
@@ -311,7 +311,7 @@ module.exports = {
         lesson_id: 13,
         createdAt: new Date(),
         updatedAt: new Date()
-      },
+      }
 
     ], {})
   },

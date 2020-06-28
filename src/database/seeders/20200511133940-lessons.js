@@ -6,7 +6,7 @@ module.exports = {
       // routes 1 instagram
       {
         id: 1,
-        title: 'Como funciona o Instagram?',
+        title: 'Como funciona o Instagram',
         route_id: 1,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -33,8 +33,7 @@ module.exports = {
         updatedAt: new Date()
       },
 
-
-      // routes 2 
+      // routes 2
       {
         id: 5,
         title: 'Como criar uma conta no Facebook pelo aplicativo.',
@@ -64,7 +63,7 @@ module.exports = {
         updatedAt: new Date()
       },
 
-      // rota 3 
+      // rota 3
       {
         id: 9,
         route_id: 3,

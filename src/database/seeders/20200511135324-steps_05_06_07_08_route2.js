@@ -44,7 +44,7 @@ module.exports = {
         updatedAt: new Date()
       },
 
-      ////////////////////////////
+      /// /////////////////////////
       {
         id: 39,
         message: 'Logue no seu Facebook pessoal.',
@@ -110,8 +110,7 @@ module.exports = {
         updatedAt: new Date()
       },
 
-
-      ////////////////////////////
+      /// /////////////////////////
       {
         id: 47,
         message: 'Clique no menu.',
@@ -161,8 +160,7 @@ module.exports = {
         updatedAt: new Date()
       },
 
-
-      ////////////////////////////
+      /// /////////////////////////
       {
         id: 53,
         message: 'Clique no menu.',
@@ -210,7 +208,7 @@ module.exports = {
         lesson_id: 8,
         createdAt: new Date(),
         updatedAt: new Date()
-      },
+      }
 
     ], {})
   },

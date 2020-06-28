@@ -4,7 +4,6 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('steps', [
 
-
       // lesson 14
 
       {
@@ -68,7 +67,7 @@ module.exports = {
       },
       {
         id: 103,
-        message: 'Possiveis objetivos: Ganhar ou aumentar o reconhecimento da marca, Gerar novos leads(possivel clientes), Melhorar a comunicação com seus clientes.',
+        message: 'Possíveis objetivos: Ganhar ou aumentar o reconhecimento da marca, Gerar novos leads(possível clientes), Melhorar a comunicação com seus clientes.',
         order: 2,
         lesson_id: 15,
         createdAt: new Date(),
@@ -76,7 +75,7 @@ module.exports = {
       },
       {
         id: 104,
-        message: 'Depois de definir seus objetivo planeje o conteudo.',
+        message: 'Depois de definir seus objetivo planeje o conteúdo.',
         order: 3,
         lesson_id: 15,
         createdAt: new Date(),
@@ -84,7 +83,7 @@ module.exports = {
       },
       {
         id: 105,
-        message: 'Tente manter um frequencia três posts por semana.',
+        message: 'Tente manter um frequência três posts por semana.',
         order: 4,
         lesson_id: 15,
         createdAt: new Date(),
@@ -92,7 +91,7 @@ module.exports = {
       },
       {
         id: 106,
-        message: 'Faça um calendário e planeje com antencedência suas postagem, dica: utilize o trello.',
+        message: 'Faça um calendário e planeje com antecedência suas postagem, dica: utilize o trello.',
         order: 5,
         lesson_id: 15,
         createdAt: new Date(),
@@ -127,7 +126,6 @@ module.exports = {
         updatedAt: new Date()
       },
 
-
       {
         id: 110,
         message: 'Instagram Stories tamanho recomendado: 1080×1920O, os vídeos podem ter no máximo 15 segundos. Já fotos são exibidas por 5 segundos.',
@@ -141,7 +139,7 @@ module.exports = {
 
       {
         id: 111,
-        message: 'Entretenimento : Memes, Concursos, Sorteios.',
+        message: 'Entretenimento : Concursos, Sorteios.',
         order: 1,
         lesson_id: 17,
         createdAt: new Date(),
