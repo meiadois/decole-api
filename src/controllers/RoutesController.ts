@@ -255,6 +255,9 @@ class RoutesController {
             ]
           },
           Route.associations.channels
+        ],
+        order: [
+          ['order', 'ASC']
         ]
       })
 
