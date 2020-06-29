@@ -9,11 +9,13 @@ export interface RouteI {
   id?: number | null;
   title: string;
   description: string;
+  order: number;
 }
 export class Route extends Model implements RouteI {
   public id?: number;
   public title!: string;
   public description!: string;
+  public order!: number;
 
   public getLessons!: HasManyGetAssociationsMixin<Lesson>; // Note the null assertions!
   public addLesson!: HasManyAddAssociationMixin<Lesson, number>;
@@ -91,6 +93,10 @@ export function init (sequelize: Sequelize): void {
       },
       description: {
         type: DataTypes.STRING,
+        allowNull: false
+      },
+      order: {
+        type: DataTypes.INTEGER,
         allowNull: false
       }
     },
