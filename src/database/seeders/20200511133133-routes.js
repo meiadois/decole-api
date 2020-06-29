@@ -5,21 +5,28 @@ module.exports = {
     return queryInterface.bulkInsert('routes', [
       {
         id: 1,
-        title: 'Instagram | Iniciante',
+        title: 'Instagram parte 1: primeiros passos',
         description: 'Conheça a rede social que mais cresce no mundo!',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 2,
-        title: 'Instagram | Médio',
-        description: 'Multiplique suas vendas com o Instagram!',
+        title: 'Facebook parte 1: primeiros passos',
+        description: 'Conheça um pouco sobre o Facebook!',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 3,
-        title: 'Instagram | Avançado',
+        title: 'Instagram parte 2: Conta Comercial e Instagram Stories',
+        description: 'Multiplique suas vendas com o Instagram!',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: 4,
+        title: 'Instagram parte 3: Publicações',
         description: 'Conheça mais detalhes do Instagram!',
         createdAt: new Date(),
         updatedAt: new Date()

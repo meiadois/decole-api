@@ -19,6 +19,10 @@ client.once('ready', () => {
   DEBUG_CHANNEL = client.channels.cache.get(DEBUG_CHANNEL_ID)
 })
 
+client.on('shardError', error => {
+  console.error('A websocket connection encountered an error:', error)
+})
+
 client.login(process.env.DISCORD_BOT_LOGGER_TOKEN)
 function process_message (message: string): string {
   if (message.length > 2000) {

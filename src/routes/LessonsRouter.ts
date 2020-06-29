@@ -1,15 +1,16 @@
 import { Router } from 'express'
 import LessonsController from '../controllers/LessonsController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const LessonsRouter = Router()
 
 LessonsRouter.route('/')
-  .get(LessonsController.list)
-  .post(LessonsController.store)
+  .get(WrapErrorMiddleware(LessonsController.list))
+  .post(WrapErrorMiddleware(LessonsController.store))
 
 LessonsRouter.route('/:id')
-  .get(LessonsController.index)
-  .put(LessonsController.update)
-  .delete(LessonsController.delete)
+  .get(WrapErrorMiddleware(LessonsController.index))
+  .put(WrapErrorMiddleware(LessonsController.update))
+  .delete(WrapErrorMiddleware(LessonsController.delete))
 
 export default LessonsRouter

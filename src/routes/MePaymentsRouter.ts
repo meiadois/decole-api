@@ -1,15 +1,16 @@
 import { Router } from 'express'
 import PaymentsController from '../controllers/PaymentsController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const MePaymentsRouter = Router()
 
 MePaymentsRouter.route('/')
-  .get(PaymentsController.list)
-  .post(PaymentsController.store)
+  .get(WrapErrorMiddleware(PaymentsController.list))
+  .post(WrapErrorMiddleware(PaymentsController.store))
 
 MePaymentsRouter.route('/:id')
-  .get(PaymentsController.index)
-  .put(PaymentsController.update)
-  .delete(PaymentsController.delete)
+  .get(WrapErrorMiddleware(PaymentsController.index))
+  .put(WrapErrorMiddleware(PaymentsController.update))
+  .delete(WrapErrorMiddleware(PaymentsController.delete))
 
 export default MePaymentsRouter

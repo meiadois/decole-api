@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -9,7 +9,7 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.STRING
-        },
+        }
       ),
       queryInterface.addColumn(
         'companies',
@@ -17,7 +17,7 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.STRING
-        },
+        }
       ),
       queryInterface.addColumn(
         'companies',
@@ -25,8 +25,8 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.BOOLEAN,
-          defaultValue: true,
-        },
+          defaultValue: true
+        }
       ),
       queryInterface.addColumn(
         'companies',
@@ -34,7 +34,7 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.STRING
-        },
+        }
       ),
       queryInterface.addColumn(
         'companies',
@@ -42,7 +42,7 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.STRING
-        },
+        }
       ),
       queryInterface.addColumn(
         'companies',
@@ -50,7 +50,7 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.STRING
-        },
+        }
       ),
       queryInterface.addColumn(
         'companies',
@@ -58,7 +58,7 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.STRING
-        },
+        }
       ),
       queryInterface.addColumn(
         'companies',
@@ -66,9 +66,9 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.STRING
-        },
-      ),
-    ]);
+        }
+      )
+    ])
   },
 
   down: (queryInterface, Sequelize) => {
@@ -80,7 +80,7 @@ module.exports = {
       queryInterface.removeColumn('companies', 'city'),
       queryInterface.removeColumn('companies', 'neighborhood'),
       queryInterface.removeColumn('companies', 'state'),
-      queryInterface.removeColumn('companies', 'street'),
-    ]);
+      queryInterface.removeColumn('companies', 'street')
+    ])
   }
-};
+}

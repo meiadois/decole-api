@@ -1,15 +1,16 @@
 import { Router } from 'express'
 import ChannelsController from '../controllers/ChannelsController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const ChannelsRouter = Router()
 
 ChannelsRouter.route('/')
-  .get(ChannelsController.list)
-  .post(ChannelsController.store)
+  .get(WrapErrorMiddleware(ChannelsController.list))
+  .post(WrapErrorMiddleware(ChannelsController.store))
 
 ChannelsRouter.route('/:id')
-  .get(ChannelsController.index)
-  .put(ChannelsController.update)
-  .delete(ChannelsController.delete)
+  .get(WrapErrorMiddleware(ChannelsController.index))
+  .put(WrapErrorMiddleware(ChannelsController.update))
+  .delete(WrapErrorMiddleware(ChannelsController.delete))
 
 export default ChannelsRouter

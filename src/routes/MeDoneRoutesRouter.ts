@@ -1,12 +1,13 @@
 import { Router } from 'express'
 import DoneRoutesController from '../controllers/DoneRoutesController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const MeDoneRoutesRouter = Router()
 
 MeDoneRoutesRouter.route('/')
-  .get(DoneRoutesController.meList)
+  .get(WrapErrorMiddleware(DoneRoutesController.meList))
 
 MeDoneRoutesRouter.route('/:route_id')
-  .post(DoneRoutesController.meStore)
+  .post(WrapErrorMiddleware(DoneRoutesController.meStore))
 
 export default MeDoneRoutesRouter

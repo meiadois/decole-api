@@ -84,15 +84,24 @@ class LikesController {
 
   async store (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const like = req.body as Like
+      const { sender_id, recipient_id } = req.body
 
-      const nResults = await Like.count({ where: { sender_id: like.sender_id, recipient_id: like.recipient_id } })
+      const nResults = await Like.count({
+        where: {
+          [Op.or]: {
+            sender_id,
+            recipient_id
+          }
+        }
+      })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe um like entre as empresas [${like.sender_id}] e [${like.recipient_id}].`)
+        throw new ErrorHandler(400, `Já existe um like entre as empresas [${sender_id}] e [${recipient_id}].`)
       }
 
-      const _like = await Like.create(like).catch((err) => {
+      const [_like] = await Like.findOrCreate({
+        where: { sender_id, recipient_id }
+      }).catch((err) => {
         console.log(err)
         return null
       })

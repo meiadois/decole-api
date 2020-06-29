@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import LessonsController from '../controllers/LessonsController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const MeLessonsRouter = Router()
 
 MeLessonsRouter.route('/')
-  .get(LessonsController.meListWithLocked)
+  .get(WrapErrorMiddleware(LessonsController.meListWithLocked))
 
 // MeLessonsRouter.route('/:id')
 //   .get(LessonsController.meIndexWithProgress)

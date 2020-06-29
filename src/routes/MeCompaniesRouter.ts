@@ -4,30 +4,31 @@ import ValidationMiddleware from '../helpers/ValidationMiddleware'
 import UploadHelper from '../helpers/UploadHelper'
 import MeCompanyStoreDTO from '../validators/MeCompanies/MeCompanyStoreDTO'
 import MeCompanyUpdateDTO from '../validators/MeCompanies/MeCompanyUpdateDTO'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const MeCompaniesRouter = Router()
 
 MeCompaniesRouter.route('/')
-  .get(CompaniesController.meList)
+  .get(WrapErrorMiddleware(CompaniesController.meList))
   .post(
     UploadHelper.companiesUpload.fields([
       { name: 'banner', maxCount: 1 },
       { name: 'thumbnail', maxCount: 1 }
     ]),
     ValidationMiddleware(MeCompanyStoreDTO),
-    CompaniesController.meStore)
+    WrapErrorMiddleware(CompaniesController.meStore))
   .put(
     UploadHelper.companiesUpload.fields([
       { name: 'banner', maxCount: 1 },
       { name: 'thumbnail', maxCount: 1 }
     ]),
     ValidationMiddleware(MeCompanyUpdateDTO),
-    CompaniesController.meUpdate)
-  .delete(CompaniesController.meDelete)
+    WrapErrorMiddleware(CompaniesController.meUpdate))
+  .delete(WrapErrorMiddleware(CompaniesController.meDelete))
 
 MeCompaniesRouter.route('/:id')
-  .get(CompaniesController.meIndex)
+  .get(WrapErrorMiddleware(CompaniesController.meIndex))
 
-MeCompaniesRouter.get('/_/search', CompaniesController.meSearch)
+MeCompaniesRouter.get('/_/search', WrapErrorMiddleware(CompaniesController.meSearch))
 
 export default MeCompaniesRouter

@@ -43,6 +43,9 @@ class App {
     // this.createFolder(path.join(this.public_folder, 'companies'))
     // this.express.use('files/companies', express.static(path.join(this.public_folder, 'companies')))
 
+    this.createFolder(path.join(this.public_folder, 'assets'))
+    this.express.use('assets', express.static(path.join(this.public_folder, 'assets')))
+
     this.createFolder(path.join(this.public_folder, 'companies', 'banners'))
     this.express.use('companies/banners', express.static(path.join(this.public_folder, 'companies', 'banners')))
 
@@ -72,10 +75,10 @@ class App {
         await db.sequelize.sync({ force: false })
         console.log('Database is up to date')
       } catch (err) {
-        console.log(err.message)
+        console.log(`Database error when sync: ${err.message}`)
       }
     }).catch((err: Error) => {
-      console.log(err.message)
+      console.log(`Database error on authenticate: ${err.message}`)
     })
   }
 
