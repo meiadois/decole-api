@@ -1,12 +1,24 @@
 import { Request, Response, NextFunction } from 'express'
 import { Info } from '../models/Info'
 import { ErrorHandler } from '../helpers/ErrorHandler'
+import { lte } from 'sequelize/types/lib/operators'
+
+export interface KeyValue {
+  [name: string]: string;
+}
 
 class InfosController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const _info = await Info.findAll()
-      return res.json(_info)
+      let keyValues: KeyValue = {}
+      await _info.forEach((info) => {
+        keyValues = Object.assign(keyValues, {
+          name: info.name,
+          value: info.value
+        });
+      }) 
+      return res.json(keyValues)
     } catch (err) {
       next(err)
     }
