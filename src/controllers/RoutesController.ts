@@ -35,12 +35,14 @@ class RoutesController {
           {
             association: Route.associations.route_requirements
           }
+        ],
+        order: [
+          ['order', 'ASC']
         ]
       })
 
       return res.json(_routes)
     } catch (err) {
-      return res.json(err)
       next(err)
     }
   }
@@ -108,7 +110,7 @@ class RoutesController {
   async update (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { id } = req.params
-      const { title, description } = req.body
+      const { title, description, order } = req.body
       if (!description || !title) {
         throw new ErrorHandler(400, '')
       }
@@ -121,6 +123,7 @@ class RoutesController {
 
       _route.description = description
       _route.title = title
+      _route.order = order
 
       const _success = await _route.save().then(() => {
         return true
@@ -184,7 +187,7 @@ class RoutesController {
           }
         ],
         order: [
-          ['id', 'ASC']
+          ['order', 'ASC']
         ]
       })
       // return res.json(_routes)
