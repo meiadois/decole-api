@@ -111,7 +111,7 @@ module.exports = {
       {
         id: 15,
         route_id: 4,
-        title: 'Planejar as suas publicações',
+        title: 'Como planejar as suas publicações',
         createdAt: new Date(),
         updatedAt: new Date()
       },

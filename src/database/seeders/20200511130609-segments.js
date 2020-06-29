@@ -83,7 +83,7 @@ module.exports = {
       },
       {
         id: 14,
-        name: 'Eletrica',
+        name: 'Elétrica',
         createdAt: new Date(),
         updatedAt: new Date()
       },
