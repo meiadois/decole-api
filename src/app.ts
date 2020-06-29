@@ -43,6 +43,9 @@ class App {
     // this.createFolder(path.join(this.public_folder, 'companies'))
     // this.express.use('files/companies', express.static(path.join(this.public_folder, 'companies')))
 
+    this.createFolder(path.join(this.public_folder, 'assets'))
+    this.express.use('assets', express.static(path.join(this.public_folder, 'assets')))
+
     this.createFolder(path.join(this.public_folder, 'companies', 'banners'))
     this.express.use('companies/banners', express.static(path.join(this.public_folder, 'companies', 'banners')))
 
