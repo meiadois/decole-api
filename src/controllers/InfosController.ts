@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { Info } from '../models/Info'
 import { ErrorHandler } from '../helpers/ErrorHandler'
-import { lte } from 'sequelize/types/lib/operators'
 
 export interface KeyValue {
   [name: string]: string;
@@ -10,15 +9,14 @@ export interface KeyValue {
 class InfosController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const _info = await Info.findAll()
-      let keyValues: KeyValue = {}
-      await _info.forEach((info) => {
-        keyValues = Object.assign(keyValues, {
-          name: info.name,
-          value: info.value
-        });
-      }) 
-      return res.json(keyValues)
+      const _infos = await Info.findAll()
+      // const keyValues: KeyValue = {}
+
+      // await _infos.forEach((info) => {
+      //   keyValues[info.name] = info.value
+      // })
+      const obj = _infos.reduce((acc, { name, value }) => ({ ...acc, [name]: value }), {})
+      return res.json(obj)
     } catch (err) {
       next(err)
     }
@@ -49,14 +47,14 @@ class InfosController {
         throw new ErrorHandler(400, '')
       }
 
-      const [_info, created] = await Info.findOrCreate({
+      const [_info] = await Info.findOrCreate({
         where: { name, value }
       })
-      .then((result) => result)
-      .catch((err) => {
-        console.log(err)
-        return null
-      })
+        .then((result) => result)
+        .catch((err) => {
+          console.log(err)
+          return null
+        })
       if (!_info) {
         throw new ErrorHandler(500, '')
       }
@@ -81,7 +79,6 @@ class InfosController {
         throw new ErrorHandler(404, `Conta ${name} não encontrada.`)
       }
 
-      
       _info.value = value
 
       const _success = await _info.save().then(() => {

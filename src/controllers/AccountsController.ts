@@ -5,35 +5,18 @@ import { Channel } from '../models/Channel'
 import { ErrorHandler } from '../helpers/ErrorHandler'
 
 class AccountsController {
-  /**
- * @swagger
- *
- * /v1/accounts:
- *   get:
- *     description: Lista todas as contas registradas
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         - name: account
- *           type: Account
- */
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-    try {
-      const _account = await Account.findAll({
-        include: [
-          {
-            association: 'user'
-          },
-          {
-            association: 'channel'
-          }
-        ]
-      })
-      return res.json(_account)
-    } catch (err) {
-      next(err)
-    }
+    const account = await Account.findAll({
+      include: [
+        {
+          association: 'user'
+        },
+        {
+          association: 'channel'
+        }
+      ]
+    })
+    return res.json(account)
   }
 
   async index (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

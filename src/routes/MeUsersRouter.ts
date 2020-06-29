@@ -1,21 +1,22 @@
 import { Router } from 'express'
 import UsersController from '../controllers/UsersController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const MeUsersRouter = Router()
 
 MeUsersRouter.route('/')
-  .get(UsersController.meIndex)
-  .put(UsersController.meUpdate)
-  .delete(UsersController.meDelete)
+  .get(WrapErrorMiddleware(UsersController.meIndex))
+  .put(WrapErrorMiddleware(UsersController.meUpdate))
+  .delete(WrapErrorMiddleware(UsersController.meDelete))
 
-MeUsersRouter.put('/change_password', UsersController.meChangePassword)
+MeUsersRouter.put('/change_password', WrapErrorMiddleware(UsersController.meChangePassword))
 
-MeUsersRouter.post('/introduce', UsersController.meIntroduce)
+MeUsersRouter.post('/introduce', WrapErrorMiddleware(UsersController.meIntroduce))
 
 MeUsersRouter.route('/users/companies')
-  .get(UsersController.listMeCompany)
-  .post(UsersController.storeMeCompany)
-  .put(UsersController.updateMeCompany)
-  .delete(UsersController.deleteMeCompany)
+  .get(WrapErrorMiddleware(UsersController.listMeCompany))
+  .post(WrapErrorMiddleware(UsersController.storeMeCompany))
+  .put(WrapErrorMiddleware(UsersController.updateMeCompany))
+  .delete(WrapErrorMiddleware(UsersController.deleteMeCompany))
 
 export default MeUsersRouter

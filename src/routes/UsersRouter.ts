@@ -1,19 +1,20 @@
 import { Router } from 'express'
 import UsersController from '../controllers/UsersController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const UsersRouter = Router()
 
 UsersRouter.route('/')
-  .get(UsersController.list)
+  .get(WrapErrorMiddleware(UsersController.list))
 
 UsersRouter.route('/:id')
-  .get(UsersController.index)
-  .put(UsersController.update)
-  .delete(UsersController.delete)
+  .get(WrapErrorMiddleware(UsersController.index))
+  .put(WrapErrorMiddleware(UsersController.update))
+  .delete(WrapErrorMiddleware(UsersController.delete))
 
 UsersRouter.route('/:id/companies')
-  .post(UsersController.storeCompany)
-  .put(UsersController.updateCompany)
-  .delete(UsersController.deleteCompany)
+  .post(WrapErrorMiddleware(UsersController.storeCompany))
+  .put(WrapErrorMiddleware(UsersController.updateCompany))
+  .delete(WrapErrorMiddleware(UsersController.deleteCompany))
 
 export default UsersRouter

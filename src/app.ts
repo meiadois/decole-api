@@ -72,10 +72,10 @@ class App {
         await db.sequelize.sync({ force: false })
         console.log('Database is up to date')
       } catch (err) {
-        console.log(err.message)
+        console.log(`Database error when sync: ${err.message}`)
       }
     }).catch((err: Error) => {
-      console.log(err.message)
+      console.log(`Database error on authenticate: ${err.message}`)
     })
   }
 

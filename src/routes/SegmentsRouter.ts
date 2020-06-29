@@ -3,18 +3,19 @@ import SegmentsController from '../controllers/SegmentsController'
 import { SegmentStoreDTO } from '../validators/Segments/SegmentStoreDTO'
 import { SegmentUpdateDTO } from '../validators/Segments/SegmentUpdateDTO'
 import ValidationMiddleware from '../helpers/ValidationMiddleware'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const SegmentsRouter = Router()
 
 SegmentsRouter.route('/')
-  .get(SegmentsController.list)
-  .post(ValidationMiddleware(SegmentStoreDTO), SegmentsController.store)
+  .get(WrapErrorMiddleware(SegmentsController.list))
+  .post(ValidationMiddleware(SegmentStoreDTO), WrapErrorMiddleware(SegmentsController.store))
 
 SegmentsRouter.route('/:id')
-  .get(SegmentsController.index)
-  .put(ValidationMiddleware(SegmentUpdateDTO), SegmentsController.update)
-  .delete(SegmentsController.delete)
+  .get(WrapErrorMiddleware(SegmentsController.index))
+  .put(ValidationMiddleware(SegmentUpdateDTO), WrapErrorMiddleware(SegmentsController.update))
+  .delete(WrapErrorMiddleware(SegmentsController.delete))
 
-SegmentsRouter.get('/_/has-companies', SegmentsController.listHasCompanies)
+SegmentsRouter.get('/_/has-companies', WrapErrorMiddleware(SegmentsController.listHasCompanies))
 
 export default SegmentsRouter

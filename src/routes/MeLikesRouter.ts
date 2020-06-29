@@ -1,12 +1,13 @@
 import { Router } from 'express'
 import LikesController from '../controllers/LikesController'
+import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
 
 const MeLikesRouter = Router()
 
 MeLikesRouter.route('/')
-  .get(LikesController.meList)
+  .get(WrapErrorMiddleware(LikesController.meList))
 MeLikesRouter.route('/sent')
-  .get(LikesController.meSentList)
+  .get(WrapErrorMiddleware(LikesController.meSentList))
 MeLikesRouter.route('/received')
-  .get(LikesController.meReceivedList)
+  .get(WrapErrorMiddleware(LikesController.meReceivedList))
 export default MeLikesRouter

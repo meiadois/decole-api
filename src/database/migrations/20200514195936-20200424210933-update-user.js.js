@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -9,14 +9,14 @@ module.exports = {
         {
           allowNull: false,
           type: Sequelize.DATE
-        },
-      ),
-    ]);
+        }
+      )
+    ])
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn('users', 'paid_access_expiration'),
-    ]);
+      queryInterface.removeColumn('users', 'paid_access_expiration')
+    ])
   }
-};
+}
