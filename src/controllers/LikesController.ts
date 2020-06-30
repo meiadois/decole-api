@@ -88,10 +88,16 @@ class LikesController {
 
       const nResults = await Like.count({
         where: {
-          [Op.or]: {
-            sender_id,
-            recipient_id
-          }
+          [Op.or]: [
+            {
+              sender_id,
+              recipient_id
+            },
+            {
+              sender_id: recipient_id,
+              recipient_id: sender_id
+            }
+          ]
         }
       })
 
