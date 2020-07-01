@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
-// import { ErrorHandler } from '@helpers/ErrorHandler'
+// import { CustomError } from '@helpers/CustomError'
 import MetricsLib, { MetricResult } from '../libs/MetricsLib'
 import { Channel } from '@models/Channel'
 import { Account } from '@models/Account'
-import { ErrorHandler } from 'src/utils/middlewares/ErrorHandlerMiddleware'
+import CustomError from '@utils/CustomError'
 import InstaLib from '../libs/InstaLib'
 interface Metrics {
   followers_per_following?: MetricResult;
@@ -22,7 +22,7 @@ class MetricsController {
     //   const metricsLib = new MetricsLib()
     //   // return res.json(await metricsLib.instagramFactory(username))
     //   if (channel_name === 'Instagram') { return res.json(await metricsLib.instagramFactory(username)) };
-    //   throw new ErrorHandler(404, `Não há métricas implementadas para o canal ${channel_name}.`)
+    //   throw new CustomError(404, `Não há métricas implementadas para o canal ${channel_name}.`)
     //   // })
     // } catch (err) {
     //   next(err)
@@ -44,7 +44,7 @@ class MetricsController {
           return null
         })
       if (channel_id === null) {
-        throw new ErrorHandler(404, `Canal ${channel_name} não encontrado.`)
+        throw new CustomError(404, `Canal ${channel_name} não encontrado.`)
       }
 
       const username = await Account.findOne({
@@ -64,13 +64,13 @@ class MetricsController {
           return null
         })
       if (username === null) {
-        throw new ErrorHandler(404, `Conta do usuário ${user_id} no canal ${channel_name} não encontrado.`)
+        throw new CustomError(404, `Conta do usuário ${user_id} no canal ${channel_name} não encontrado.`)
       }
 
       const metricsLib = new MetricsLib()
 
       if (channel_name === 'Instagram') { return res.json(await metricsLib.instagramFactory(username)) };
-      throw new ErrorHandler(404, `Não há métricas implementadas para o canal ${channel_name}.`)
+      throw new CustomError(404, `Não há métricas implementadas para o canal ${channel_name}.`)
     } catch (err) {
       next(err)
     }
