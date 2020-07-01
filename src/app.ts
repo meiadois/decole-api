@@ -1,6 +1,6 @@
 import Database from '@models/index'
 import routes from './routes'
-import { HandleErrorMiddleware, NotFoundRoute } from '@helpers/ErrorHandler'
+import { HandleErrorMiddleware, NotFoundRoute } from 'src/utils/middlewares/ErrorHandlerMiddleware'
 import express from 'express'
 import cors from 'cors'
 import * as moment from 'moment-timezone'
@@ -9,6 +9,7 @@ import * as fs from 'fs'
 import * as bodyParser from 'body-parser'
 import swaggerOptions from './swaggerOptions'
 import * as swaggerUi from 'swagger-ui-express'
+import { LogsMiddleware } from '@utils/middlewares/LogsMiddleware'
 
 moment.tz.setDefault('America/Sao_Paulo')
 
@@ -56,6 +57,7 @@ class App {
     this.express.use(bodyParser.urlencoded({ extended: true }))
     this.express.use(express.json())
     this.express.use(cors())
+    this.express.use(LogsMiddleware)
   }
 
   private swagger (): void {

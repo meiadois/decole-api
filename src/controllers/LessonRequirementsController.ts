@@ -3,7 +3,7 @@ import { LessonRequirement } from '@models/LessonRequirement'
 import { Step } from '@models/Step'
 import { Lesson } from '@models/Lesson'
 
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 
 class LessonRequirementsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -29,7 +29,7 @@ class LessonRequirementsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _requirement = await LessonRequirement.findByPk(id, {
         include: [
@@ -43,7 +43,7 @@ class LessonRequirementsController {
       })
 
       if (_requirement === null) {
-        throw new ErrorHandler(404, `Requisito ${id} não encontrado.`)
+        throw new CustomError(404, `Requisito ${id} não encontrado.`)
       }
       return res.status(200).json(_requirement)
     } catch (err) {
@@ -55,19 +55,19 @@ class LessonRequirementsController {
     try {
       const { lesson_id, required_lesson_id, step_order } = req.body
       if (!lesson_id || !required_lesson_id || !step_order) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const lesson = await Lesson.findByPk(lesson_id)
 
       if (!lesson) {
-        throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`)
+        throw new CustomError(404, `Lição ${lesson_id} não encontrada.`)
       }
 
       const required_lesson = await Lesson.findByPk(required_lesson_id)
 
       if (!required_lesson) {
-        throw new ErrorHandler(404, `Lição Requerida ${required_lesson_id} não encontrado.`)
+        throw new CustomError(404, `Lição Requerida ${required_lesson_id} não encontrado.`)
       }
 
       const step = await Step.findOne({
@@ -78,7 +78,7 @@ class LessonRequirementsController {
       })
 
       if (!step) {
-        throw new ErrorHandler(404, `Etapa ${step_order} da lição ${required_lesson_id} não encontrada.`)
+        throw new CustomError(404, `Etapa ${step_order} da lição ${required_lesson_id} não encontrada.`)
       }
 
       const nResults = await LessonRequirement.findAll({
@@ -92,7 +92,7 @@ class LessonRequirementsController {
       })
       console.log(nResults)
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `A etapa [${step.id}] da lição [${required_lesson_id}] já é requisito para a lição [${lesson_id}].`)
+        throw new CustomError(400, `A etapa [${step.id}] da lição [${required_lesson_id}] já é requisito para a lição [${lesson_id}].`)
       }
 
       const _requirement = await LessonRequirement.create({
@@ -106,7 +106,7 @@ class LessonRequirementsController {
         })
 
       if (!_requirement) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       /*
       const _success = await lesson.addLessonRequirement(_requirement).then(() => {
@@ -117,7 +117,7 @@ class LessonRequirementsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       } */
       return res.status(201).json(_requirement)
     } catch (err) {
@@ -130,19 +130,19 @@ class LessonRequirementsController {
       const { id } = req.params
       const { lesson_id, required_lesson_id, step_order } = req.body
       if (!lesson_id || !required_lesson_id || !step_order) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _requirement = await LessonRequirement.findByPk(id)
 
       if (!_requirement) {
-        throw new ErrorHandler(404, `Requisito ${id} não encontrado.`)
+        throw new CustomError(404, `Requisito ${id} não encontrado.`)
       }
 
       const step = await Step.findOne({ where: { lesson_id: required_lesson_id, order: step_order } })
 
       if (!step) {
-        throw new ErrorHandler(404, `Etapa ${id} não encontrada.`)
+        throw new CustomError(404, `Etapa ${id} não encontrada.`)
       }
 
       _requirement.lesson_id = lesson_id
@@ -157,7 +157,7 @@ class LessonRequirementsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_requirement)
     } catch (err) {
@@ -169,13 +169,13 @@ class LessonRequirementsController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _requirement = await LessonRequirement.findByPk(id)
 
       if (!_requirement) {
-        throw new ErrorHandler(404, `Requisito ${id} não encontrado.`)
+        throw new CustomError(404, `Requisito ${id} não encontrado.`)
       }
 
       const _success = await _requirement.destroy().then(() => {
@@ -186,7 +186,7 @@ class LessonRequirementsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {

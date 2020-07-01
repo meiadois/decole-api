@@ -20,8 +20,7 @@ module.exports = {
         "@models": "./src/models",
         "@validators": "./src/validators",
         "@services": "./src/services",
-        "@helpers": "./src/helpers"
-
+        "@utils": "./src/utils"
       }
     }]
   ],

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 import { Channel } from '@models/Channel'
 
 class ChannelsController {
@@ -17,7 +17,7 @@ class ChannelsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       let _channel = null
       try {
@@ -27,7 +27,7 @@ class ChannelsController {
       }
 
       if (_channel === null) {
-        throw new ErrorHandler(404, `Canal ${id} não encontrado.`)
+        throw new CustomError(404, `Canal ${id} não encontrado.`)
       }
       return res.status(200).json(_channel)
     } catch (err) {
@@ -39,13 +39,13 @@ class ChannelsController {
     try {
       const { name, category } = req.body
       if (!name || !category) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const nResults = await Channel.count({ where: { name } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe um canal chamado [${name}].`)
+        throw new CustomError(400, `Já existe um canal chamado [${name}].`)
       }
 
       const _channel = await Channel.create({
@@ -55,7 +55,7 @@ class ChannelsController {
         return null
       })
       if (!_channel) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(201).json(_channel)
     } catch (err) {
@@ -68,13 +68,13 @@ class ChannelsController {
       const { id } = req.params
       const { name, category } = req.body
       if (!name || !category) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _channel = await Channel.findByPk(id)
 
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${id} não encontrado.`)
+        throw new CustomError(404, `Canal ${id} não encontrado.`)
       }
 
       _channel.name = name
@@ -88,7 +88,7 @@ class ChannelsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_channel)
     } catch (err) {
@@ -100,13 +100,13 @@ class ChannelsController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _channel = await Channel.findByPk(id)
 
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${id} não encontrado.`)
+        throw new CustomError(404, `Canal ${id} não encontrado.`)
       }
 
       const _success = await _channel.destroy().then(() => {
@@ -117,7 +117,7 @@ class ChannelsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {

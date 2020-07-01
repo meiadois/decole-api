@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { Lesson } from '@models/Lesson'
 import { Route } from '@models/Route'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 import { LessonRequirement } from '@models/LessonRequirement'
 
 import { DoneLesson } from '@models/DoneLesson'
@@ -34,7 +34,7 @@ class LessonsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _lesson = await Lesson.findByPk(id, {
         include: [
@@ -48,7 +48,7 @@ class LessonsController {
       })
 
       if (_lesson === null) {
-        throw new ErrorHandler(404, `Lição ${id} não encontrada.`)
+        throw new CustomError(404, `Lição ${id} não encontrada.`)
       }
       return res.status(200).json(_lesson)
     } catch (err) {
@@ -61,17 +61,17 @@ class LessonsController {
       const { title, description, route_id, order } = req.body
 
       if (!title || !description || !route_id || !order) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
       const nLessons = await Lesson.count({ where: { title } })
 
       if (nLessons !== 0) {
-        throw new ErrorHandler(400, `Já existe uma lição com o título [${title}].`)
+        throw new CustomError(400, `Já existe uma lição com o título [${title}].`)
       }
       const nRoutes = await Route.count({ where: { id: route_id } })
 
       if (nRoutes === 0) {
-        throw new ErrorHandler(400, `Rota [${route_id}] não encontrada.`)
+        throw new CustomError(400, `Rota [${route_id}] não encontrada.`)
       }
       const _lesson = await Lesson.create({
         title, description, route_id, order
@@ -80,7 +80,7 @@ class LessonsController {
         return null
       })
       if (!_lesson) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_lesson)
@@ -94,19 +94,19 @@ class LessonsController {
       const { id } = req.params
       const { title, description, route_id, order } = req.body
       if (!description || !title || !route_id || !order) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const nRoutes = await Route.count({ where: { id: route_id } })
 
       if (nRoutes === 0) {
-        throw new ErrorHandler(400, `Rota [${route_id}] não encontrada.`)
+        throw new CustomError(400, `Rota [${route_id}] não encontrada.`)
       }
 
       const _lesson = await Lesson.findByPk(id)
 
       if (!_lesson) {
-        throw new ErrorHandler(404, `Lição ${id} não encontrada.`)
+        throw new CustomError(404, `Lição ${id} não encontrada.`)
       }
 
       _lesson.description = description
@@ -122,7 +122,7 @@ class LessonsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(await _lesson.reload())
     } catch (err) {
@@ -134,13 +134,13 @@ class LessonsController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _lesson = await Lesson.findByPk(id)
 
       if (!_lesson) {
-        throw new ErrorHandler(404, `Lição ${id} não encontrada.`)
+        throw new CustomError(404, `Lição ${id} não encontrada.`)
       }
 
       const _success = await _lesson.destroy().then(() => {
@@ -151,7 +151,7 @@ class LessonsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {

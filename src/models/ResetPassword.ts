@@ -48,6 +48,4 @@ export function init (sequelize: Sequelize): void {
   )
 }
 
-export function associate (sequelize: Sequelize): void {
-  console.log('ResetPassword dont have associations')
-}
+export function associate (sequelize: Sequelize): void {}

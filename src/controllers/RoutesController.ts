@@ -6,7 +6,7 @@ import { DoneRoute } from '@models/DoneRoute'
 import { RouteRequirement } from '@models/RouteRequirement'
 import { Lesson } from '@models/Lesson'
 
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 import { User } from 'discord.js'
 import { Account } from '@models/Account'
 import LessonsUtils from '../utils/LessonsUtils'
@@ -52,7 +52,7 @@ class RoutesController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       let _route = null
       try {
@@ -74,7 +74,7 @@ class RoutesController {
       }
 
       if (_route === null) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
       return res.status(200).json(_route)
     } catch (err) {
@@ -91,14 +91,14 @@ class RoutesController {
       })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma rota com a descrição [${route.description}].`)
+        throw new CustomError(400, `Já existe uma rota com a descrição [${route.description}].`)
       }
       const _route = await Route.create(route).catch((err) => {
         console.log(err)
         return null
       })
       if (!_route) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_route)
@@ -112,13 +112,13 @@ class RoutesController {
       const { id } = req.params
       const { title, description, order } = req.body
       if (!description || !title) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id)
 
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
 
       _route.description = description
@@ -133,7 +133,7 @@ class RoutesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_route)
     } catch (err) {
@@ -145,13 +145,13 @@ class RoutesController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id)
 
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
 
       const _success = await _route.destroy().then(() => {
@@ -162,7 +162,7 @@ class RoutesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -273,7 +273,7 @@ class RoutesController {
         })
       }
       if (_route === null) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
       const lessons = _route.lessons as Lesson[]
       const required_routes = _route?.route_requirements as RouteRequirement[]
@@ -319,7 +319,7 @@ class RoutesController {
       const { id } = req.params
       const { lesson_ids } = req.body
       if (!id || !lesson_ids) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id, {
@@ -328,13 +328,13 @@ class RoutesController {
         ]
       })
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
 
       for (const i in lesson_ids) {
         const _lesson = await Lesson.findByPk(lesson_ids[i])
         if (!_lesson) {
-          throw new ErrorHandler(404, `Lição ${lesson_ids[i]} não encontrada.`)
+          throw new CustomError(404, `Lição ${lesson_ids[i]} não encontrada.`)
         }
         const _success = await _route.addLesson(_lesson).then(() => {
           return true
@@ -344,7 +344,7 @@ class RoutesController {
         })
 
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 
@@ -359,7 +359,7 @@ class RoutesController {
       const { id } = req.params
       const { lesson_ids } = req.body
       if (!id || !lesson_ids) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id, {
@@ -368,7 +368,7 @@ class RoutesController {
         ]
       })
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
       const _associated_lessons = _route.lessons
       if (_associated_lessons !== undefined) {
@@ -382,7 +382,7 @@ class RoutesController {
       for (const i in lesson_ids) {
         const _lesson = await Lesson.findByPk(lesson_ids[i])
         if (!_lesson) {
-          throw new ErrorHandler(404, `Lição ${lesson_ids[i]} não encontrada.`)
+          throw new CustomError(404, `Lição ${lesson_ids[i]} não encontrada.`)
         }
         const _success = await _route.addLesson(_lesson).then(() => {
           return true
@@ -391,7 +391,7 @@ class RoutesController {
           return false
         })
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 
@@ -406,7 +406,7 @@ class RoutesController {
       const { id } = req.params
       const { lesson_ids } = req.body
       if (!id || !lesson_ids) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id, {
@@ -416,13 +416,13 @@ class RoutesController {
       })
 
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
 
       for (const i in lesson_ids) {
         const _lesson = await Lesson.findByPk(lesson_ids[i])
         if (!_lesson) {
-          throw new ErrorHandler(404, `Lição ${lesson_ids[i]} não encontrada.`)
+          throw new CustomError(404, `Lição ${lesson_ids[i]} não encontrada.`)
         }
         const _success = await _route.removeLesson(_lesson).then(() => {
           return true
@@ -432,7 +432,7 @@ class RoutesController {
         })
 
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 
@@ -447,7 +447,7 @@ class RoutesController {
       const { id } = req.params
       const { channel_ids } = req.body
       if (!id || !channel_ids) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id, {
@@ -456,13 +456,13 @@ class RoutesController {
         ]
       })
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
 
       for (const i in channel_ids) {
         const _channel = await Channel.findByPk(channel_ids[i])
         if (!_channel) {
-          throw new ErrorHandler(404, `Lição ${channel_ids[i]} não encontrada.`)
+          throw new CustomError(404, `Lição ${channel_ids[i]} não encontrada.`)
         }
 
         const _success = await _route.addChannel(_channel).then(() => {
@@ -473,7 +473,7 @@ class RoutesController {
         })
 
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 
@@ -488,7 +488,7 @@ class RoutesController {
       const { id } = req.params
       const { channel_ids } = req.body
       if (!id || !channel_ids) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id, {
@@ -498,7 +498,7 @@ class RoutesController {
         ]
       })
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
 
       const _associated_channels = _route.channels
@@ -513,7 +513,7 @@ class RoutesController {
       for (const i in channel_ids) {
         const _channel = await Channel.findByPk(channel_ids[i])
         if (!_channel) {
-          throw new ErrorHandler(404, `Lição ${channel_ids[i]} não encontrada.`)
+          throw new CustomError(404, `Lição ${channel_ids[i]} não encontrada.`)
         }
 
         const _success = await _route.addChannel(_channel).then(() => {
@@ -524,7 +524,7 @@ class RoutesController {
         })
 
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 
@@ -539,7 +539,7 @@ class RoutesController {
       const { id } = req.params
       const { channel_ids } = req.body
       if (!id || !channel_ids) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(id, {
@@ -549,13 +549,13 @@ class RoutesController {
       })
 
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${id} não encontrada.`)
+        throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
 
       for (const i in channel_ids) {
         const _channel = await Channel.findByPk(channel_ids[i])
         if (!_channel) {
-          throw new ErrorHandler(404, `Lição ${channel_ids[i]} não encontrada.`)
+          throw new CustomError(404, `Lição ${channel_ids[i]} não encontrada.`)
         }
 
         const _success = await _route.removeChannel(_channel).then(() => {
@@ -566,7 +566,7 @@ class RoutesController {
         })
 
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 

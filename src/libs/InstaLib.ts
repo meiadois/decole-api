@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 
 const InstagramApi = axios.create({
   baseURL: 'https://www.instagram.com'
@@ -207,7 +207,7 @@ class InstaLib {
         return null
       })
     if (data == null) {
-      throw new ErrorHandler(404, `Não foi possível encontrar informações do usuário ${nickname}`)
+      throw new CustomError(404, `Não foi possível encontrar informações do usuário ${nickname}`)
     }
     return data as UserInstagramSimpleProfile
   }
@@ -233,7 +233,7 @@ class InstaLib {
         }
       })
     if (data == null) {
-      throw new ErrorHandler(404, `Não foi possível encontrar informações do usuário ${nickname}`)
+      throw new CustomError(404, `Não foi possível encontrar informações do usuário ${nickname}`)
     }
     return data as UserInstagramProfile
   }

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { Info } from '@models/Info'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 
 export interface KeyValue {
   [name: string]: string;
@@ -27,12 +27,12 @@ class InfosController {
       const { name } = req.params
 
       if (!name) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _info = await Info.findByPk(name)
 
       if (_info === null) {
-        throw new ErrorHandler(404, `Conta ${name} não encontrada.`)
+        throw new CustomError(404, `Conta ${name} não encontrada.`)
       }
       return res.status(200).json(_info)
     } catch (err) {
@@ -44,7 +44,7 @@ class InfosController {
     try {
       const { name, value } = req.body
       if (!name || !value) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const [_info] = await Info.findOrCreate({
@@ -56,7 +56,7 @@ class InfosController {
           return null
         })
       if (!_info) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_info)
@@ -70,13 +70,13 @@ class InfosController {
       const { name } = req.params
       const { value } = req.body
       if (!name) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _info = await Info.findByPk(name)
 
       if (_info === null) {
-        throw new ErrorHandler(404, `Conta ${name} não encontrada.`)
+        throw new CustomError(404, `Conta ${name} não encontrada.`)
       }
 
       _info.value = value
@@ -89,7 +89,7 @@ class InfosController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(await _info.reload())
     } catch (err) {
@@ -101,13 +101,13 @@ class InfosController {
     try {
       const { name } = req.params
       if (!name) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _info = await Info.findByPk(name)
 
       if (!_info) {
-        throw new ErrorHandler(404, `Conta ${name} não encontrada.`)
+        throw new CustomError(404, `Conta ${name} não encontrada.`)
       }
 
       const _success = await _info.destroy().then(() => {
@@ -118,7 +118,7 @@ class InfosController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {

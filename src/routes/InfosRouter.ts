@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 import InfosController from '@controllers/InfosController'
 const InfosRouter = Router()
 

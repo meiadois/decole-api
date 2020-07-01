@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 import { DoneRoute } from '@models/DoneRoute'
 import { Route } from '@models/Route'
 
@@ -35,7 +35,7 @@ class DoneRoutesController {
     const { id } = req.params
 
     if (!id) {
-      throw new ErrorHandler(404, '')
+      throw new CustomError(404, '')
     }
     const _done_route = await DoneRoute.findByPk(id, {
       include: [
@@ -49,7 +49,7 @@ class DoneRoutesController {
     })
 
     if (_done_route === null) {
-      throw new ErrorHandler(404, `Rota Concluida ${id} não encontrada.`)
+      throw new CustomError(404, `Rota Concluida ${id} não encontrada.`)
     }
     return res.status(200).json(_done_route)
   }
@@ -58,19 +58,19 @@ class DoneRoutesController {
     try {
       const { user_id, route_id } = req.body
       if (!user_id || !route_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _route = await Route.findByPk(route_id)
 
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${route_id} não encontrada.`)
+        throw new CustomError(404, `Rota ${route_id} não encontrada.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       const _done_route = await DoneRoute.create({
@@ -80,7 +80,7 @@ class DoneRoutesController {
         return null
       })
       if (!_done_route) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_done_route)
@@ -94,25 +94,25 @@ class DoneRoutesController {
       const { id } = req.params
       const { user_id, route_id } = req.body
       if (!user_id || !route_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _done_route = await DoneRoute.findByPk(id)
 
       if (!_done_route) {
-        throw new ErrorHandler(404, `Rota Concluida ${id} não encontrada.`)
+        throw new CustomError(404, `Rota Concluida ${id} não encontrada.`)
       }
 
       const _route = await Route.findByPk(route_id)
 
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${route_id} não encontrada.`)
+        throw new CustomError(404, `Rota ${route_id} não encontrada.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       _done_route.user_id = user_id
@@ -126,7 +126,7 @@ class DoneRoutesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(await _done_route.reload())
     } catch (err) {
@@ -138,13 +138,13 @@ class DoneRoutesController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _done_route = await DoneRoute.findByPk(id)
 
       if (!_done_route) {
-        throw new ErrorHandler(404, `Rota Concluida ${id} não encontrada.`)
+        throw new CustomError(404, `Rota Concluida ${id} não encontrada.`)
       }
 
       const _success = await _done_route.destroy().then(() => {
@@ -155,7 +155,7 @@ class DoneRoutesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -193,12 +193,12 @@ class DoneRoutesController {
       const { route_id } = req.params
       const user_id = res.locals.user.id
       if (!user_id || !route_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
       const nResults = await DoneRoute.count({ where: { user_id, route_id } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `A rota [${route_id}] já foi concluida pelo usuário [${user_id}].`)
+        throw new CustomError(400, `A rota [${route_id}] já foi concluida pelo usuário [${user_id}].`)
       }
 
       const _route = await Route.findByPk(route_id, {
@@ -210,13 +210,13 @@ class DoneRoutesController {
       })
 
       if (!_route) {
-        throw new ErrorHandler(404, `Rota ${route_id} não encontrada.`)
+        throw new CustomError(404, `Rota ${route_id} não encontrada.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       const _done_route = await DoneRoute.create({
@@ -226,7 +226,7 @@ class DoneRoutesController {
         return null
       })
       if (!_done_route) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       delete _done_route.user_id
       /*

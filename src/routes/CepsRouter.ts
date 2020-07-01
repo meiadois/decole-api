@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import CepsController from '@controllers/CepsController'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const CepsRouter = Router()
 

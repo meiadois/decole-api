@@ -3,7 +3,7 @@ import path from 'path'
 import * as crypto from 'crypto'
 import sharp from 'sharp'
 import * as fs from 'fs'
-import { ErrorHandler } from './ErrorHandler'
+import CustomError from './CustomError'
 require('dotenv/config')
 
 export interface File {
@@ -62,13 +62,13 @@ class UploadHelper {
           if (file.fieldname === 'banner' || file.fieldname === 'thumbnail') {
             cb(null, this.tmpFolder)
           } else {
-            cb(new ErrorHandler(404, `Fieldname ${file.fieldname} não aceito. Fieldnames possívels : ['banner', 'thumbnail']`), this.tmpFolder)
+            cb(new CustomError(404, `Fieldname ${file.fieldname} não aceito. Fieldnames possívels : ['banner', 'thumbnail']`), this.tmpFolder)
           }
         },
         filename: function (req, file, cb) {
           crypto.randomBytes(16, (err, hash) => {
             if (err) {
-              cb(new ErrorHandler(404, `Erro ao criar nome para o arquivo ${file.filename}`), '')
+              cb(new CustomError(404, `Erro ao criar nome para o arquivo ${file.filename}`), '')
             } else {
               const fileName = `${file.fieldname}_${hash.toString('hex')}.png`
               cb(null, fileName)

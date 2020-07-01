@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import MetricsLib, { MetricResult } from '../libs/MetricsLib'
 import { Channel } from '@models/Channel'
 import { Account } from '@models/Account'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import { ErrorHandler } from 'src/utils/middlewares/ErrorHandlerMiddleware'
 import InstaLib from '../libs/InstaLib'
 interface Metrics {
   followers_per_following?: MetricResult;

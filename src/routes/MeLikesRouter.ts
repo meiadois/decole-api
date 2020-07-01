@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import LikesController from '@controllers/LikesController'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const MeLikesRouter = Router()
 

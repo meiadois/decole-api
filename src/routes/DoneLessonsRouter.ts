@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import DoneLessonsController from '@controllers/DoneLessonsController'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const DoneLessonsRouter = Router()
 

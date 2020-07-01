@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import RoutesController from '@controllers/RoutesController'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const MeRoutesRouter = Router()
 

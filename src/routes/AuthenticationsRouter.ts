@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import AuthenticationsController from '@controllers/AuthenticationsController'
 import { UserRegisterDTO } from '@validators/Authentications/UserRegisterDTO'
-import validationMiddleware from '@helpers/ValidationMiddleware'
+import validationMiddleware from 'src/utils/middlewares/ValidationMiddleware'
 import { UserLoginDTO } from '@validators/Authentications/UserLoginDTO'
 import { UserResetPasswordDTO } from '@validators/Authentications/UserResetPasswordDTO'
 import { UserForgotPasswordDTO } from '@validators/Authentications/UserForgotPasswordDTO'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const AuthenticationsRouter = Router()
 

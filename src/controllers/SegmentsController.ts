@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 import { Segment } from '@models/Segment'
 import { Company } from '@models/Company'
 import { Op } from 'sequelize'
@@ -29,7 +29,7 @@ class SegmentsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _segment = await Segment.findByPk(id, {
         include: [
@@ -42,7 +42,7 @@ class SegmentsController {
       })
 
       if (_segment === null) {
-        throw new ErrorHandler(404, `Segmento ${id} não encontrada.`)
+        throw new CustomError(404, `Segmento ${id} não encontrada.`)
       }
 
       return res.json(_segment)
@@ -60,14 +60,14 @@ class SegmentsController {
       })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe um segmento com o nome [${segment.name}].`)
+        throw new CustomError(400, `Já existe um segmento com o nome [${segment.name}].`)
       }
       const _segment = await Segment.create(segment).catch((err: any) => {
         console.log(err)
         return null
       })
       if (!_segment) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(201).json(_segment)
     } catch (err) {
@@ -81,13 +81,13 @@ class SegmentsController {
       const { name } = req.body
 
       if (!id || !name) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _segment = await Segment.findByPk(id)
 
       if (!_segment) {
-        throw new ErrorHandler(404, `Segmento ${id} não encontrada.`)
+        throw new CustomError(404, `Segmento ${id} não encontrada.`)
       }
 
       _segment.name = name
@@ -100,7 +100,7 @@ class SegmentsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_segment)
     } catch (err) {
@@ -113,13 +113,13 @@ class SegmentsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _segment = await Segment.findByPk(id)
 
       if (!_segment) {
-        throw new ErrorHandler(404, `Segmento ${id} não encontrada.`)
+        throw new CustomError(404, `Segmento ${id} não encontrada.`)
       }
 
       const _success = await _segment.destroy().then(() => {
@@ -130,7 +130,7 @@ class SegmentsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -189,7 +189,7 @@ class SegmentsController {
         ]
       })
       if (!_user_company) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
 
       const _companies = await Company.aggregate('segment_id', 'DISTINCT',

@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import StepsController from '@controllers/StepsController'
-import ValidationMiddleware from '@helpers/ValidationMiddleware'
+import ValidationMiddleware from 'src/utils/middlewares/ValidationMiddleware'
 import { StepStoreDTO } from '@validators/Steps/StepStoreDTO'
 import { StepUpdateDTO } from '@validators/Steps/StepUpdateDTO'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const StepsRouter = Router()
 

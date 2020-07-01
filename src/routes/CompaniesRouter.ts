@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import CompaniesController from '@controllers/CompaniesController'
-import ValidationMiddleware from '@helpers/ValidationMiddleware'
+import ValidationMiddleware from 'src/utils/middlewares/ValidationMiddleware'
 import CompanyStoreDTO from '@validators/Companies/CompanyStoreDTO'
 import CompanyUpdateDTO from '@validators/Companies/CompanyUpdateDTO'
-import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 const CompaniesRouter = Router()
 
 CompaniesRouter.route('/')

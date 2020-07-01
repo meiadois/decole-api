@@ -12,6 +12,7 @@ export interface UserI {
   name: string;
   email: string;
   password: string;
+  role?: string;
   introduced: boolean;
   paid_access_expiration: Date;
 }
@@ -20,6 +21,7 @@ export class User extends Model implements UserI {
   public name!: string;
   public email!: string;
   public password!: string;
+  public role?: string;
   public introduced!: boolean;
   public paid_access_expiration!: Date;
 
@@ -106,6 +108,11 @@ export function init (sequelize: Sequelize): void {
       password: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'user'
       },
       introduced: {
         type: DataTypes.BOOLEAN,

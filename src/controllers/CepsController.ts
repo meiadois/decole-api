@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '@helpers/ErrorHandler'
+import CustomError from '@utils/CustomError'
 import cepPromise from 'cep-promise'
 
 interface CepI{
@@ -22,7 +22,7 @@ class CepsController {
           return null
         })
       if (cep_infos == null) {
-        throw new ErrorHandler(400, `CEP [${cep}] não encontrado ou mal formado.`)
+        throw new CustomError(400, `CEP [${cep}] não encontrado ou mal formado.`)
       }
       return res.json(cep_infos)
     } catch (err) {
