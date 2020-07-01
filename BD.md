@@ -128,29 +128,29 @@
 ## Comandos
 
 ### Criar migration
-`sequelize migration:create --name=create-users`
+`yar sequelize migration:create --name=create-users`
 ### Subir migrations
-`sequelize-cli db:migrate`
+`yarn sequelize-cli db:migrate`
 
 
 ### Remover migration especifica
-`npx sequelize-cli db:migrate:undo --name 20200424210933-create-like.js`
+`yarn sequelize-cli db:migrate:undo --name 20200424210933-create-like.js`
 
 ### Remover todas as migrations do banco
-`sequelize-cli db:migrate:undo:all`
+`yarn sequelize-cli db:migrate:undo:all`
 
 
 ### Criar Seed
-`sequelize seed:generate --name users`
+`yarn sequelize seed:generate --name users`
 
 ## Subir Seeds
-`sequelize-cli db:seed:all`
+`yarn sequelize-cli db:seed:all`
 
 ## Subir um
-`npx sequelize-cli db:seed --seed 20191011121208-update-feature.js`
+`yarn sequelize-cli db:seed --seed 20191011121208-update-feature.js`
 
 ## Remover Seed especifico
-`sequelize-cli db:seed:undo --seed name-of-seed-as-in-data`
+`yarn sequelize-cli db:seed:undo --seed name-of-seed-as-in-data`
 
 ## Remover todos os Seeds
-`sequelize-cli db:seed:undo:all`
+`yarn sequelize-cli db:seed:undo:all`

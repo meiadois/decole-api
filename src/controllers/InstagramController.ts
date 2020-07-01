@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-// import { ErrorHandler } from '../helpers/ErrorHandler'
+// import { CustomError } from '@helpers/CustomError'
 import InstaLib from '../libs/InstaLib'
 interface JsonObject {
   [key: string]: any;

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { Step } from '../models/Step'
-import { Lesson } from '../models/Lesson'
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { Step } from '@models/Step'
+import { Lesson } from '@models/Lesson'
+import CustomError from '@utils/CustomError'
 
 class StepsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -24,7 +24,7 @@ class StepsController {
       })
 
       if (_lesson === null) {
-        throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`)
+        throw new CustomError(404, `Lição ${lesson_id} não encontrada.`)
       }
       return res.json(_lesson.steps)
     } catch (err) {
@@ -37,12 +37,12 @@ class StepsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _step = await Step.findByPk(id)
 
       if (_step === null) {
-        throw new ErrorHandler(404, `Etapa ${id} não encontrada.`)
+        throw new CustomError(404, `Etapa ${id} não encontrada.`)
       }
       return res.status(200).json(_step)
     } catch (err) {
@@ -59,14 +59,14 @@ class StepsController {
       })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma etapa com a mensagem [${step.message}] na lição [${step.lesson_id}].`)
+        throw new CustomError(400, `Já existe uma etapa com a mensagem [${step.message}] na lição [${step.lesson_id}].`)
       }
       const _step = await Step.create(step).catch((err) => {
         console.log(err)
         return null
       })
       if (!_step) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(201).json(_step)
     } catch (err) {
@@ -82,7 +82,7 @@ class StepsController {
       const _step = await Step.findByPk(id)
 
       if (!_step) {
-        throw new ErrorHandler(404, `Etapa ${id} não encontrada.`)
+        throw new CustomError(404, `Etapa ${id} não encontrada.`)
       }
 
       _step.message = message
@@ -97,7 +97,7 @@ class StepsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_step)
     } catch (err) {
@@ -110,13 +110,13 @@ class StepsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _step = await Step.findByPk(id)
 
       if (!_step) {
-        throw new ErrorHandler(404, `Etapa ${id} não encontrada.`)
+        throw new CustomError(404, `Etapa ${id} não encontrada.`)
       }
 
       const _success = await _step.destroy().then(() => {
@@ -127,7 +127,7 @@ class StepsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {

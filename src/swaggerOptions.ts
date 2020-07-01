@@ -1,4 +1,4 @@
-import * as swaggerJsdoc from 'swagger-jsdoc'
+import swaggerJsdoc from 'swagger-jsdoc'
 // const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerOptions = {
   swaggerDefinition: {

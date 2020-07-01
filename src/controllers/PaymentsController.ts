@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
-import { User } from '../models/User'
-import { Payment } from '../models/Payment'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import * as moment from 'moment-timezone'
+import { User } from '@models/User'
+import { Payment } from '@models/Payment'
+import CustomError from '@utils/CustomError'
+import moment from 'moment-timezone'
 
 const PAYMENT_STATUS = ['confirmed', 'pending', 'denied', 'refunded']
 function is_valid_payment_status (status: string): boolean {
@@ -29,7 +29,7 @@ class PaymentsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _payment = await Payment.findByPk(id, {
         include: [
@@ -40,7 +40,7 @@ class PaymentsController {
       })
 
       if (_payment === null) {
-        throw new ErrorHandler(404, `Pagamento ${id} não encontrado.`)
+        throw new CustomError(404, `Pagamento ${id} não encontrado.`)
       }
       return res.status(200).json(_payment)
     } catch (err) {
@@ -55,23 +55,23 @@ class PaymentsController {
       const { price, description, value, date, type, status, user_id } = req.body
 
       if (!price || !description || !value || !date || !type || !status || !user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuario ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuario ${user_id} não encontrado.`)
       }
 
       if (status != null) {
         if (!is_valid_payment_status(status)) {
-          throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${PAYMENT_STATUS.toString()}]`)
+          throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${PAYMENT_STATUS.toString()}]`)
         }
       }
       if (type != null) {
         if (!is_valid_payment_type(type)) {
-          throw new ErrorHandler(400, `[${type}] não é um tipo válido. Estes são os status possíveis: [${PAYMENT_TYPES.toString()}]`)
+          throw new CustomError(400, `[${type}] não é um tipo válido. Estes são os status possíveis: [${PAYMENT_TYPES.toString()}]`)
         }
       }
       const _payment = await Payment.create({
@@ -81,7 +81,7 @@ class PaymentsController {
         return null
       })
       if (!_payment) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       if (type === 'access') {
@@ -102,7 +102,7 @@ class PaymentsController {
         })
 
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 
@@ -118,19 +118,19 @@ class PaymentsController {
       const { price, description, value, date, type, status, user_id } = req.body
 
       if (!price || !description || !value || !date || !type || !status || !user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuario ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuario ${user_id} não encontrado.`)
       }
 
       const _payment = await Payment.findByPk(id)
 
       if (!_payment) {
-        throw new ErrorHandler(404, `Etapa ${id} não encontrada.`)
+        throw new CustomError(404, `Etapa ${id} não encontrada.`)
       }
 
       _payment.price = price
@@ -149,7 +149,7 @@ class PaymentsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_payment)
     } catch (err) {
@@ -162,13 +162,13 @@ class PaymentsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _payment = await Payment.findByPk(id)
 
       if (!_payment) {
-        throw new ErrorHandler(404, `Pagamento ${id} não encontrada.`)
+        throw new CustomError(404, `Pagamento ${id} não encontrada.`)
       }
 
       const _success = await _payment.destroy().then(() => {
@@ -179,7 +179,7 @@ class PaymentsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -204,7 +204,7 @@ class PaymentsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const user_id = res.locals.user.id
       const _payment = await Payment.findOne({
@@ -217,7 +217,7 @@ class PaymentsController {
       })
 
       if (_payment === null) {
-        throw new ErrorHandler(404, `Pagamento ${id} do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Pagamento ${id} do usuário ${user_id} não encontrada.`)
       }
       return res.status(200).json(_payment)
     } catch (err) {
@@ -234,23 +234,23 @@ class PaymentsController {
       const { price, description, value, date, type, status } = req.body
 
       if (!price || !description || !value || !date || !type || !status || !user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuario ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuario ${user_id} não encontrado.`)
       }
 
       if (status != null) {
         if (!is_valid_payment_status(status)) {
-          throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${PAYMENT_STATUS.toString()}]`)
+          throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${PAYMENT_STATUS.toString()}]`)
         }
       }
       if (type != null) {
         if (!is_valid_payment_type(type)) {
-          throw new ErrorHandler(400, `[${type}] não é um tipo válido. Estes são os status possíveis: [${PAYMENT_TYPES.toString()}]`)
+          throw new CustomError(400, `[${type}] não é um tipo válido. Estes são os status possíveis: [${PAYMENT_TYPES.toString()}]`)
         }
       }
       const _payment = await Payment.create({
@@ -260,7 +260,7 @@ class PaymentsController {
         return null
       })
       if (!_payment) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       if (type === 'access') {
@@ -281,7 +281,7 @@ class PaymentsController {
         })
 
         if (!_success) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 
@@ -298,13 +298,13 @@ class PaymentsController {
       const { price, description, value, date, type, status } = req.body
 
       if (!price || !description || !value || !date || !type || !status || !user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuario ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuario ${user_id} não encontrado.`)
       }
 
       const _payment = await Payment.findOne({
@@ -312,7 +312,7 @@ class PaymentsController {
       })
 
       if (!_payment) {
-        throw new ErrorHandler(404, `Pagamento ${id} do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Pagamento ${id} do usuário ${user_id} não encontrada.`)
       }
 
       _payment.price = price
@@ -331,7 +331,7 @@ class PaymentsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_payment)
     } catch (err) {
@@ -345,7 +345,7 @@ class PaymentsController {
       const user_id = res.locals.user.id
 
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _payment = await Payment.findOne({
@@ -353,7 +353,7 @@ class PaymentsController {
       })
 
       if (!_payment) {
-        throw new ErrorHandler(404, `Pagamento ${id} do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Pagamento ${id} do usuário ${user_id} não encontrada.`)
       }
 
       const _success = await _payment.destroy().then(() => {
@@ -364,7 +364,7 @@ class PaymentsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {

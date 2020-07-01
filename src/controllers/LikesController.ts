@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { Like } from '../models/Like'
-import { Company } from '../models/Company'
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { Like } from '@models/Like'
+import { Company } from '@models/Company'
+import CustomError from '@utils/CustomError'
 import { Op } from 'sequelize'
 
 const VALID_STATUS = ['pending', 'accepted', 'denied', 'deleted']
@@ -22,7 +22,7 @@ class LikesController {
       if (status !== undefined) {
         if (status != null) {
           if (!is_valid_status(status)) {
-            throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
+            throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
         where.status = status
@@ -55,7 +55,7 @@ class LikesController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       let _like = null
       try {
@@ -74,7 +74,7 @@ class LikesController {
       }
 
       if (_like === null) {
-        throw new ErrorHandler(404, `Canal ${id} não encontrado.`)
+        throw new CustomError(404, `Canal ${id} não encontrado.`)
       }
       return res.status(200).json(_like)
     } catch (err) {
@@ -102,7 +102,7 @@ class LikesController {
       })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe um like entre as empresas [${sender_id}] e [${recipient_id}].`)
+        throw new CustomError(400, `Já existe um like entre as empresas [${sender_id}] e [${recipient_id}].`)
       }
 
       const [_like] = await Like.findOrCreate({
@@ -112,7 +112,7 @@ class LikesController {
         return null
       })
       if (!_like) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(201).json(_like)
     } catch (err) {
@@ -125,30 +125,30 @@ class LikesController {
       const { id } = req.params
       const { sender_id, recipient_id, status = null } = req.body
       if (!sender_id || !recipient_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
       if (status != null) {
         if (!is_valid_status(status)) {
-          throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
+          throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
         }
       }
 
       const nResultsSender = await Company.count({ where: { id: sender_id } })
 
       if (nResultsSender === 0) {
-        throw new ErrorHandler(400, `Não existe uma empresa com o id [${sender_id}].`)
+        throw new CustomError(400, `Não existe uma empresa com o id [${sender_id}].`)
       }
 
       const nResultsRecipient = await Company.count({ where: { id: recipient_id } })
 
       if (nResultsRecipient === 0) {
-        throw new ErrorHandler(400, `Não existe uma empresa com o id [${recipient_id}].`)
+        throw new CustomError(400, `Não existe uma empresa com o id [${recipient_id}].`)
       }
 
       const _like = await Like.findByPk(id)
 
       if (!_like) {
-        throw new ErrorHandler(404, `Like ${id} não encontrado.`)
+        throw new CustomError(404, `Like ${id} não encontrado.`)
       }
 
       _like.sender_id = sender_id
@@ -168,7 +168,7 @@ class LikesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_like)
     } catch (err) {
@@ -180,13 +180,13 @@ class LikesController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _like = await Like.findByPk(id)
 
       if (!_like) {
-        throw new ErrorHandler(404, `Like ${id} não encontrado.`)
+        throw new CustomError(404, `Like ${id} não encontrado.`)
       }
 
       const _success = await _like.destroy().then(() => {
@@ -197,7 +197,7 @@ class LikesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -221,7 +221,7 @@ class LikesController {
       })
 
       if (_company === null) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
       let { status } = req.query
       status = status as string
@@ -231,7 +231,7 @@ class LikesController {
       if (status !== undefined) {
         if (status != null) {
           if (!is_valid_status(status)) {
-            throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
+            throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
         console.log('não é undefined')
@@ -317,7 +317,7 @@ class LikesController {
       })
 
       if (_company === null) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
       let { status } = req.query
       status = status as string
@@ -326,7 +326,7 @@ class LikesController {
       if (status !== undefined) {
         if (status != null) {
           if (!is_valid_status(status)) {
-            throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
+            throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
         console.log('não é undefined')
@@ -384,7 +384,7 @@ class LikesController {
       })
 
       if (_company === null) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
       let { status } = req.query
       status = status as string
@@ -393,7 +393,7 @@ class LikesController {
       if (status !== undefined) {
         if (status != null) {
           if (!is_valid_status(status)) {
-            throw new ErrorHandler(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
+            throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
         console.log('não é undefined')

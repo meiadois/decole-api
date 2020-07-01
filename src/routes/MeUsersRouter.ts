@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import UsersController from '../controllers/UsersController'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import UsersController from '@controllers/UsersController'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const MeUsersRouter = Router()
 

@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { Company } from '../models/Company'
-import { User } from '../models/User'
+import CustomError from '@utils/CustomError'
+import { Company } from '@models/Company'
+import { User } from '@models/User'
 import { Op } from 'sequelize'
-import { Like } from '../models/Like'
-import UploadHelper from '../helpers/UploadHelper'
+import { Like } from '@models/Like'
+import UploadUtils from 'src/utils/UploadUtils'
 
 interface ExpressFiles {
   [fieldname: string]: Express.Multer.File[];
@@ -30,7 +30,7 @@ class CompaniesController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       let _company = null
       try {
@@ -55,7 +55,7 @@ class CompaniesController {
       }
 
       if (_company === null) {
-        throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
+        throw new CustomError(404, `Empresa ${id} não encontrada.`)
       }
       return res.status(200).json(_company)
     } catch (err) {
@@ -70,7 +70,7 @@ class CompaniesController {
       const nResults = await Company.count({ where: { id: company.cnpj } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
+        throw new CustomError(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
       }
       const _company = await Company.create(company)
         .catch((err) => {
@@ -78,7 +78,7 @@ class CompaniesController {
           return null
         })
       if (!_company) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_company)
@@ -94,7 +94,7 @@ class CompaniesController {
       const _company = await Company.findByPk(id)
 
       if (!_company) {
-        throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
+        throw new CustomError(404, `Empresa ${id} não encontrada.`)
       }
 
       _company.name = company.name
@@ -119,7 +119,7 @@ class CompaniesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(_company)
     } catch (err) {
@@ -131,13 +131,13 @@ class CompaniesController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _company = await Company.findByPk(id)
 
       if (!_company) {
-        throw new ErrorHandler(404, `Empresa ${id} não encontrada.`)
+        throw new CustomError(404, `Empresa ${id} não encontrada.`)
       }
 
       const _success = await _company.destroy().then(() => {
@@ -148,7 +148,7 @@ class CompaniesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -161,7 +161,7 @@ class CompaniesController {
       const user_id = res.locals.user.id
 
       if (!user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _company = await Company.findOne({
@@ -195,11 +195,11 @@ class CompaniesController {
               });
 
               if (!_user) {
-                  throw new ErrorHandler(404, "Usuário não encontrada");
+                  throw new CustomError(404, "Usuário não encontrada");
               } */
 
       if (_company === null) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
       return res.status(200).json(_company)
     } catch (err) {
@@ -213,13 +213,13 @@ class CompaniesController {
       const user_id = res.locals.user.id
 
       if (!user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const nResults = await User.count({ where: { id: user_id } })
 
       if (nResults === 0) {
-        throw new ErrorHandler(404, 'Usuário não encontrado')
+        throw new CustomError(404, 'Usuário não encontrado')
       }
 
       const _company = await Company.findOne({
@@ -244,7 +244,7 @@ class CompaniesController {
         ]
       })
       if (!_company) {
-        throw new ErrorHandler(404, `Empresa ${id} do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa ${id} do usuário ${user_id} não encontrada.`)
       }
 
       return res.status(200).json(_company)
@@ -255,7 +255,7 @@ class CompaniesController {
 
   async meStore (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      // const files = await UploadHelper.processCompaniesImages(req.files)
+      // const files = await UploadUtils.processCompaniesImages(req.files)
       const user_id = res.locals.user.id
 
       const company_ = await Company.findOne(
@@ -272,7 +272,7 @@ class CompaniesController {
         })
 
       if (company_ !== null) {
-        throw new ErrorHandler(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`)
+        throw new CustomError(400, `Já há uma empresa cadastrada pelo usuário [${user_id}].`)
       }
 
       const company = req.body as Company
@@ -284,7 +284,7 @@ class CompaniesController {
         try {
           if (Object.keys(req.files).indexOf('banner') >= 0) {
             const banner = files.banner[0]
-            const banner_url = await UploadHelper.processCompanyBanner(banner)
+            const banner_url = await UploadUtils.processCompanyBanner(banner)
             company.banner = banner_url
           }
         } catch (err) {
@@ -293,7 +293,7 @@ class CompaniesController {
         try {
           if (Object.keys(req.files).indexOf('thumbnail') >= 0) {
             const thumbnail = files.thumbnail[0]
-            const thumbnail_url = await UploadHelper.processCompanyThumbnail(thumbnail)
+            const thumbnail_url = await UploadUtils.processCompanyThumbnail(thumbnail)
             company.thumbnail = thumbnail_url
           }
         } catch (err) {
@@ -307,13 +307,13 @@ class CompaniesController {
         const nResults = await Company.count({ where: { cnpj: company.cnpj } })
 
         if (nResults !== 0) {
-          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
+          throw new CustomError(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
         }
       }
 
       const _user = await User.findByPk(user_id)
       if (!_user) {
-        throw new ErrorHandler(404, 'Usuário não encontrado')
+        throw new CustomError(404, 'Usuário não encontrado')
       }
 
       const _company = await Company.create(company, {
@@ -329,7 +329,7 @@ class CompaniesController {
       })
 
       if (!_company) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       const _success = await _user.addCompany(_company).then(() => {
@@ -340,7 +340,7 @@ class CompaniesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(await _company.reload())
@@ -356,12 +356,12 @@ class CompaniesController {
       const company = req.body as Company
 
       if (!user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
       const nResults = await User.count({ where: { id: user_id } })
 
       if (nResults === 0) {
-        throw new ErrorHandler(404, 'Usuário não encontrado')
+        throw new CustomError(404, 'Usuário não encontrado')
       }
 
       const _company = await Company.findOne({
@@ -384,14 +384,14 @@ class CompaniesController {
       })
 
       if (_company == null) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
 
       if (company.cnpj !== null && company.cnpj !== _company.cnpj) {
         const nResults = await Company.count({ where: { cnpj: company.cnpj } })
 
         if (nResults !== 0) {
-          throw new ErrorHandler(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
+          throw new CustomError(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
         }
       }
       if (Object.keys(req.files).length !== 0) {
@@ -399,7 +399,7 @@ class CompaniesController {
         try {
           if (Object.keys(req.files).indexOf('banner') >= 0) {
             const banner = files.banner[0]
-            const banner_url = await UploadHelper.processCompanyBanner(banner)
+            const banner_url = await UploadUtils.processCompanyBanner(banner)
             _company.banner = banner_url
           }
         } catch (err) {
@@ -408,7 +408,7 @@ class CompaniesController {
         try {
           if (Object.keys(req.files).indexOf('thumbnail') >= 0) {
             const thumbnail = files.thumbnail[0]
-            const thumbnail_url = await UploadHelper.processCompanyThumbnail(thumbnail)
+            const thumbnail_url = await UploadUtils.processCompanyThumbnail(thumbnail)
             _company.thumbnail = thumbnail_url
           }
         } catch (err) {
@@ -437,7 +437,7 @@ class CompaniesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(await _company.reload())
     } catch (err) {
@@ -450,12 +450,12 @@ class CompaniesController {
       const user_id = res.locals.user.id
 
       if (!user_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
       const nResults = await User.count({ where: { id: user_id } })
 
       if (nResults === 0) {
-        throw new ErrorHandler(404, 'Usuário não encontrado')
+        throw new CustomError(404, 'Usuário não encontrado')
       }
 
       const _company = await Company.findOne({
@@ -478,7 +478,7 @@ class CompaniesController {
       })
 
       if (_company == null) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
 
       const _success = await _company.destroy().then(() => {
@@ -489,7 +489,7 @@ class CompaniesController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -623,7 +623,7 @@ class CompaniesController {
         ]
       })
       if (!_user_company) {
-        throw new ErrorHandler(404, `Empresa do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
       let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood } = req.query
       limit = limit as number

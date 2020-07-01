@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { Lesson } from '../models/Lesson'
-import { DoneLesson } from '../models/DoneLesson'
+import CustomError from '@utils/CustomError'
+import { Lesson } from '@models/Lesson'
+import { DoneLesson } from '@models/DoneLesson'
 
-import { User } from '../models/User'
-import { DoneRoute } from '../models/DoneRoute'
+import { User } from '@models/User'
+import { DoneRoute } from '@models/DoneRoute'
 
 class DoneLessonsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -30,7 +30,7 @@ class DoneLessonsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _done_lesson = await DoneLesson.findByPk(id, {
         include: [
@@ -44,7 +44,7 @@ class DoneLessonsController {
       })
 
       if (_done_lesson === null) {
-        throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`)
+        throw new CustomError(404, `Lição Concluida ${id} não encontrada.`)
       }
       return res.status(200).json(_done_lesson)
     } catch (err) {
@@ -56,19 +56,19 @@ class DoneLessonsController {
     try {
       const { user_id, lesson_id } = req.body
       if (!user_id || !lesson_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _lesson = await Lesson.findByPk(lesson_id)
 
       if (!_lesson) {
-        throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`)
+        throw new CustomError(404, `Lição ${lesson_id} não encontrada.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       const _done_lesson = await DoneLesson.create({
@@ -78,7 +78,7 @@ class DoneLessonsController {
         return null
       })
       if (!_done_lesson) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_done_lesson)
@@ -92,25 +92,25 @@ class DoneLessonsController {
       const { id } = req.params
       const { user_id, lesson_id } = req.body
       if (!user_id || !lesson_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _done_lesson = await DoneLesson.findByPk(id)
 
       if (!_done_lesson) {
-        throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`)
+        throw new CustomError(404, `Lição Concluida ${id} não encontrada.`)
       }
 
       const _lesson = await Lesson.findByPk(lesson_id)
 
       if (!_lesson) {
-        throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`)
+        throw new CustomError(404, `Lição ${lesson_id} não encontrada.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       _done_lesson.user_id = user_id
@@ -124,7 +124,7 @@ class DoneLessonsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(await _done_lesson.reload())
     } catch (err) {
@@ -136,13 +136,13 @@ class DoneLessonsController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _done_lesson = await DoneLesson.findByPk(id)
 
       if (!_done_lesson) {
-        throw new ErrorHandler(404, `Lição Concluida ${id} não encontrada.`)
+        throw new CustomError(404, `Lição Concluida ${id} não encontrada.`)
       }
 
       const _success = await _done_lesson.destroy().then(() => {
@@ -153,7 +153,7 @@ class DoneLessonsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -186,26 +186,26 @@ class DoneLessonsController {
       const user_id = res.locals.user.id
 
       if (!user_id || !lesson_id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const __done_lesson = await DoneLesson.findOne({ where: { user_id, lesson_id } })
 
       if (__done_lesson !== null) {
         return res.json(__done_lesson)
-        // throw new ErrorHandler(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${user_id}].`)
+        // throw new CustomError(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${user_id}].`)
       }
 
       const _lesson = await Lesson.findByPk(lesson_id)
 
       if (!_lesson) {
-        throw new ErrorHandler(404, `Lição ${lesson_id} não encontrada.`)
+        throw new CustomError(404, `Lição ${lesson_id} não encontrada.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
       const max_lesson_id = await Lesson.max('order', {
         where: {
@@ -220,7 +220,7 @@ class DoneLessonsController {
         return null
       })
       if (!_done_lesson) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       if (max_lesson_id === _lesson.id) {
@@ -231,7 +231,7 @@ class DoneLessonsController {
           return null
         })
         if (!_done_route) {
-          throw new ErrorHandler(500, '')
+          throw new CustomError(500, '')
         }
       }
 

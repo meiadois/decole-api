@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import AccountsController from '../controllers/AccountsController'
-import { AccountStoreDTO } from '../validators/Accounts/AccountStoreDTO'
-import ValidationMiddleware from '../helpers/ValidationMiddleware'
-import { AccountUpdateDTO } from '../validators/Accounts/AccountUpdateDTO'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import AccountsController from '@controllers/AccountsController'
+import { AccountStoreDTO } from '@validators/Accounts/AccountStoreDTO'
+import ValidationMiddleware from 'src/utils/middlewares/ValidationMiddleware'
+import { AccountUpdateDTO } from '@validators/Accounts/AccountUpdateDTO'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const AccountsRouter = Router()
 

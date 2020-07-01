@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
-import { User } from '../models/User'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import Logger from '../services/Logger'
-import LoginService from '../services/LoginService'
-import AuthService from '../services/AuthService'
-import EmailService, { ResetPasswordTemplate } from '../services/EmailService'
+import { User } from '@models/User'
+import CustomError from '@utils/CustomError'
+import Logger from '@services/Logger'
+import LoginService from '@services/LoginService'
+import AuthService from '@services/AuthService'
+import EmailService, { ResetPasswordTemplate } from '@services/EmailService'
 
-import { ResetPassword } from '../models/ResetPassword'
+import { ResetPassword } from '@models/ResetPassword'
 import * as crypto from 'crypto'
-import * as moment from 'moment-timezone'
+import moment from 'moment-timezone'
 import { UserResetPasswordDTO } from '../validators/Authentications/UserResetPasswordDTO'
 import { UserLoginDTO } from '../validators/Authentications/UserLoginDTO'
 import { UserForgotPasswordDTOI } from '../validators/Authentications/UserForgotPasswordDTO'
@@ -23,12 +23,12 @@ class AccountsController {
       const _user = await User.findOne({ where: { email: user.email } })
 
       if (_user === null) {
-        throw new ErrorHandler(404, `Não há usuários com o email ${user.email}.`)
+        throw new CustomError(404, `Não há usuários com o email ${user.email}.`)
       }
 
       const success = await LoginService.login(_user.password, user.password)
       if (!success) {
-        throw new ErrorHandler(404, 'Email ou Senha incorretos.')
+        throw new CustomError(404, 'Email ou Senha incorretos.')
       }
 
       const token = await AuthService.generateToken({
@@ -36,7 +36,8 @@ class AccountsController {
           id: _user.id as number,
           email: _user.email,
           name: _user.name,
-          paid_access: (moment(_user.paid_access_expiration).isAfter(now))
+          paid_access: (moment(_user.paid_access_expiration).isAfter(now)),
+          role: _user.role
         }
       })
       Logger.info(`Usuário ${_user.email} realizou o login com sucesso`)
@@ -74,7 +75,7 @@ class AccountsController {
       const nResults = await User.count({ where: { email: user.email } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Email [${user.email}] já está sendo utilizado.`)
+        throw new CustomError(400, `Email [${user.email}] já está sendo utilizado.`)
       }
 
       user.password = await LoginService.createHashedPassword(user.password)
@@ -82,7 +83,7 @@ class AccountsController {
       const _user = await User.create(user)
 
       if (!_user) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       await _user.reload()
       _user.password = ''
@@ -92,7 +93,8 @@ class AccountsController {
           id: _user.id as number,
           email: _user.email,
           name: _user.name,
-          paid_access: paid_exp_date.isAfter(now)
+          paid_access: paid_exp_date.isAfter(now),
+          role: _user.role
         }
       })
       Logger.info(`Usuário ${_user.email} cadastrado com sucesso com sucesso`)
@@ -120,7 +122,7 @@ class AccountsController {
       const _user = await User.findOne({ where: { email: user.email } })
 
       if (_user === null) {
-        throw new ErrorHandler(404, `Não há usuários com o email ${user.email}.`)
+        throw new CustomError(404, `Não há usuários com o email ${user.email}.`)
       }
 
       const user_id = _user.id
@@ -139,7 +141,7 @@ class AccountsController {
         return null
       })
       if (!reset_password) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       const replacements: ResetPasswordTemplate = {
         username: _user.name,
@@ -178,17 +180,17 @@ class AccountsController {
 
       const reset_password = await ResetPassword.findOne({ where: { token: user_forgot_password.token } })
       if (reset_password == null) {
-        throw new ErrorHandler(404, `Não há reset_passwords com o token ${user_forgot_password.token}.`)
+        throw new CustomError(404, `Não há reset_passwords com o token ${user_forgot_password.token}.`)
       }
 
       if (moment(reset_password.expiresAt) < now) {
-        throw new ErrorHandler(400, `O token [${user_forgot_password.token}] já expirou.`)
+        throw new CustomError(400, `O token [${user_forgot_password.token}] já expirou.`)
       }
 
       const user = await User.findByPk(reset_password.user_id)
 
       if (user == null) {
-        throw new ErrorHandler(404, `Não há usuários com o id ${reset_password.user_id}.`)
+        throw new CustomError(404, `Não há usuários com o id ${reset_password.user_id}.`)
       }
 
       user.password = await LoginService.createHashedPassword(user_forgot_password.password)
@@ -201,7 +203,7 @@ class AccountsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       await ResetPassword.destroy({ where: { user_id: reset_password.user_id } })

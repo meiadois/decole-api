@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
-import InfosController from '../controllers/InfosController'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
+import InfosController from '@controllers/InfosController'
 const InfosRouter = Router()
 
 InfosRouter.route('/')

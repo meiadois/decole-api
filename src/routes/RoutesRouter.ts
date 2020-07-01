@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import RoutesController from '../controllers/RoutesController'
-import { RouteStoreDTO } from '../validators/Routes/RouteStoreDTO'
-import ValidationMiddleware from '../helpers/ValidationMiddleware'
-import { RouteUpdateDTO } from '../validators/Routes/RouteUpdateDTO'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import RoutesController from '@controllers/RoutesController'
+import { RouteStoreDTO } from '@validators/Routes/RouteStoreDTO'
+import ValidationMiddleware from 'src/utils/middlewares/ValidationMiddleware'
+import { RouteUpdateDTO } from '@validators/Routes/RouteUpdateDTO'
+import WrapErrorMiddleware from 'src/utils/middlewares/WrapErrorMiddleware'
 
 const RoutesRouter = Router()
 

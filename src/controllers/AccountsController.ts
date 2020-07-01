@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
-import { Account } from '../models/Account'
-import { User } from '../models/User'
-import { Channel } from '../models/Channel'
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { Account } from '@models/Account'
+import { User } from '@models/User'
+import { Channel } from '@models/Channel'
+import CustomError from '@utils/CustomError'
 
 class AccountsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -24,7 +24,7 @@ class AccountsController {
       const { id } = req.params
 
       if (!id) {
-        throw new ErrorHandler(404, '')
+        throw new CustomError(404, '')
       }
       const _account = await Account.findByPk(id, {
         include: [
@@ -38,7 +38,7 @@ class AccountsController {
       })
 
       if (_account === null) {
-        throw new ErrorHandler(404, `Conta ${id} não encontrada.`)
+        throw new CustomError(404, `Conta ${id} não encontrada.`)
       }
       return res.status(200).json(_account)
     } catch (err) {
@@ -50,7 +50,7 @@ class AccountsController {
     try {
       const { user_id, username, channel_name } = req.body
       if (!user_id || !username || !channel_name) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _channel = await Channel.findOne({
@@ -60,19 +60,19 @@ class AccountsController {
       })
 
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`)
+        throw new CustomError(404, `Canal ${channel_name} não encontrada.`)
       }
 
       const nResults = await Account.count({ where: { user_id, channel_id: _channel.id as number } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma conta do usuário [${user_id}] no canal ${channel_name}.`)
+        throw new CustomError(400, `Já existe uma conta do usuário [${user_id}] no canal ${channel_name}.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       const _account = await Account.findOrCreate({
@@ -82,7 +82,7 @@ class AccountsController {
         return null
       })
       if (!_account) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_account)
@@ -96,7 +96,7 @@ class AccountsController {
       const { id } = req.params
       const { user_id, username, channel_name } = req.body
       if (!id || !user_id || !username || !channel_name) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _account = await Account.findByPk(id, {
@@ -111,7 +111,7 @@ class AccountsController {
       })
 
       if (_account === null) {
-        throw new ErrorHandler(404, `Conta ${id} não encontrada.`)
+        throw new CustomError(404, `Conta ${id} não encontrada.`)
       }
 
       const _channel = await Channel.findOne({
@@ -121,13 +121,13 @@ class AccountsController {
       })
 
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`)
+        throw new CustomError(404, `Canal ${channel_name} não encontrada.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       _account.user_id = user_id
@@ -142,7 +142,7 @@ class AccountsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(await _account.reload())
     } catch (err) {
@@ -154,13 +154,13 @@ class AccountsController {
     try {
       const { id } = req.params
       if (!id) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _account = await Account.findByPk(id)
 
       if (!_account) {
-        throw new ErrorHandler(404, `Conta ${id} não encontrada.`)
+        throw new CustomError(404, `Conta ${id} não encontrada.`)
       }
 
       const _success = await _account.destroy().then(() => {
@@ -171,7 +171,7 @@ class AccountsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {
@@ -209,7 +209,7 @@ class AccountsController {
       })
 
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`)
+        throw new CustomError(404, `Canal ${channel_name} não encontrada.`)
       }
 
       const _account = await Account.findOne({
@@ -234,7 +234,7 @@ class AccountsController {
       const user_id = res.locals.user.id
       const { username, channel_name } = req.body
       if (!user_id || !username || !channel_name) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
       const _channel = await Channel.findOne({
         where: {
@@ -242,19 +242,19 @@ class AccountsController {
         }
       })
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`)
+        throw new CustomError(404, `Canal ${channel_name} não encontrada.`)
       }
 
       const nResults = await Account.count({ where: { user_id, channel_id: _channel.id as number } })
 
       if (nResults !== 0) {
-        throw new ErrorHandler(400, `Já existe uma conta do usuário [${user_id}] no canal ${channel_name}.`)
+        throw new CustomError(400, `Já existe uma conta do usuário [${user_id}] no canal ${channel_name}.`)
       }
 
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       const _account = await Account.create({
@@ -264,7 +264,7 @@ class AccountsController {
         return null
       })
       if (!_account) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
 
       return res.status(201).json(_account)
@@ -279,7 +279,7 @@ class AccountsController {
       const { channel_name } = req.params
       const { username } = req.body
       if (!user_id || !username || !channel_name) {
-        throw new ErrorHandler(400, '')
+        throw new CustomError(400, '')
       }
 
       const _channel = await Channel.findOne({
@@ -289,7 +289,7 @@ class AccountsController {
       })
 
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`)
+        throw new CustomError(404, `Canal ${channel_name} não encontrada.`)
       }
       const _account = await Account.findOne({
         where: {
@@ -303,12 +303,12 @@ class AccountsController {
         ]
       })
       if (_account === null) {
-        throw new ErrorHandler(404, `Conta do usuário ${user_id} não encontrada.`)
+        throw new CustomError(404, `Conta do usuário ${user_id} não encontrada.`)
       }
       const _user = await User.findByPk(user_id)
 
       if (!_user) {
-        throw new ErrorHandler(404, `Usuário ${user_id} não encontrado.`)
+        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
       }
 
       _account.user_id = user_id
@@ -323,7 +323,7 @@ class AccountsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(200).json(await _account.reload())
     } catch (err) {
@@ -343,7 +343,7 @@ class AccountsController {
       })
 
       if (!_channel) {
-        throw new ErrorHandler(404, `Canal ${channel_name} não encontrada.`)
+        throw new CustomError(404, `Canal ${channel_name} não encontrada.`)
       }
 
       const _account = await Account.findOne({
@@ -353,7 +353,7 @@ class AccountsController {
         }
       })
       if (!_account) {
-        throw new ErrorHandler(404, `Conta do usuário ${user_id} no ${channel_name} não encontrada.`)
+        throw new CustomError(404, `Conta do usuário ${user_id} no ${channel_name} não encontrada.`)
       }
 
       const _success = await _account.destroy().then(() => {
@@ -364,7 +364,7 @@ class AccountsController {
       })
 
       if (!_success) {
-        throw new ErrorHandler(500, '')
+        throw new CustomError(500, '')
       }
       return res.status(204).json({})
     } catch (err) {

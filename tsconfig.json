@@ -1,23 +1,33 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    //"esModuleInterop": true,
+    "target": "es2017",                          
+    "module": "commonjs",                     
+    "lib": ["es6"],                             
+    "allowJs": true,                       
+    "outDir": "./dist",                        
+    "rootDir": "./src",                       
+    "removeComments": true,                
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],                          
+    "esModuleInterop": true,                  
     "resolveJsonModule": true,
-    "experimentalDecorators": true,
-    "outDir": "./dist",
-    "target": "es6",
-    //"noEmit": true,
-    //"allowSyntheticDefaultImports": true,
-    "types": [
-      "node"
-    ]
+    "experimentalDecorators": true,        
+    "emitDecoratorMetadata": true,         
+    "skipLibCheck": true,                     
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@controllers/*": ["./src/controllers/*"],
+      "@models/*": ["./src/models/*"],
+      "@validators/*": ["./src/validators/*"],
+      "@services/*": ["./src/services/*"],
+      "@utils/*": ["./src/utils/*"],
+
+    }
   },
   "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
-  "compileOnSave": false
+    "src/**/*"
+  ]
 }
