@@ -1,16 +1,14 @@
-import Database from './models/index'
+import Database from '@models/index'
 import routes from './routes'
-import { HandleErrorMiddleware, NotFoundRoute } from './helpers/ErrorHandler'
-import * as express from 'express'
-import * as cors from 'cors'
+import { HandleErrorMiddleware, NotFoundRoute } from '@helpers/ErrorHandler'
+import express from 'express'
+import cors from 'cors'
 import * as moment from 'moment-timezone'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as bodyParser from 'body-parser'
-import AutoDeployService from './services/AutoDeployService'
 import swaggerOptions from './swaggerOptions'
 import * as swaggerUi from 'swagger-ui-express'
-// import * as swaggerConfig from './swagger/swagger.json'
 
 moment.tz.setDefault('America/Sao_Paulo')
 
@@ -83,7 +81,6 @@ class App {
   }
 
   private routes (): void {
-    this.express.post('/deploy', AutoDeployService.deploy)
     this.express.get('/', function (req, res) {
       return res.json({ message: 'Seja bem vindo(a)' })
     })

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { Segment } from '../models/Segment'
-import { Company } from '../models/Company'
+import { ErrorHandler } from '@helpers/ErrorHandler'
+import { Segment } from '@models/Segment'
+import { Company } from '@models/Company'
 import { Op } from 'sequelize'
 interface JsonObject {
   [key: string]: any;

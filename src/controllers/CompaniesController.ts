@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { Company } from '../models/Company'
-import { User } from '../models/User'
+import { ErrorHandler } from '@helpers/ErrorHandler'
+import { Company } from '@models/Company'
+import { User } from '@models/User'
 import { Op } from 'sequelize'
-import { Like } from '../models/Like'
-import UploadHelper from '../helpers/UploadHelper'
+import { Like } from '@models/Like'
+import UploadHelper from '@helpers/UploadHelper'
 
 interface ExpressFiles {
   [fieldname: string]: Express.Multer.File[];

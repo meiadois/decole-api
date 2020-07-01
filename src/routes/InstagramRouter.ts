@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import InstagramController from '../controllers/InstagramController'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import InstagramController from '@controllers/InstagramController'
+import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
 
 const InstagramRouter = Router()
 

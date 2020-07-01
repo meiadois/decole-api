@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import PaymentsController from '../controllers/PaymentsController'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import PaymentsController from '@controllers/PaymentsController'
+import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
 
 const PaymentsRouter = Router()
 

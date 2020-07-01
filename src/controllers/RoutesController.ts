@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
-import { Route } from '../models/Route'
-import { DoneLesson } from '../models/DoneLesson'
-import { Channel } from '../models/Channel'
-import { DoneRoute } from '../models/DoneRoute'
-import { RouteRequirement } from '../models/RouteRequirement'
-import { Lesson } from '../models/Lesson'
+import { Route } from '@models/Route'
+import { DoneLesson } from '@models/DoneLesson'
+import { Channel } from '@models/Channel'
+import { DoneRoute } from '@models/DoneRoute'
+import { RouteRequirement } from '@models/RouteRequirement'
+import { Lesson } from '@models/Lesson'
 
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { ErrorHandler } from '@helpers/ErrorHandler'
 import { User } from 'discord.js'
-import { Account } from '../models/Account'
+import { Account } from '@models/Account'
 import LessonsUtils from '../utils/LessonsUtils'
 
 export interface LessonsWithLock {

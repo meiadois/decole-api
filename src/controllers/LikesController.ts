@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { Like } from '../models/Like'
-import { Company } from '../models/Company'
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { Like } from '@models/Like'
+import { Company } from '@models/Company'
+import { ErrorHandler } from '@helpers/ErrorHandler'
 import { Op } from 'sequelize'
 
 const VALID_STATUS = ['pending', 'accepted', 'denied', 'deleted']

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { Channel } from '../models/Channel'
+import { ErrorHandler } from '@helpers/ErrorHandler'
+import { Channel } from '@models/Channel'
 
 class ChannelsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

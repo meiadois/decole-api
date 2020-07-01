@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import DoneRoutesController from '../controllers/DoneRoutesController'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import DoneRoutesController from '@controllers/DoneRoutesController'
+import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
 
 const MeDoneRoutesRouter = Router()
 

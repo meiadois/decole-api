@@ -1,7 +1,7 @@
-import * as multer from 'multer'
-import * as path from 'path'
+import multer from 'multer'
+import path from 'path'
 import * as crypto from 'crypto'
-import * as sharp from 'sharp'
+import sharp from 'sharp'
 import * as fs from 'fs'
 import { ErrorHandler } from './ErrorHandler'
 require('dotenv/config')

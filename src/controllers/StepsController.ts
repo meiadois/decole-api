@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { Step } from '../models/Step'
-import { Lesson } from '../models/Lesson'
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { Step } from '@models/Step'
+import { Lesson } from '@models/Lesson'
+import { ErrorHandler } from '@helpers/ErrorHandler'
 
 class StepsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

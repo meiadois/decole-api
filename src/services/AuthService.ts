@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express'
 import * as jwt from 'jsonwebtoken'
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { ErrorHandler } from '@helpers/ErrorHandler'
 
 interface User {
     id: number;

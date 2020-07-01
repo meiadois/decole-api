@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { Info } from '../models/Info'
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { Info } from '@models/Info'
+import { ErrorHandler } from '@helpers/ErrorHandler'
 
 export interface KeyValue {
   [name: string]: string;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import * as cepPromise from 'cep-promise'
+import { ErrorHandler } from '@helpers/ErrorHandler'
+import cepPromise from 'cep-promise'
 
 interface CepI{
   cep: string;

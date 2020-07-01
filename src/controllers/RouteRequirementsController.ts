@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
-import { RouteRequirement } from '../models/RouteRequirement'
-import { Route } from '../models/Route'
+import { RouteRequirement } from '@models/RouteRequirement'
+import { Route } from '@models/Route'
 
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { ErrorHandler } from '@helpers/ErrorHandler'
 
 class RouteRequirementsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

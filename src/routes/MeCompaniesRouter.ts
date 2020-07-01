@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import CompaniesController from '../controllers/CompaniesController'
-import ValidationMiddleware from '../helpers/ValidationMiddleware'
-import UploadHelper from '../helpers/UploadHelper'
-import MeCompanyStoreDTO from '../validators/MeCompanies/MeCompanyStoreDTO'
-import MeCompanyUpdateDTO from '../validators/MeCompanies/MeCompanyUpdateDTO'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import CompaniesController from '@controllers/CompaniesController'
+import ValidationMiddleware from '@helpers/ValidationMiddleware'
+import UploadHelper from '@helpers/UploadHelper'
+import MeCompanyStoreDTO from '@validators/MeCompanies/MeCompanyStoreDTO'
+import MeCompanyUpdateDTO from '@validators/MeCompanies/MeCompanyUpdateDTO'
+import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
 
 const MeCompaniesRouter = Router()
 

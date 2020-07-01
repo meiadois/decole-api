@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import ChannelsController from '../controllers/ChannelsController'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import ChannelsController from '@controllers/ChannelsController'
+import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
 
 const ChannelsRouter = Router()
 

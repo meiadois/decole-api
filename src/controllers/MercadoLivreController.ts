@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-// import { ErrorHandler } from '../helpers/ErrorHandler'
+// import { ErrorHandler } from '@helpers/ErrorHandler'
 import Melif, { UserByNicknameInfos, UserReputation } from '../libs/MelifLib'
 
 class MercadoLivreController {

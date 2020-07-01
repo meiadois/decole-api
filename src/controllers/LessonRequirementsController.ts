@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
-import { LessonRequirement } from '../models/LessonRequirement'
-import { Step } from '../models/Step'
-import { Lesson } from '../models/Lesson'
+import { LessonRequirement } from '@models/LessonRequirement'
+import { Step } from '@models/Step'
+import { Lesson } from '@models/Lesson'
 
-import { ErrorHandler } from '../helpers/ErrorHandler'
+import { ErrorHandler } from '@helpers/ErrorHandler'
 
 class LessonRequirementsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

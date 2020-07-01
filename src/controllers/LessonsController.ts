@@ -1,11 +1,11 @@
 
 import { Request, Response, NextFunction } from 'express'
-import { Lesson } from '../models/Lesson'
-import { Route } from '../models/Route'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { LessonRequirement } from '../models/LessonRequirement'
+import { Lesson } from '@models/Lesson'
+import { Route } from '@models/Route'
+import { ErrorHandler } from '@helpers/ErrorHandler'
+import { LessonRequirement } from '@models/LessonRequirement'
 
-import { DoneLesson } from '../models/DoneLesson'
+import { DoneLesson } from '@models/DoneLesson'
 
 class LessonsController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

@@ -2,7 +2,7 @@ import * as nodemailer from 'nodemailer'
 import * as handlebars from 'handlebars'
 import * as fs from 'fs'
 import * as path from 'path'
-import Mail = require('nodemailer/lib/mailer');
+import Mail from 'nodemailer/lib/mailer'
 require('dotenv/config')
 
 const ROOT_PATH = path.join(__dirname, '..')

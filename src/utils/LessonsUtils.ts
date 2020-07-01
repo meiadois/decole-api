@@ -1,6 +1,6 @@
-import { Lesson } from '../models/Lesson'
-import { LessonRequirement } from '../models/LessonRequirement'
-import { DoneLesson } from '../models/DoneLesson'
+import { Lesson } from '@models/Lesson'
+import { LessonRequirement } from '@models/LessonRequirement'
+import { DoneLesson } from '@models/DoneLesson'
 
 class LessonsUtils {
   async isLocked (lesson: Lesson, user_id: number): Promise<boolean> {

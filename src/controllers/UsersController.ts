@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { User } from '../models/User'
-import { Company } from '../models/Company'
+import { ErrorHandler } from '@helpers/ErrorHandler'
+import { User } from '@models/User'
+import { Company } from '@models/Company'
 
-import LoginService from '../services/LoginService'
-import { Route } from '../models/Route'
+import LoginService from '@services/LoginService'
+import { Route } from '@models/Route'
 
 class UsersController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

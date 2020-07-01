@@ -1,8 +1,7 @@
 import { ErrorHandler } from './ErrorHandler'
 import { plainToClass } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
-import { Request, Response, NextFunction } from 'express'
-import express = require('express')
+import express, { Request, Response, NextFunction } from 'express'
 
 export default function ValidationMiddleware<T> (type: any, skipMissingProperties = false): express.RequestHandler {
   return (req: Request, res: Response, next: NextFunction): void => {

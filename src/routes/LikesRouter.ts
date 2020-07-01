@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import LikesController from '../controllers/LikesController'
-import ValidationMiddleware from '../helpers/ValidationMiddleware'
-import { LikeStoreDTO } from '../validators/Likes/LikeStoreDTO'
-import { LikeUpdateDTO } from '../validators/Likes/LikeUpdateDTO'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import LikesController from '@controllers/LikesController'
+import ValidationMiddleware from '@helpers/ValidationMiddleware'
+import { LikeStoreDTO } from '@validators/Likes/LikeStoreDTO'
+import { LikeUpdateDTO } from '@validators/Likes/LikeUpdateDTO'
+import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
 
 const LikesRouter = Router()
 

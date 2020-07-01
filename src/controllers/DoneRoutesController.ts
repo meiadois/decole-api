@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
-import { ErrorHandler } from '../helpers/ErrorHandler'
-import { DoneRoute } from '../models/DoneRoute'
-import { Route } from '../models/Route'
+import { ErrorHandler } from '@helpers/ErrorHandler'
+import { DoneRoute } from '@models/DoneRoute'
+import { Route } from '@models/Route'
 
-import { DoneLesson } from '../models/DoneLesson'
+import { DoneLesson } from '@models/DoneLesson'
 
-import { User } from '../models/User'
+import { User } from '@models/User'
 
 class DoneRoutesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

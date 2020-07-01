@@ -1,6 +1,6 @@
 // const Logger = require('../services/Logger');
 import { Request, Response, NextFunction } from 'express'
-import Logger from '../services/Logger'
+import Logger from '@services/Logger'
 
 export class ErrorHandler extends Error {
     public statusCode: number;

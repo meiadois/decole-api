@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import MetricsController from '../controllers/MetricsController'
-import WrapErrorMiddleware from '../helpers/WrapErrorMiddleware'
+import MetricsController from '@controllers/MetricsController'
+import WrapErrorMiddleware from '@helpers/WrapErrorMiddleware'
 
 const MeMetricsRouter = Router()
 
