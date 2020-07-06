@@ -38,11 +38,16 @@ class EmailService {
           process.env.DECOLE_NOREPLY_EMAIL,
           process.env.DECOLE_NOREPLY_PASSWORD)),
 
-      MeAjuda: new Transporter(
+      Contato: new Transporter(
         process.env.DECOLE_CONTATO_EMAIL,
         this.createTransport(
           process.env.DECOLE_CONTATO_EMAIL,
-          process.env.DECOLE_CONTATO_PASSWORD))
+          process.env.DECOLE_CONTATO_PASSWORD)),
+      MeAjuda: new Transporter(
+        process.env.DECOLE_MEAJUDA_EMAIL,
+        this.createTransport(
+          process.env.DECOLE_MEAJUDA_EMAIL,
+          process.env.DECOLE_MEAJUDA_PASSWORD))
     }
 
     createTransport (user: string, password: string) {
@@ -67,20 +72,26 @@ class EmailService {
       return template(replacements)
     };
 
-    async sendMail (transporter: Transporter, to: string, subject: string, html: string) {
-      const email = {
+    async sendMail (transporter: Transporter, to: string, subject: string, html: string, replyTo = null) {
+      return transporter.service.sendMail({
         from: transporter.email, // Quem enviou este e-mail
         to: to, // Quem receberá
         subject: subject, // Um assunto bacana :-)
-        html: html // O conteúdo do e-mail
+        html: html,
+        replyTo: replyTo === null ? transporter.email : replyTo
       }
+      // , function (err) {
+      //   if (err) {
+      //     console.log(err)
+      //     throw err // Oops, algo de errado aconteceu.
+      //   }
 
-      return transporter.service.sendMail(email, function (err) {
-        if (err) {
-          console.log(err)
-          throw err // Oops, algo de errado aconteceu.
-        }
-        console.log('Email enviado para ' + email)
+      // }
+      ).then((result) => {
+        console.log(result)
+      }).catch((err) => {
+        console.log(err)
+        throw err
       })
     }
 
