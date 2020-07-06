@@ -23,6 +23,8 @@ import MetricsRouter from './routes/MetricsRouter'
 import MeRouter from './routes/MeRouter'
 import AuthService from './services/AuthService'
 import InfosRouter from './routes/InfosRouter'
+import ContactsRouter from './routes/ContactsRouter'
+
 
 const routes = Router()
 
@@ -51,6 +53,9 @@ routes.use('/steps', StepsRouter)
 routes.use('/users', UsersRouter)
 routes.use('/metrics', MetricsRouter)
 routes.use('/infos', InfosRouter)
+routes.use('/contacts', ContactsRouter)
+
+
 
 routes.use('/me', AuthService.authorize, MeRouter)
 
