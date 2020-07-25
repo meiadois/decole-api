@@ -281,9 +281,15 @@ class RoutesController {
 
       for (let i = 0; i < lessons.length; i++) {
         const n = await DoneLesson.count({ where: { user_id, lesson_id: lessons[i].id as number } })
-        lessons[i].done = n !== 0 // is true if is done
-        if (n !== 0) n_done_lessons++
-        lessons[i].locked = await LessonsUtils.isLocked(lessons[i], user_id)
+        const isDone = n !== 0
+        lessons[i].done = isDone
+
+        if (isDone) {
+          n_done_lessons++
+          lessons[i].locked = false
+        } else {
+          lessons[i].locked = await LessonsUtils.isLocked(lessons[i], user_id)
+        }
       }
       let locked = false
       for (let i = 0; i < required_routes.length; i++) {
