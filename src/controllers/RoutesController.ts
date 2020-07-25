@@ -10,6 +10,7 @@ import CustomError from '@utils/CustomError'
 import { User } from 'discord.js'
 import { Account } from '@models/Account'
 import LessonsUtils from '../utils/LessonsUtils'
+import RouteRequirementsUtils from '@utils/RouteRequirementsUtils'
 
 export interface LessonsWithLock {
   id?: number | null;
@@ -242,7 +243,7 @@ class RoutesController {
       const { id } = req.params
       const user_id = res.locals.user.id
 
-      const _route = await Route.findByPk(id, {
+      const route = await Route.findByPk(id, {
         include: [
           Route.associations.route_requirements,
           // Route.associations.lessons,
@@ -261,59 +262,29 @@ class RoutesController {
         ]
       })
 
-      const _channels = []
-
-      for (let i = 0; i < _route.channels.length; i++) {
-        const n_accounts = await Account.count({ where: { user_id, channel_id: _route.channels[i].id } })
-        _channels.push({
-          id: _route.channels[i].id,
-          name: _route.channels[i].name,
-          category: _route.channels[i].category,
-          registered: n_accounts > 0
-        })
-      }
-      if (_route === null) {
+      if (route === null) {
         throw new CustomError(404, `Rota ${id} não encontrada.`)
       }
-      const lessons = _route.lessons as Lesson[]
-      const required_routes = _route?.route_requirements as RouteRequirement[]
-      let n_done_lessons = 0
 
-      for (let i = 0; i < lessons.length; i++) {
-        const n = await DoneLesson.count({ where: { user_id, lesson_id: lessons[i].id as number } })
-        const isDone = n !== 0
-        lessons[i].done = isDone
+      Promise.all([
+        LessonsUtils.verify(route.lessons, user_id),
+        RouteRequirementsUtils.verify(route.route_requirements, user_id)
+      ]).then((results) => {
+        const [{ lessons, n_done_lessons }, locked] = results
 
-        if (isDone) {
-          n_done_lessons++
-          lessons[i].locked = false
-        } else {
-          lessons[i].locked = await LessonsUtils.isLocked(lessons[i], user_id)
-        }
-      }
-      let locked = false
-      for (let i = 0; i < required_routes.length; i++) {
-        const n = await DoneRoute.count({ where: { user_id, route_id: required_routes[i].required_route_id } })
-
-        if (n === 0) {
-          locked = true
-          break
-        }
-      }
-
-      return res.status(200).json({
-        id: _route.id,
-        title: _route.title,
-        description: _route.description,
-        lessons: lessons,
-        _channels,
-        locked,
-        progress: {
-          done: n_done_lessons,
-          total: lessons.length,
-          remain: lessons.length - n_done_lessons,
-          percentage: Math.floor((((n_done_lessons) / lessons.length) * 100))
-        }
+        return res.status(200).json({
+          id: route.id,
+          title: route.title,
+          description: route.description,
+          lessons: lessons,
+          locked,
+          progress: {
+            done: n_done_lessons,
+            total: lessons.length,
+            remain: lessons.length - n_done_lessons,
+            percentage: Math.floor((((n_done_lessons) / lessons.length) * 100))
+          }
+        })
       })
     } catch (err) {
       next(err)
