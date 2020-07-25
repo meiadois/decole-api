@@ -20,8 +20,8 @@ class RouteRequirementsUtils {
     return n !== 0
   }
 
-  async isLocked (route: RouteRequirement, user_id: number): Promise<boolean> {
-    const isDone = await this.isDone(route, user_id)
+  async isLocked (required_route: RouteRequirement, user_id: number): Promise<boolean> {
+    const isDone = await this.isDone(required_route, user_id)
     return !isDone
   }
 }

@@ -7,8 +7,6 @@ import { RouteRequirement } from '@models/RouteRequirement'
 import { Lesson } from '@models/Lesson'
 
 import CustomError from '@utils/CustomError'
-import { User } from 'discord.js'
-import { Account } from '@models/Account'
 import LessonsUtils from '../utils/LessonsUtils'
 import RouteRequirementsUtils from '@utils/RouteRequirementsUtils'
 
@@ -269,9 +267,7 @@ class RoutesController {
       Promise.all([
         LessonsUtils.verify(route.lessons, user_id),
         RouteRequirementsUtils.verify(route.route_requirements, user_id)
-      ]).then((results) => {
-        const [{ lessons, n_done_lessons }, locked] = results
-
+      ]).then(([{ lessons, n_done_lessons }, locked]) => {
         return res.status(200).json({
           id: route.id,
           title: route.title,
