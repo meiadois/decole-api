@@ -9,7 +9,7 @@ interface User {
     paid_access: boolean;
     role: string;
 }
-interface TokenInfos {
+export interface TokenInfos {
     user: User;
 }
 class AuthService {

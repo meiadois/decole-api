@@ -8,12 +8,14 @@ module.exports = {
         id: 1,
         title: 'Como funciona o Instagram',
         route_id: 1,
+        order: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 2,
         route_id: 1,
+        order: 2,
         title: 'Como criar uma conta no Instagram pelo aplicativo',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -21,6 +23,7 @@ module.exports = {
       {
         id: 3,
         route_id: 1,
+        order: 3,
         title: 'Como mudar a foto do seu perfil',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -28,6 +31,7 @@ module.exports = {
       {
         id: 4,
         route_id: 1,
+        order: 4,
         title: 'Como estruturar sua Bio',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -38,12 +42,14 @@ module.exports = {
         id: 5,
         title: 'Como criar uma conta no Facebook pelo aplicativo.',
         route_id: 2,
+        order: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 6,
         route_id: 2,
+        order: 2,
         title: 'Como criar um página comercial',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -51,6 +57,7 @@ module.exports = {
       {
         id: 7,
         route_id: 2,
+        order: 3,
         title: 'Como mudar a foto do seu página',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -58,6 +65,7 @@ module.exports = {
       {
         id: 8,
         route_id: 2,
+        order: 4,
         title: 'Como mudar uma foto de capa',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -67,6 +75,7 @@ module.exports = {
       {
         id: 9,
         route_id: 3,
+        order: 1,
         title: 'Como alterar o perfil do Instagram para conta comercial',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -74,6 +83,7 @@ module.exports = {
       {
         id: 10,
         route_id: 3,
+        order: 2,
         title: 'Como usar Instagram Stories',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -81,6 +91,7 @@ module.exports = {
       {
         id: 11,
         route_id: 3,
+        order: 3,
         title: 'Como colocar stickers no Stories',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -88,6 +99,7 @@ module.exports = {
       {
         id: 12,
         route_id: 3,
+        order: 4,
         title: 'Como colocar música no Stories',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -95,6 +107,7 @@ module.exports = {
       {
         id: 13,
         route_id: 3,
+        order: 5,
         title: 'Como colocar links no Stories',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -103,6 +116,7 @@ module.exports = {
       {
         id: 14,
         route_id: 4,
+        order: 1,
         title: 'Como criar #umahashtagperfeita',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -111,6 +125,7 @@ module.exports = {
       {
         id: 15,
         route_id: 4,
+        order: 2,
         title: 'Como planejar as suas publicações',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -118,6 +133,7 @@ module.exports = {
       {
         id: 16,
         route_id: 4,
+        order: 3,
         title: 'Tamanhos ideais para o Instagram',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -125,6 +141,7 @@ module.exports = {
       {
         id: 17,
         route_id: 4,
+        order: 4,
         title: 'Dicas de conteúdo',
         createdAt: new Date(),
         updatedAt: new Date()
