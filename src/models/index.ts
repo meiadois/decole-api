@@ -6,6 +6,7 @@ export default class Database {
     private static instance: Database
     public sequelize: Sequelize
     private constructor () {
+      console.log(`Connecting to DB: ${String(process.env.DB_SEQUELIZE_DATABASE)}`)
       // this.sequelize = new Sequelize(databaseConfig)
       this.sequelize = new Sequelize(
         String(process.env.DB_SEQUELIZE_DATABASE),

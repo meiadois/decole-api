@@ -189,12 +189,12 @@ class DoneLessonsController {
         throw new CustomError(400, '')
       }
 
-      const __done_lesson = await DoneLesson.findOne({ where: { user_id, lesson_id } })
+      // const __done_lesson = await DoneLesson.findOne({ where: { user_id, lesson_id } })
 
-      if (__done_lesson !== null) {
-        return res.json(__done_lesson)
-        // throw new CustomError(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${user_id}].`)
-      }
+      // if (__done_lesson !== null) {
+      //   return res.json(__done_lesson)
+      //   // throw new CustomError(400, `A lição [${lesson_id}] já foi concluida pelo usuário [${user_id}].`)
+      // }
 
       const _lesson = await Lesson.findByPk(lesson_id)
 
@@ -202,19 +202,21 @@ class DoneLessonsController {
         throw new CustomError(404, `Lição ${lesson_id} não encontrada.`)
       }
 
-      const _user = await User.findByPk(user_id)
+      // const _user = await User.findByPk(user_id)
 
-      if (!_user) {
-        throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
-      }
+      // if (!_user) {
+      //   throw new CustomError(404, `Usuário ${user_id} não encontrado.`)
+      // }
       const max_lesson_id = await Lesson.max('order', {
         where: {
           route_id: _lesson.route_id
         }
       })
 
-      const _done_lesson = await DoneLesson.create({
-        user_id, lesson_id
+      const [_done_lesson, _] = await DoneLesson.findOrCreate({
+        where: {
+          user_id, lesson_id
+        }
       }).catch((err) => {
         console.log(err)
         return null
@@ -223,9 +225,11 @@ class DoneLessonsController {
         throw new CustomError(500, '')
       }
 
-      if (max_lesson_id === _lesson.id) {
-        const _done_route = await DoneRoute.create({
-          user_id, route_id: _lesson.route_id
+      if (max_lesson_id === _lesson.order) {
+        const [_done_route, _] = await DoneRoute.findOrCreate({
+          where: {
+            user_id, route_id: _lesson.route_id
+          }
         }).catch((err) => {
           console.log(err)
           return null

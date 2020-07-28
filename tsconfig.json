@@ -23,8 +23,7 @@
       "@models/*": ["./src/models/*"],
       "@validators/*": ["./src/validators/*"],
       "@services/*": ["./src/services/*"],
-      "@utils/*": ["./src/utils/*"],
-
+      "@utils/*": ["./src/utils/*"]
     }
   },
   "include": [

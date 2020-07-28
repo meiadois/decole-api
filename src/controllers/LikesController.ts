@@ -234,7 +234,6 @@ class LikesController {
             throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
-        console.log('não é undefined')
         ANDs.push({ status })
       }
       ORs.push({
@@ -255,7 +254,6 @@ class LikesController {
           [Op.and]: ANDs
         }
       }
-      console.log(where)
       const _likes = await Like.findAll({
         where,
 
@@ -329,7 +327,6 @@ class LikesController {
             throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
-        console.log('não é undefined')
         ANDs.push({ status })
       }
       ANDs.push({ sender_id: _company.id })
@@ -338,7 +335,6 @@ class LikesController {
       where = {
         [Op.and]: ANDs
       }
-      console.log(where)
       const _likes = await Like.findAll({
         where,
         attributes: {
@@ -396,7 +392,6 @@ class LikesController {
             throw new CustomError(400, `[${status}] não é um status válido. Estes são os status possíveis: [${VALID_STATUS.toString()}]`)
           }
         }
-        console.log('não é undefined')
         ANDs.push({ status })
       }
       ANDs.push({ recipient_id: _company.id })
@@ -405,7 +400,6 @@ class LikesController {
       where = {
         [Op.and]: ANDs
       }
-      console.log(where)
       const _likes = await Like.findAll({
         where,
         attributes: {
