@@ -9,6 +9,12 @@ import UploadUtils from 'src/utils/UploadUtils'
 interface ExpressFiles {
   [fieldname: string]: Express.Multer.File[];
 }
+
+export interface SearchParameters {
+  segment_id?: number;
+  limit?: number;
+  offset?: number;
+}
 class CompaniesController {
   async list (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -603,164 +609,91 @@ class CompaniesController {
     }
   }
 
-  async meSearch (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-    try {
-      const user_id = res.locals.user.id
+  async meSearch (req: Request, res: Response): Promise<Response | void> {
+    const user_id = res.locals.user.id
+    const { limit = 10, offset = 0, segment_id = undefined }: SearchParameters = req.query
 
-      const _user_company = await Company.findOne({
-
-        attributes: {
-          exclude: ['name', 'description', 'cnpj', 'cellphone', 'email', 'thumbnail', 'banner']
-        },
-        include: [
-          {
-            association: 'users',
-            attributes: [],
-            where: {
-              id: user_id
-            }
-          }
-        ]
-      })
-      if (!_user_company) {
-        throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
-      }
-      let { limit = 10, offset = 0, name, segment_id, email, cep, cnpj, cellphone, city, neighborhood } = req.query
-      limit = limit as number
-      offset = offset as number
-      const user_where = {}
-      const ANDs = []
-      const ORs = []
-      const include = []
-
-      ANDs.push({
-        visible: true
-      })
-
-      if (name !== undefined) {
-        name = `%${name}%`
-        ORs.push({
-          name: {
-            [Op.like]: name
-          }
-        })
-        ORs.push({
-          description: {
-            [Op.like]: name
-          }
-        })
-      }
-
-      if (segment_id !== undefined) {
-        ANDs.push({
-          segment_id
-        })
-      }
-      if (neighborhood !== undefined) {
-        ANDs.push({
-          neighborhood
-        })
-      }
-      if (city !== undefined) {
-        ANDs.push({
-          city
-        })
-      }
-      if (cellphone !== undefined) {
-        ANDs.push({
-          cellphone
-        })
-      }
-      if (cnpj !== undefined) {
-        ANDs.push({
-          cnpj
-        })
-      }
-      if (cep !== undefined) {
-        ANDs.push({
-          cep
-        })
-      }
-
-      if (email !== undefined) {
-        ANDs.push({
-          email
-        })
-      }
-
-      include.push(
+    const userCompany = await Company.findOne({
+      include: [
         {
-          association: 'segment',
-          attributes: ['name']
-        }
-      )
-      if (Object.keys(user_where).length !== 0) {
-        include.push({
           association: 'users',
           attributes: [],
-          where: user_where
-        })
-      }
-
-      const _associated_companies = await Like.findAll({
-        attributes: {
-          include: ['id']
-        },
-        where: {
-          [Op.or]: [
-            {
-              sender_id: _user_company.id
-            },
-            {
-              recipient_id: _user_company.id
-            }
-
-          ]
+          where: {
+            id: user_id
+          }
         }
+      ]
+    })
+    if (!userCompany) {
+      throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
+    }
+
+    const ANDs = []
+    let where = {}
+
+    ANDs.push({
+      visible: true
+    })
+
+    if (segment_id !== undefined) {
+      ANDs.push({
+        segment_id
       })
-      let _associated_company_ids = _associated_companies.map((obj) => {
-        if (obj.sender_id === _user_company.id) {
+    }
+
+    const associatedCompanyIds = await Like.findAll({
+      attributes: {
+        include: ['id']
+      },
+      where: {
+        [Op.or]: [
+          {
+            sender_id: userCompany.id
+          },
+          {
+            recipient_id: userCompany.id
+          }
+
+        ]
+      }
+    }).then((likes) => {
+      let companyIds = likes.map((obj) => { // Return the all the IDs from associated companies
+        if (obj.sender_id === userCompany.id) {
           return obj.recipient_id
         }
         return obj.sender_id
       })
-      _associated_company_ids = _associated_company_ids.filter((value, index, self) => self.indexOf(value) === index) // get only unique values
-      _associated_company_ids.push(_user_company.id) // Dont search the user company
-      let where = {}
-      if (ORs.length > 0) {
-        where = {
-          [Op.and]: ANDs,
-          [Op.or]: ORs,
-          [Op.not]: [
-            {
-              id: _associated_company_ids
-            }
-          ]
+      companyIds = companyIds.filter((value, index, self) => self.indexOf(value) === index) // get only unique values
+      companyIds.push(userCompany.id) // Dont search the user company
+      return companyIds
+    })
+
+    where = {
+      [Op.and]: ANDs,
+      [Op.not]: [
+        {
+          id: !associatedCompanyIds ? [] : associatedCompanyIds
         }
-      } else {
-        where = {
-          [Op.and]: ANDs,
-          [Op.not]: [
-            {
-              id: _associated_company_ids
-            }
-          ]
-        }
-      }
-      const _company = await Company.findAll({
-        limit,
-        offset,
-        where,
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',
-            'city', 'neighborhood', 'cep']
-        },
-        include
-      })
-      return res.json(_company)
-    } catch (err) {
-      next(err)
+      ]
     }
+
+    const foundCompanies = await Company.findAll({
+      limit,
+      offset,
+      where,
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'segment_id', 'visible',
+          'city', 'neighborhood', 'cep']
+      },
+      include: [
+        {
+          association: 'segment',
+          attributes: ['name']
+        }
+      ]
+    })
+
+    return res.json(foundCompanies)
   }
 }
 export default new CompaniesController()
