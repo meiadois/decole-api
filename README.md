@@ -45,7 +45,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 <!--Please make sure to update tests as appropriate-->
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[All Rights Reserved](https://github.com/meiadois/decole-api/blob/TS/LICENSE.md)
 
 <sub>Checked at Hackathon SEBRAE by [@ARGOLO](https://github.com/argolo)</sub>
 
