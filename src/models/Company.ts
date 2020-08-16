@@ -9,7 +9,7 @@ export interface CompanyI {
   name: string;
   description: string;
   segment_id: number;
-  cnpj: string;
+  cnpj?: string;
   cellphone: string;
   email: string;
   thumbnail?: string;
@@ -24,7 +24,7 @@ export class Company extends Model implements CompanyI {
   public name!: string;
   public description!: string;
   public segment_id!: number;
-  public cnpj!: string;
+  public cnpj?: string;
   public cellphone!: string;
   public email!: string;
   public thumbnail?: string;
@@ -88,7 +88,7 @@ export function init (sequelize: Sequelize): void {
       },
       cnpj: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       cellphone: {
         type: DataTypes.STRING,
