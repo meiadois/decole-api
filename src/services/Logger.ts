@@ -32,44 +32,63 @@ function process_message (message: string): string {
 }
 class Logger {
   async info (message: string, url?: string): Promise<void> {
-    if (url === undefined) {
-      message = `:information_source:\n[Mensagem] ${message}`
-    } else {
-      message = `:information_source:\n[URL] ${url}\n[Mensagem] ${message}`
+    try {
+      if (url === undefined) {
+        message = `:information_source:\n[Mensagem] ${message}`
+      } else {
+        message = `:information_source:\n[URL] ${url}\n[Mensagem] ${message}`
+      }
+      message = process_message(message)
+      INFO_CHANNEL.send(message)
+    } catch (e) {
+      console.error('[Discord Bot] - Error')
+      console.error(e)
     }
-    message = process_message(message)
-    INFO_CHANNEL.send(message)
   }
 
   async debug (message: string, url?: string): Promise<void> {
-    if (url === undefined) {
-      message = `:mag:\n[Mensagem] ${message}`
-    } else {
-      message = `:mag:\n[URL] ${url}\n[Mensagem] ${message}`
+    try {
+      if (url === undefined) {
+        message = `:mag:\n[Mensagem] ${message}`
+      } else {
+        message = `:mag:\n[URL] ${url}\n[Mensagem] ${message}`
+      }
+      message = process_message(message)
+      DEBUG_CHANNEL.send(message)
+    } catch (e) {
+      console.error('[Discord Bot] - Error')
+      console.error(e)
     }
-    message = process_message(message)
-    DEBUG_CHANNEL.send(message)
   }
 
   async error (message: string, url?: string): Promise<void> {
-    if (url === undefined) {
-      message = `:octagonal_sign: ${message}`
-    } else {
-      message = `:octagonal_sign:\n[URL] ${url}\n${message}`
+    try {
+      if (url === undefined) {
+        message = `:octagonal_sign: ${message}`
+      } else {
+        message = `:octagonal_sign:\n[URL] ${url}\n${message}`
+      }
+      message = process_message(message)
+      ERROR_CHANNEL.send(message)
+    } catch (e) {
+      console.error('[Discord Bot] - Error')
+      console.error(e)
     }
-    message = process_message(message)
-
-    ERROR_CHANNEL.send(message)
   }
 
   async warn (message: string, url?: string): Promise<void> {
-    if (url === undefined) {
-      message = `:warning:\n[Mensagem] ${message}`
-    } else {
-      message = `:warning:\n[URL] ${url}\n[Mensagem] ${message}`
+    try {
+      if (url === undefined) {
+        message = `:warning:\n[Mensagem] ${message}`
+      } else {
+        message = `:warning:\n[URL] ${url}\n[Mensagem] ${message}`
+      }
+      message = process_message(message)
+      WARN_CHANNEL.send(message)
+    } catch (e) {
+      console.error('[Discord Bot] - Error')
+      console.error(e)
     }
-    message = process_message(message)
-    WARN_CHANNEL.send(message)
   }
 
   get_message_from_error (err: any): string {
