@@ -73,10 +73,12 @@ class CompaniesController {
     try {
       const company = req.body as Company
 
-      const nResults = await Company.count({ where: { id: company.cnpj } })
+      if (company.cnpj) {
+        const nResults = await Company.count({ where: { id: company.cnpj } })
 
-      if (nResults !== 0) {
-        throw new CustomError(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
+        if (nResults !== 0) {
+          throw new CustomError(400, `Já existe uma empresa com o CNPJ [${company.cnpj}].`)
+        }
       }
       const _company = await Company.create(company)
         .catch((err) => {
@@ -115,7 +117,7 @@ class CompaniesController {
 
       if (company.thumbnail !== null) _company.thumbnail = company.thumbnail
       if (company.banner !== null) _company.banner = company.banner
-      if (company.cnpj !== null) _company.cnpj = company.cnpj
+      if (company.cnpj !== undefined) _company.cnpj = company.cnpj
 
       const _success = await _company.save().then(() => {
         return true
@@ -309,7 +311,7 @@ class CompaniesController {
         console.log('Não há arquivos de imagem')
       }
 
-      if (company.cnpj !== null) {
+      if (company.cnpj) {
         const nResults = await Company.count({ where: { cnpj: company.cnpj } })
 
         if (nResults !== 0) {
@@ -393,7 +395,7 @@ class CompaniesController {
         throw new CustomError(404, `Empresa do usuário ${user_id} não encontrada.`)
       }
 
-      if (company.cnpj !== null && company.cnpj !== _company.cnpj) {
+      if (company.cnpj && company.cnpj !== _company.cnpj) {
         const nResults = await Company.count({ where: { cnpj: company.cnpj } })
 
         if (nResults !== 0) {
@@ -433,7 +435,7 @@ class CompaniesController {
       _company.city = company.city
       _company.neighborhood = company.neighborhood
 
-      if (company.cnpj !== null) _company.cnpj = company.cnpj
+      if (company.cnpj !== undefined) _company.cnpj = company.cnpj
 
       const _success = await _company.save().then(() => {
         return true
