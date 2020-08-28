@@ -3,13 +3,14 @@ import { StepsController } from './steps.controller';
 import { StepsService } from './steps.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Step } from '@/database/entity/step';
+import { LoggerModule } from '@/shared/logger/logger.module';
 
 describe('RoutesController', () => {
   let stepsController: StepsController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Step])],
+      imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Step]), LoggerModule],
       controllers: [StepsController],
       providers: [StepsService],
     }).compile();

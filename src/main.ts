@@ -20,11 +20,13 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('Decole Api')
     .setDescription('API da Decole')
-    .setVersion('1.0')
-    .addBearerAuth()
+    .setVersion('0.0.1')
+    // .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document);
+  SwaggerModule.setup('/', app, document);
+
   app.use('/admin/queues', bullUI);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(APP_PORT);

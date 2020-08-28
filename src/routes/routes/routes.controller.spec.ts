@@ -3,13 +3,14 @@ import { RoutesController } from './routes.controller';
 import { RoutesService } from './routes.service';
 import { Route } from '@/database/entity/route';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LoggerModule } from '@/shared/logger/logger.module';
 
 describe('RoutesController', () => {
   let routesController: RoutesController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Route])],
+      imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Route]), LoggerModule],
       controllers: [RoutesController],
       providers: [RoutesService],
     }).compile();

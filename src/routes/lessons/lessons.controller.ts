@@ -17,7 +17,10 @@ export class LessonsController {
     type: [Lesson],
   })
   @Get('/')
-  async getAll(@Query('routeId') routeId: string, @Pag() pagination: Pagination): Promise<Lesson[]> {
+  async getAll(
+    @Query('routeId') routeId: string,
+    @Pag() pagination: Pagination
+    ): Promise<Lesson[]> {
     return this.service.getAll(pagination, routeId)
   }
 
