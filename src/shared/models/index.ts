@@ -1,0 +1,1 @@
+export { UserI } from './user'

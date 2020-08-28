@@ -1,0 +1,32 @@
+// // import { HttpException } from '@nestjs/common/exceptions/http.exception';
+// import { NestMiddleware, HttpStatus, Injectable } from '@nestjs/common';
+// import { Request, Response, NextFunction } from 'express';
+// // import * as jwt from 'jsonwebtoken';
+// import AuthUtils, { TokenInfos } from '../utils/AuthUtils'
+// import CustomError from './errors/CustomError'
+
+// @Injectable()
+// export class AuthMiddleware implements NestMiddleware {
+//   async use(req: Request, res: Response, next: NextFunction) {
+//     const token = req.headers['x-access-token']
+    
+//     if (token) {
+//       const tokenInfos: TokenInfos = await AuthUtils.decodeToken(token as string)
+//       .then((res) => res)
+//       .catch((err) => {
+//         console.error(err)
+//         return null
+//       });
+
+//       if (!tokenInfos) {
+//         throw new CustomError(HttpStatus.UNAUTHORIZED, 'Não autorizado')
+//       }
+      
+//       res.locals.user = tokenInfos;
+//       next();
+
+//     } else {
+//       throw new CustomError(HttpStatus.UNAUTHORIZED, 'Não autorizado')
+//     }
+//   }
+// }

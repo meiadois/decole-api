@@ -9,8 +9,7 @@ module.exports = {
         "ts"
     ],
     rootDir: "./src",
-    testRegex: ".spec.ts$",
-    testPathIgnorePatterns: ["src/*/__test__"],
+    testRegex: ".e2e-spec.ts$",
     transform: {
         "^.+\\.(t|j)s$": "ts-jest"
     },
