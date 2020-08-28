@@ -2,6 +2,8 @@ require('dotenv').config();
 // App
 export const APP_PORT = Number(process.env.APP_PORT) 
 export const APP_HOST = Number(process.env.APP_HOST)
+export const IS_PRODUTION = String(process.env.IS_PRODUCTION).toLowerCase() === 'true'
+
 
 // Authentication
 export const JWT_SALT = String(process.env.JWT_SALT)
@@ -24,3 +26,4 @@ export const DATABASE_PORT = Number(process.env.DATABASE_PORT)
 // Redis
 export const REDIS_HOST = String(process.env.REDIS_HOST)
 export const REDIS_PORT = Number(process.env.REDIS_PORT)
+export const REDIS_PASSWORD = String(process.env.REDIS_PASSWORD)
