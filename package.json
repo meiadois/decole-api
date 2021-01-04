@@ -16,7 +16,7 @@
         "generate-swagger": "tsoa routes && tsoa swagger"
     },
     "dependencies": {
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "bcrypt": "^5.0.0",
         "cep-promise": "^3.0.9",
         "class-transformer": "^0.3.1",
