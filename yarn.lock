@@ -300,18 +300,17 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@babel/node@^7.10.4":
-  version "7.10.4"
-  resolved "https://registry.yarnpkg.com/@babel/node/-/node-7.10.4.tgz#f246ac8a63dddbd5f084fd90be58ee0b904378b7"
-  integrity sha512-U41uyQkG0J1ezCb8KCdhDJotQF68Z/OsUbcgdxaC0M4JoXKZVdaKQJ+ecnr7aaWjNLt0Vee6Vddj6VL4JEMJnQ==
+"@babel/node@^7.12.17":
+  version "7.12.17"
+  resolved "https://registry.yarnpkg.com/@babel/node/-/node-7.12.17.tgz#f892e4a16a108a62f7d4cc327f1608d8dae0d556"
+  integrity sha512-NLe32pSqoweEFvCEHxvJq3DgBx3oBLtgNfdW5936pMEc5TE2P8jVmDiY6JXQccn/4tt9sBLMUuh+tF3VXWyMhA==
   dependencies:
-    "@babel/register" "^7.10.4"
+    "@babel/register" "^7.12.13"
     commander "^4.0.1"
     core-js "^3.2.1"
-    lodash "^4.17.13"
+    lodash "^4.17.19"
     node-environment-flags "^1.0.5"
     regenerator-runtime "^0.13.4"
-    resolve "^1.13.1"
     v8flags "^3.1.1"
 
 "@babel/parser@^7.1.0", "@babel/parser@^7.10.4":
@@ -882,13 +881,13 @@
     "@babel/helper-plugin-utils" "^7.10.4"
     "@babel/plugin-transform-typescript" "^7.10.4"
 
-"@babel/register@^7.10.4":
-  version "7.10.4"
-  resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.10.4.tgz#53004ba8b04c4af3cbd84508e03ad150669746e4"
-  integrity sha512-whHmgGiWNVyTVnYTSawtDWhaeYsc+noeU8Rmi+MPnbGhDYmr5QpEDMrQcIA07D2RUv0BlThPcN89XcHCqq/O4g==
+"@babel/register@^7.12.13":
+  version "7.12.13"
+  resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.12.13.tgz#e9cb57618264f2944634da941ba9755088ef9ec5"
+  integrity sha512-fnCeRXj970S9seY+973oPALQg61TRvAaW0nRDe1f4ytKqM3fZgsNXewTZWmqZedg74LFIRpg/11dsrPZZvYs2g==
   dependencies:
     find-cache-dir "^2.0.0"
-    lodash "^4.17.13"
+    lodash "^4.17.19"
     make-dir "^2.1.0"
     pirates "^4.0.0"
     source-map-support "^0.5.16"
