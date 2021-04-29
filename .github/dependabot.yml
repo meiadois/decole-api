@@ -1,0 +1,61 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  target-branch: TS
+  ignore:
+  - dependency-name: y18n
+    versions:
+    - 4.0.1
+    - 4.0.2
+  - dependency-name: discord.js
+    versions:
+    - 12.5.1
+    - 12.5.2
+  - dependency-name: sharp
+    versions:
+    - 0.27.1
+    - 0.27.2
+    - 0.28.0
+  - dependency-name: "@babel/cli"
+    versions:
+    - 7.12.10
+    - 7.12.13
+    - 7.12.16
+    - 7.12.17
+    - 7.13.0
+    - 7.13.10
+    - 7.13.14
+  - dependency-name: "@babel/node"
+    versions:
+    - 7.12.10
+    - 7.12.13
+    - 7.12.16
+    - 7.12.17
+    - 7.13.0
+    - 7.13.10
+    - 7.13.12
+  - dependency-name: ts-jest
+    versions:
+    - 26.4.4
+    - 26.5.0
+    - 26.5.1
+    - 26.5.2
+    - 26.5.3
+    - 26.5.4
+  - dependency-name: "@babel/plugin-proposal-decorators"
+    versions:
+    - 7.12.12
+    - 7.12.13
+    - 7.13.0
+    - 7.13.5
+  - dependency-name: bl
+    versions:
+    - 4.0.3
+    - 4.0.4
+  - dependency-name: "@types/cors"
+    versions:
+    - 2.8.9
